@@ -2641,6 +2641,15 @@ function backupNote(){
   }
 })();
 
+/* Alte Claude-Artefakt-Version: auf die feste Adresse hinweisen */
+if (window.claude) {
+  const b = $("#banner");
+  b.innerHTML = `<b>Match-Log ist umgezogen:</b> <a href="https://salamibus.github.io/Lorcana-Tracker/" target="_blank" rel="noopener" style="color:var(--ink)">salamibus.github.io/Lorcana-Tracker</a><br>`
+    + `So nimmst du deine Matches mit: hier im Verlauf ganz unten „Als Text kopieren“ tippen, die neue Adresse öffnen und dort im Verlauf „Text einfügen“.`
+    + `<div class="acts" style="margin-top:8px"><button class="chip" type="button" id="moveGo">Zum Kopieren</button></div>`;
+  b.hidden = false;
+  $("#moveGo").onclick = () => { switchTab("log"); $("#copyJson").scrollIntoView({ block: "center" }); };
+}
 renderAll();
 if (!storageProbe()) storageFailed();
 store.init();
