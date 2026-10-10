@@ -1,0 +1,2592 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Match-Log</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Match-Log">
+<meta name="theme-color" content="#18203A">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAAFl0lEQVR42u3dy2tcVRzA8Xvn2USbBElQrPVBIKgtxbho0/jIA6QuWhSTVHDtwlU3Lvwb3OkuWzddGI0SkEID5mmpbdCioe2i0GZRSFFisKl27szc66JFaOZM7kyaufec3+/7XQ6XYTr303PPuY+J/8yLgx6RqQxfAYGDwEHgIHAQOAgcBA4CB4GDwEEEDgIHgYPAQeAgcBA4CBwEDgIHETgIHAQOAgeBI7UuTnbxJfyfz+OQRhYDn2zynYCj7miBD+04Yo8jmonoxdHU9EInEY04dj3r1EZEF47HX4yo8qEFx96uUZUQUYGjRWcvxBMRjiOBk1qCiYjFkeS5Tqk+BOJI6xS4PCKicNhwZUQSESE4rLpgJsaHBBx2XkoVQMRtHPZfYXeaiKs43LrxwlEi7uFw9H4cF324hEPAbVpuEXEGh6Qb+Fwh4gAOqfd12k/Eahzib/e13IelOFTdBW4tEetwqH04wEIiGWTwb7d95OBpIguHkPRxwMJaImnigIXlRNLBAQsnfCSNAxYOEUkUBzLcIpIQDli4SKTlOGDhrg9+vMXJLk52JfC/DhwEDgIHgYPAQeAgcBA4CBwEDgIHUU05mz/c6s3Kx59vxW726YdtEyPFpt75s8l7C1fKO2/TVvTnvuzcxQf76J3imbE2Rg4r+mYhiKImtl/fCJd+KzMwqMCxtl5duV5pfPvpxSAM2fVq5hxT86UGtyxXvJnlEjteEY7l38vrGw2NBucvB5tbETteEY4w9KYXg4YmKPMMG/qWsjPLpXLcxGP1ZuXaWpW9rg7H5lY0uxIzeEzNBexyjThiDxkbf0c//gIOrTiu3qpevVX3qPH9Uvxxh4Tg6O40fPhvF8yDRzX0vlsKGnwTch7H+28Val+cXSkbV6rzv5b/2AwbfBNyHsepNwrFvL/txaAcGc9xTc0ZXjz8Uu7lF7IgEIijo90/cTRf+/r0YhA+OnbcuF29csMw3ZgYYdiQOyEdHzZcjF3fCJcfva72tWnYeKrDH30dHHJx9B3MHunN7bymvftPdP6S4Rrse28W8zkAiF7KGg8Nl69X1u48nH7O/BTcD7ZPUbMZ74O3GTak4xjpL9QuR6Po4Zo2jLxp0+J26LV8TxeLWOk4clnzcvSHC8G/pejCavn2n4YV7MRwkX0vH8eDcxW5mgXpvfvRuZ8D4wq290C2v4/phg4c3Z2ZkX7D4PHVudKlaxWGDdU46k1L7/wV1t5bur/df/dYnh2vCMeR3lzfwYbOdZ48XthX8NnxinB4dU6Ibcv3vTGOKQpxnDia73giZkgYOJR/rocVrD4cxbx/ajDmvNbEMCe+VOLwPG9sqJipP3Yc6MkcP8RUVCuOZ7szg4fr7v7xoaLPTFQtDs/zxus8NLuv4J8c5JiiG8exV3LPP50xTlf3tzNu6Mbh+974kGHwaPYxfPIs/wmG3XV6tHh6NE0KZ2dLZ2ebe65u4NXcF2eeZOQgDisEDgIHgYMIHNTQeQH+jJe7tfqPeTFyEDgIHAQOAgeBg8BB4CBwEDgIHETgIHAQOAgcBA6yq5bf7PMgbvnZ21p9m0+iOCDinIykceDDFRbp4ICIEyzSxAERy1mkjwMiNsuwAgc+LGRhEQ6I2MbCOhwQsYeFpTjUErFNhr04VPmwkIXtODQQsZaFGzgEE7FchjM4hBGxn4V7OAT4cIWFkzjcJeIWC4dxOEfERRlu43CCiKMshOCw1ofTLOTgsI2IABbScFhCRIwMgThSJCKJhWQcCfuQx0I4jsSISJUhH0dLiQhmoQjHnhMRz0Idjj3xoYSFRhyPSUSVDKU4dkFEGwvtOBokopMFOGJ8aGYBjp2IIAMcBiKwAAfFx88+ETgIHAQOAgeBg8BB4CBwEDgIHETgIHAQOAgcBA4CB4GDwEHgIH39BxDEzNo/U5+9AAAAAElFTkSuQmCC">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#10152A; --surface:#1A2140; --ink:#E6E9F4; --muted:#98A0BE; --line:#2E3761;
+  --gold:#E0B84A; --gold-soft:#3A3417; --win:#4CC486; --loss:#F06078;
+  --amber:#F4B223; --amethyst:#B069B8; --emerald:#3FB24C; --ruby:#F0335A; --sapphire:#3BAEE0; --steel:#A7B0BF;
+  --radius-s:6px; --radius-m:12px;
+  --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 var(--body);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;color:inherit;font:inherit}
+button.ghost{border:1.5px solid var(--line);background:transparent;border-radius:999px;padding:8px 14px;font-size:15px;color:var(--ink)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+.app{max-width:720px;margin:0 auto;padding:0 16px 160px}
+.import .drop{display:flex;flex-wrap:wrap;gap:2px 10px;align-items:baseline;justify-content:center;text-align:center;padding:10px 14px;border:2px dashed var(--line);border-radius:var(--radius-m);background:var(--surface);cursor:pointer;transition:border-color .15s,background .15s}
+.import .drop.drag{border-color:var(--gold);background:var(--gold-soft)}
+.import .drop-main{font:600 15px var(--body)}
+.import .drop-sub{font-size:12px;color:var(--muted)}
+.linkrow{display:flex;gap:8px;margin-top:8px}
+.linkrow .field{flex:1 1 auto;min-width:0;padding:8px 12px}
+.linkrow .chip{flex:0 0 auto}
+.import-status .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.goal{display:flex;align-items:center;gap:10px;margin:0 0 18px;font-size:14px}
+.goal .gbar{flex:1 1 auto;height:8px;border-radius:999px;background:var(--line);overflow:hidden}
+.goal .gbar .fill{display:block;height:100%;background:var(--gold);border-radius:999px}
+.goal .gbar .fill.done{background:var(--win)}
+.goal .txt{white-space:nowrap;color:var(--muted)}
+.goal .txt b{color:var(--ink)}
+.goal-set{display:flex;align-items:center;gap:8px;margin:0 0 18px;font-size:14px;flex-wrap:wrap}
+.goal-set .field{width:84px;padding:8px 10px}
+.import-status{margin-top:10px;font-size:14px;border-radius:var(--radius-s);padding:10px 12px;background:var(--surface);border:1px solid var(--line)}
+.import-status.ok{border-color:var(--win);color:var(--win)}
+.import-status.err{border-color:var(--loss);color:var(--loss)}
+.import-status ul{margin:6px 0 0;padding-left:18px}
+.backup-nag{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 18px;padding:10px 12px;border:1px solid var(--gold);background:var(--gold-soft);border-radius:var(--radius-s);font-size:14px}
+.backup-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+header.top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:18px 0 10px}
+header.top h1{font:700 30px/1 var(--display);margin:0;letter-spacing:.01em;white-space:nowrap}
+header.top .who{font-size:14px;color:var(--muted);display:flex;align-items:baseline;gap:6px;min-width:0}
+header.top .who input{border:0;border-bottom:1.5px dashed var(--line);background:none;width:8em;max-width:40vw;padding:2px 0;color:var(--ink);font-weight:600}
+
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:4px;padding:8px 0;border-bottom:1px solid var(--line);margin-bottom:16px}
+nav.tabs button{flex:1 1 0;min-width:0;border:0;background:none;padding:10px 2px;font:600 16px/1 var(--display);color:var(--muted);border-radius:var(--radius-s)}
+nav.tabs button[aria-selected="true"]{color:var(--ink);background:var(--surface);box-shadow:inset 0 -3px 0 var(--gold)}
+
+section.block{margin:0 0 22px}
+.block h2{font:600 20px/1.1 var(--display);margin:0 0 10px;display:flex;flex-wrap:wrap;gap:6px 10px;justify-content:space-between;align-items:baseline}
+.block h2 small{font:400 13px var(--body);color:var(--muted)}
+
+/* Ink gems: the core input */
+.gems{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.gem{border:0;background:none;padding:4px 0 2px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;color:var(--muted)}
+.gem .hex{width:46px;height:52px;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:var(--c);opacity:.35;transition:opacity .12s,transform .12s;display:grid;place-items:center;color:#fff;font-weight:700}
+.gem[aria-pressed="true"] .hex{opacity:1;transform:scale(1.06)}
+.gem[aria-pressed="true"]{color:var(--ink);font-weight:600}
+.gem[aria-pressed="true"] .hex::after{content:"✓";font-size:20px;text-shadow:0 1px 2px rgba(0,0,0,.4)}
+.gems.small .hex{width:30px;height:34px}
+
+.mini{display:inline-flex;gap:2px;vertical-align:middle}
+.mini i{display:inline-block;width:13px;height:15px;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:var(--c)}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 14px;font-size:15px;display:inline-flex;align-items:center;gap:8px}
+.chip[aria-pressed="true"]{border-color:var(--gold);background:var(--gold-soft);font-weight:600}
+.chip.add{border-style:dashed;color:var(--muted)}
+
+.result{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.result.bo3{grid-template-columns:repeat(4,1fr)}
+.res{border:2px solid var(--line);background:var(--surface);border-radius:var(--radius-m);padding:16px 6px;font:700 24px/1 var(--display)}
+.res.w[aria-pressed="true"]{background:var(--win);border-color:var(--win);color:#fff}
+.res.l[aria-pressed="true"]{background:var(--loss);border-color:var(--loss);color:#fff}
+.seg{display:inline-flex;border:1.5px solid var(--line);border-radius:999px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:none;padding:7px 14px;font-size:14px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg);font-weight:600}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+.field{display:block;width:100%;border:1.5px solid var(--line);border-radius:var(--radius-s);background:var(--surface);padding:10px 12px}
+details.seen{margin-top:8px;font-size:14px}
+details.seen summary{cursor:pointer;color:var(--muted);list-style:none}
+details.seen summary::-webkit-details-marker{display:none}
+details.seen summary::after{content:" ▾"}
+details.seen[open] summary::after{content:" ▴"}
+.seenlist{list-style:none;margin:6px 0 0;padding:0;columns:2 150px;column-gap:16px}
+.seenlist li{break-inside:avoid;padding:2px 0}
+.seenlist .n{display:inline-block;min-width:2.2em;font-variant-numeric:tabular-nums;color:var(--gold);font-weight:600}
+.deckhint{margin:8px 0 0;font-size:14px;padding:8px 12px;border-radius:var(--radius-s);border:1px solid var(--gold);background:var(--gold-soft)}
+.deckhint.ok{border-color:var(--line);background:transparent;color:var(--muted)}
+.import-status .namerow{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;align-items:center}
+.import-status .namerow .field{flex:1 1 160px;padding:8px 10px}
+section.more h2 .opt{font:400 14px var(--body);color:var(--muted);margin-left:6px}
+details.sec{border:1.5px solid var(--line);border-radius:var(--radius-m);background:var(--surface);margin-top:10px}
+details.sec>summary{display:flex;align-items:baseline;gap:10px;padding:12px 14px;cursor:pointer;list-style:none}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary .st{font:600 16px var(--body);flex:0 0 auto}
+details.sec>summary .sv{flex:1 1 auto;min-width:0;text-align:right;font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+details.sec>summary::after{content:"+";flex:0 0 auto;font:600 18px var(--body);color:var(--muted);width:14px;text-align:center}
+details.sec[open]>summary::after{content:"−"}
+details.sec[open]>summary .sv{visibility:hidden}
+details.sec .inner{display:grid;gap:14px;padding:2px 14px 14px}
+section.more{border-top:0}
+.editbar{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:0 0 16px;padding:12px 14px;border:1.5px solid var(--gold);border-radius:var(--radius-m);background:var(--gold-soft);font-size:14px;top:env(safe-area-inset-top,0px)}
+.editbar .et{flex:1 1 200px;min-width:0}
+.editbar .et b{display:block;font-size:15px}
+.editbar .acts{display:flex;gap:8px;flex-wrap:wrap}
+body.editing #tab-entry .import,body.editing #goalBox,body.editing #backupNag{display:none !important}
+details.more{border-top:1px solid var(--line);padding-top:12px}
+details.more summary{cursor:pointer;font:600 18px var(--display);color:var(--muted);list-style:none}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary::before{content:"+ "}
+details.more[open] summary::before{content:"− "}
+details.more .inner{display:grid;gap:14px;padding-top:12px}
+
+.sub-h{font:600 15px var(--body);color:var(--muted);margin:0 0 6px}
+.grp{display:grid;gap:6px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;align-items:end}
+.three .sub-h{font-size:13px}
+.num-in button{flex:0 0 34px}
+.num-in{display:flex;align-items:center;border:1.5px solid var(--line);border-radius:var(--radius-s);background:var(--surface);overflow:hidden}
+.num-in button{border:0;background:none;width:34px;height:40px;font-size:20px;color:var(--muted)}
+.num-in input{border:0;background:none;width:100%;text-align:center;font:600 18px var(--display);padding:0;-moz-appearance:textfield}
+.num-in input::-webkit-outer-spin-button,.num-in input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.chip .x{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:var(--loss);color:#fff;font-size:12px;line-height:1;margin-left:2px}
+.chip.editing{padding:4px 6px;gap:2px;border-style:dashed}
+.chip.editing .mv{border:0;background:none;width:30px;height:32px;border-radius:6px;font-size:14px;color:var(--ink)}
+.chip.editing .mv:disabled{opacity:.25;cursor:default}
+.chip.editing .mv:not(:disabled):hover{background:var(--gold-soft)}
+.chip.editing > span{padding:0 4px;white-space:nowrap}
+.chip.editing.hiddenTag{opacity:1;text-decoration:none}
+.chip.editing.hiddenTag > span{opacity:.45;text-decoration:line-through}
+.chip.editing.hiddenTag .x{background:var(--win)}
+.chip.editing .x{border:0;padding:0;flex:0 0 24px;width:24px;height:24px;cursor:pointer;margin-left:4px;font-size:13px}
+.chip.hiddenTag{opacity:.4;text-decoration:line-through}
+.chip.linkish{border:0;background:none;color:var(--muted);text-decoration:underline;padding:8px 4px}
+.addtag{display:flex;gap:8px}
+.addtag input{flex:1}
+.replays{display:grid;gap:8px}
+ul.log .links{grid-column:2 / 4;display:flex;flex-wrap:wrap;gap:10px;font-size:14px}
+ul.log .links a{color:var(--ink);font-weight:600}
+ul.log .edit{grid-column:1 / 4;display:grid;gap:8px;padding:10px;border:1.5px dashed var(--line);border-radius:var(--radius-m);margin-top:6px}
+.newdeck{border:1.5px dashed var(--line);border-radius:var(--radius-m);padding:12px;margin-top:10px;display:grid;gap:10px}
+
+.savebar{pointer-events:none;position:fixed;left:0;right:0;bottom:0;z-index:6;background:linear-gradient(to top,var(--bg) 70%,transparent);padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px))}
+.savebar button{pointer-events:auto;display:block;width:100%;max-width:688px;margin:0 auto;border:0;border-radius:var(--radius-m);padding:16px;background:var(--ink);color:var(--bg);font:700 22px/1 var(--display);letter-spacing:.02em}
+.savebar button:disabled{opacity:.35;cursor:not-allowed}
+.savebar .hint{max-width:688px;margin:0 auto 6px;font-size:13px;color:var(--muted);text-align:center;min-height:1em}
+
+.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;display:none;gap:14px;align-items:center;z-index:9;font-size:15px}
+.toast.show{display:flex}
+.toast button{background:none;border:0;color:var(--gold);font-weight:600;padding:0}
+
+/* Auswertung */
+details.filterbox{margin-bottom:18px}
+details.filterbox summary{cursor:pointer;font:600 18px var(--display);list-style:none;padding:4px 0 10px}
+details.filterbox summary::-webkit-details-marker{display:none}
+details.filterbox summary::after{content:" ▾";color:var(--muted)}
+.filters input[data-fo]{display:block;width:100%;border:1.5px solid var(--line);border-radius:var(--radius-s);background:var(--surface);padding:8px 10px}
+details.filterbox[open] summary::after{content:" ▴"}
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:18px}
+.filters label{font-size:12px;color:var(--muted);display:grid;gap:3px}
+.filters select{border:1.5px solid var(--line);border-radius:var(--radius-s);background:var(--surface);padding:8px}
+.headline{display:flex;gap:22px;align-items:flex-end;flex-wrap:wrap;margin-bottom:20px}
+.headline .big{font:700 64px/0.9 var(--display)}
+.headline .big span{font-size:28px}
+.headline dl{display:grid;grid-template-columns:auto auto;gap:2px 12px;margin:0;font-size:14px}
+.headline dt{color:var(--muted)} .headline dd{margin:0;font-weight:600}
+table.stats{width:100%;border-collapse:collapse;font-size:15px}
+table.stats td:first-child{white-space:nowrap}
+table.stats th{white-space:nowrap;font:600 13px var(--body);color:var(--muted);text-align:left;padding:6px 6px;border-bottom:1px solid var(--line)}
+table.stats td{padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+table.stats td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.thin td{opacity:.55}
+.bar{height:8px;border-radius:4px;background:var(--line);position:relative;min-width:60px}
+.bar b{position:absolute;inset:0 auto 0 0;border-radius:4px;background:var(--gold)}
+.bar::after{content:"";position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--muted);opacity:.5}
+.scroll{overflow-x:auto}
+table.matrix{border-collapse:separate;border-spacing:3px;font-size:13px}
+table.matrix th{font-weight:500;color:var(--muted);padding:4px;text-align:center;white-space:nowrap}
+table.matrix th.rowh{text-align:left}
+table.matrix td{min-width:52px;text-align:center;padding:6px 4px;border-radius:var(--radius-s);font-variant-numeric:tabular-nums;line-height:1.1}
+table.matrix td small{display:block;opacity:.75;font-size:11px}
+.note{font-size:13px;color:var(--muted)}
+.empty{padding:28px 16px;text-align:center;color:var(--muted);border:1.5px dashed var(--line);border-radius:var(--radius-m)}
+
+/* Verlauf */
+ul.log{list-style:none;margin:0;padding:0}
+ul.log li{display:grid;grid-template-columns:auto 1fr auto;gap:4px 12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.badge{font:700 18px/1 var(--display);width:42px;text-align:center;padding:8px 0;border-radius:var(--radius-s);color:#fff}
+.badge.W{background:var(--win)} .badge.L{background:var(--loss)}
+ul.log .main{font-size:15px}
+ul.log li li{display:block;padding:2px 0;border:0;font-size:13px}
+ul.log details.seen{font-size:13px;margin-top:4px}
+.opening{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}.oside{border:1px solid var(--line);border-radius:var(--radius-s);padding:6px 8px}.oside .oh{font-weight:600;font-size:12px;color:var(--muted);margin-bottom:4px}.otrow{display:flex;gap:6px;padding:2px 0}.otrow .ot{flex:0 0 auto;font-weight:600;color:var(--gold);font-variant-numeric:tabular-nums}.otrow .ol{flex:1 1 auto;min-width:0}.og{font-weight:600;font-size:13px;margin:8px 0 2px}@media (max-width:420px){.opening{grid-template-columns:1fr}}
+ul.log .sub{font-size:13px;color:var(--muted);grid-column:2}
+ul.log li.pack{border-left:3px solid var(--gold);background:color-mix(in srgb, var(--gold) 7%, transparent);padding-left:10px;padding-right:6px;border-radius:var(--radius-s);margin:6px 0;border-bottom:0}
+ul.log .games{display:block;margin:6px 0 4px}
+ul.log .grow{display:flex;align-items:center;gap:8px;padding:2px 0;color:var(--ink)}
+ul.log .gb{flex:0 0 22px;height:22px;display:inline-grid;place-items:center;border-radius:6px;font-weight:700;font-size:12px;color:#10152A}
+ul.log .gb.W{background:var(--win)} ul.log .gb.L{background:var(--loss)} ul.log .gb.Q{background:var(--line);color:var(--ink)}
+ul.log .grow.miss{color:var(--muted)} ul.log .grow.miss .gb{opacity:.55;outline:1.5px dashed var(--muted);outline-offset:1px}
+.viewopt{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:18px 2px 4px;font-size:14px;color:var(--ink)}
+.viewopt input{width:18px;height:18px;accent-color:var(--gold)}
+nav.tabs button[hidden]{display:none}
+.logtools{flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.archmgr{border:1.5px solid var(--line);border-radius:var(--radius-m);padding:10px 12px;margin-bottom:12px}
+.archmgr .amgroup{margin-top:10px}
+.archmgr .amrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;padding:4px 0}
+.archmgr .amrow input{flex:1 1 9em;min-width:0}
+.selbox{width:18px;height:18px;vertical-align:-3px;accent-color:var(--gold)}
+.selbar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:1.5px solid var(--gold);padding:10px 16px calc(10px + env(safe-area-inset-bottom));display:grid;gap:8px;box-shadow:0 -6px 18px rgba(0,0,0,.35)}
+.selbar .selhead,.selbar .selact{display:flex;flex-wrap:wrap;align-items:center;gap:8px;max-width:688px;width:100%;margin:0 auto}
+.selbar .selact .field{flex:1 1 10em;min-width:0}
+#tab-log{padding-bottom:140px}
+.repair{border:1.5px solid var(--gold);border-radius:var(--radius-m);padding:10px 12px;margin:0 0 12px;font-size:14px;line-height:1.45}
+.repair .chip{margin-top:8px}
+ul.log .del{border:0;background:none;color:var(--muted);font-size:13px;text-decoration:underline}
+.banner{background:var(--gold-soft);border-radius:var(--radius-s);padding:10px 12px;font-size:14px;margin-bottom:14px}
+.banner.warn{background:color-mix(in srgb, var(--loss) 22%, var(--surface));border:1.5px solid var(--loss);line-height:1.45}
+.banner.warn .acts{margin-top:8px}
+/* Bo3 Einzelspiele */
+.games{display:grid;gap:10px;margin-top:12px}
+.game{border:1.5px solid var(--line);border-radius:var(--radius-m);background:var(--surface);padding:10px 12px;display:grid;gap:8px}
+.game.done{border-color:var(--muted)}
+.game-h{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;font:600 18px/1 var(--display)}
+.game .result .res{padding:10px 4px;font-size:20px}
+.chips.tight{gap:5px}
+.chips.tight .chip{padding:5px 11px;font-size:14px}
+.series{font:700 22px/1 var(--display);margin-top:4px}
+/* Lore-Zähler */
+.lore{display:grid;grid-template-rows:1fr auto 1fr;gap:8px;height:calc(100dvh - 150px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));min-height:420px}
+.side{display:grid;grid-template-columns:1fr 1.4fr 1fr;align-items:stretch;border:2px solid var(--line);border-radius:var(--radius-m);background:var(--surface);position:relative;overflow:hidden}
+.side.opp{transform:rotate(180deg)}
+.side.active{border-color:var(--gold);box-shadow:inset 0 0 0 2px var(--gold)}
+.side button{border:0;background:none;font:600 44px/1 var(--display);color:var(--muted);touch-action:manipulation}
+.side button:active{background:var(--gold-soft)}
+.side .val{display:grid;place-items:center;font:700 clamp(72px,22vw,128px)/1 var(--display);font-variant-numeric:tabular-nums}
+.side .who{position:absolute;left:0;right:0;bottom:6px;text-align:center;font-size:13px;color:var(--muted);pointer-events:none}
+.side.win .val{color:var(--win)}
+.lore-mid{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;text-align:center}
+.lore-mid .turn{font:600 20px/1 var(--display)}
+.lore-mid .msg{flex-basis:100%;font-size:14px;color:var(--muted)}
+.lore-mid .big-btn{border:0;border-radius:var(--radius-m);padding:12px 18px;background:var(--ink);color:var(--bg);font:700 18px/1 var(--display)}
+/* Diagramme */
+.trend svg{display:block}
+.trend text{font:12px var(--body);fill:var(--muted)}
+.cardvars{display:flex;flex-wrap:wrap;gap:6px}
+.cardvars span{border:1px solid var(--line);border-radius:999px;padding:2px 9px;font-size:13px;white-space:nowrap}
+.cardvars span.thin{opacity:.55}
+.profile{padding:8px 0;border-bottom:1px solid var(--line)}
+.profile p{margin:4px 0 0;font-size:14px;color:var(--muted)}
+.statnote{font-size:13px;color:var(--muted);margin:-4px 0 10px}
+.chip.small{font-size:13px;padding:5px 10px}
+.chip .dq{color:var(--muted);font-size:12px;font-weight:400}
+.chip[aria-pressed="false"] .dq{opacity:.7}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <h1>Match-Log</h1>
+    <label class="who">Spieler: <input id="player" placeholder="dein Name" autocomplete="nickname" maxlength="30"></label>
+  </header>
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-tab="entry" aria-selected="true">Eintragen</button>
+    <button role="tab" data-tab="counter" aria-selected="false">Zähler</button>
+    <button role="tab" data-tab="stats" aria-selected="false">Auswerten</button>
+    <button role="tab" data-tab="log" aria-selected="false">Verlauf</button>
+  </nav>
+  <div id="storeWarn" class="banner warn" role="alert" hidden></div>
+  <div id="banner" class="banner" hidden></div>
+
+  <!-- EINTRAGEN -->
+  <main id="tab-entry">
+    <div class="editbar" id="editBar" hidden></div>
+    <section class="block import">
+      <label class="drop" id="dropZone">
+        <input type="file" id="replayFile" multiple hidden>
+        <span class="drop-main">Replay-Datei einlesen</span>
+        <span class="drop-sub">optional, füllt das Formular aus</span>
+      </label>
+      <div class="linkrow">
+        <input class="field" id="replayLink" type="url" inputmode="url" placeholder="oder Replay-Link einfügen" autocomplete="off">
+        <button class="chip" type="button" id="replayLinkGo">Laden</button>
+      </div>
+      <div class="import-status" id="importStatus" hidden></div>
+    </section>
+
+    <div id="goalBox"></div>
+
+    <div class="backup-nag" id="backupNag" hidden><span id="backupNagMsg"></span><button class="chip" id="backupNagBtn" aria-pressed="true">Jetzt sichern</button></div>
+
+    <section class="block">
+      <h2>Mein Deck</h2>
+      <div class="chips" id="deckChips"></div>
+      <p class="deckhint" id="deckHint" hidden></p>
+      <div class="newdeck" id="newDeck" hidden>
+        <div class="gems small" id="newDeckGems"></div>
+        <input class="field" id="newDeckName" placeholder="Deckname, z. B. Amber/Steel Mickey" maxlength="40">
+        <div class="row"><button class="chip" id="newDeckSave" aria-pressed="true">Deck übernehmen</button><button class="chip" id="newDeckCancel">Abbrechen</button></div>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Gegner</h2>
+      <div class="gems" id="oppGems"></div>
+      <div class="chips" id="archChips" style="margin-top:10px"></div>
+      <div class="two arch-add" id="archAddRow" hidden>
+        <input class="field" id="newArch" placeholder="Variante benennen, z. B. Aggro" maxlength="40">
+        <button class="chip" id="saveArch" type="button">Sichern</button>
+      </div>
+      <p class="note" id="archHint" hidden></p>
+      <div id="seenBox"></div>
+      <div class="row" style="margin-top:8px"><button class="chip linkish" type="button" id="pinOpp"></button></div>
+    </section>
+
+    <section class="block">
+      <h2>Ergebnis <span class="seg" id="fmtSeg"><button data-v="bo1">Bo1</button><button data-v="bo3">Bo3</button></span></h2>
+      <div class="result" id="resultBox"></div>
+      <div class="row" id="perGameRow" style="margin-top:10px" hidden><button class="chip" type="button" id="perGameToggle"></button></div>
+      <div class="games" id="gameBoxes" hidden></div>
+      <div class="addtag" id="gAddRow" style="margin-top:8px" hidden>
+        <input class="field" id="gNewTag" placeholder="Name für deinen Knopf, z. B. Ramp auf 2" maxlength="30">
+        <button class="chip" id="gNewTagSave" aria-pressed="true" type="button">Hinzufügen</button>
+      </div>
+    </section>
+
+    <section class="block" id="startBlock">
+      <h2 id="startLabel">Wer hat angefangen?</h2>
+      <div class="seg" id="playSeg"><button data-v="play">Ich</button><button data-v="draw">Gegner</button></div>
+    </section>
+
+    <section class="block">
+      <h2>Event</h2>
+      <div class="chips" id="eventChips"></div>
+      <div class="chips" id="tourneyActive" style="margin-top:8px" hidden></div>
+    </section>
+
+    <section class="more block" id="more">
+      <h2>Weitere Angaben <span class="opt">optional</span></h2>
+      <details class="sec" data-sec="play">
+        <summary><span class="st">Spielverlauf</span><span class="sv" data-sv="play"></span></summary>
+        <div class="inner">
+        <div class="grp" id="tagGrp">
+          <p class="sub-h">Markierungen</p>
+          <div class="chips" id="tagChips"></div>
+          <div class="addtag" id="addTagRow" hidden>
+            <input class="field" id="newTag" placeholder="Name für deinen Knopf, z. B. Lilo gezogen" maxlength="30">
+            <button class="chip" id="newTagSave" aria-pressed="true">Hinzufügen</button>
+          </div>
+          </div>
+        <div class="grp" id="mullGrp">
+          <p class="sub-h">Mulligan</p>
+          <div class="chips" id="mullChips"></div>
+        </div>
+        <div class="grp" id="turnsGrp">
+          <p class="sub-h">Züge (Spieldauer)</p>
+          <input class="field" id="turns" type="number" inputmode="numeric" min="1" max="40" placeholder="z. B. 8" style="max-width:9em">
+        </div>
+        <div class="grp">
+          <p class="sub-h">Eigene Leistung</p>
+          <div class="chips" id="perfChips"></div>
+        </div>
+        </div>
+      </details>
+      <details class="sec" data-sec="opp">
+        <summary><span class="st">Gegner &amp; Turnier</span><span class="sv" data-sv="opp"></span></summary>
+        <div class="inner">
+        <div class="grp">
+          <p class="sub-h">Gegnername</p>
+          <input class="field" id="oppName" list="nameList" placeholder="Gegnername" maxlength="40">
+          <datalist id="nameList"></datalist>
+        </div>
+        <div class="grp" id="tourneyGrp">
+          <p class="sub-h">Turnier</p>
+          <div class="two">
+            <input class="field" id="tourney" list="tourneyList" placeholder="Name, z. B. Set Champs Köln" maxlength="50">
+            <input class="field" id="round" type="number" inputmode="numeric" min="1" max="20" placeholder="Runde">
+          </div>
+          <datalist id="tourneyList"></datalist>
+        </div>
+        </div>
+      </details>
+      <details class="sec" data-sec="notes">
+        <summary><span class="st">Notizen</span><span class="sv" data-sv="notes"></span></summary>
+        <div class="inner">
+        <div class="grp">
+                    <input class="field" id="keyCards" placeholder="Schlüsselkarten, z. B. Be Prepared, Hades" maxlength="120">
+          <textarea class="field" id="notes" rows="2" placeholder="Was ist dir aufgefallen? Fehler, Ideen, Sideboard-Plan …" maxlength="500"></textarea>
+        </div>
+        </div>
+      </details>
+      <details class="sec" data-sec="rep">
+        <summary><span class="st">Replay &amp; Format</span><span class="sv" data-sv="rep"></span></summary>
+        <div class="inner">
+        <div class="grp">
+          <p class="sub-h">Replay</p>
+          <div class="replays" id="replayInputs"></div>
+        </div>
+        <div class="grp">
+          <p class="sub-h">Format</p>
+          <input class="field" id="meta" maxlength="30" style="max-width:14em">
+        </div>
+        </div>
+      </details>
+      <label class="viewopt"><input type="checkbox" id="showCounter"> Zähler-Tab anzeigen <span class="note">(Lore-Zähler für Spiele mit echten Karten)</span></label>
+    </section>
+  </main>
+
+  <!-- ZÄHLER -->
+  <main id="tab-counter" hidden>
+    <div class="lore" id="lore">
+      <div class="side opp" id="sideOpp"><button type="button" data-side="opp" data-d="-1" aria-label="Gegner minus eins">−</button><div class="val" id="loreOpp" aria-live="polite">0</div><button type="button" data-side="opp" data-d="1" aria-label="Gegner plus eins">+</button><span class="who">Gegner</span></div>
+      <div class="lore-mid" id="loreMid"></div>
+      <div class="side me" id="sideMe"><button type="button" data-side="me" data-d="-1" aria-label="Ich minus eins">−</button><div class="val" id="loreMe" aria-live="polite">0</div><button type="button" data-side="me" data-d="1" aria-label="Ich plus eins">+</button><span class="who">Ich</span></div>
+    </div>
+  </main>
+
+  <!-- AUSWERTEN -->
+  <main id="tab-stats" hidden>
+    <details class="filterbox"><summary data-sum>Filter</summary><div class="filters" id="filters"></div></details>
+    <div id="statsOut"></div>
+  </main>
+
+  <!-- VERLAUF -->
+  <main id="tab-log" hidden>
+    <details class="filterbox"><summary data-sum>Filter</summary><div class="filters" id="filtersLog"></div></details>
+    <div class="row logtools"><button class="chip" type="button" id="selBtn">Mehrere auswählen</button><button class="chip" type="button" id="archMgrBtn">Varianten verwalten</button><span style="flex:1"></span><button class="chip" id="csvBtn" hidden>CSV herunterladen</button></div>
+    <div id="archMgr" class="archmgr" hidden></div>
+    <div id="logOut"></div>
+    <div id="selBar" class="selbar" hidden></div>
+  </main>
+</div>
+
+<div class="savebar" id="savebar">
+  <div class="hint" id="saveHint"></div>
+  <button id="saveBtn" disabled>Match speichern</button>
+</div>
+<div class="toast" id="toast"><span id="toastMsg"></span><button id="toastUndo">Rückgängig</button></div>
+
+<script>
+(() => {
+"use strict";
+const INKS = [
+  {k:"amber",n:"Bernstein",c:"var(--amber)"},
+  {k:"amethyst",n:"Amethyst",c:"var(--amethyst)"},
+  {k:"emerald",n:"Smaragd",c:"var(--emerald)"},
+  {k:"ruby",n:"Rubin",c:"var(--ruby)"},
+  {k:"sapphire",n:"Saphir",c:"var(--sapphire)"},
+  {k:"steel",n:"Stahl",c:"var(--steel)"},
+];
+const INK = Object.fromEntries(INKS.map(i => [i.k, i]));
+const EVENTS = ["Ladder / Quickplay","Turnier online","Turnier Paper","Testrunde"];
+const TAGS = ["Tintenprobleme","Schlechte Starthand","Flood","Gegner hatte die Kurve","Eigener Fehler","Knapp","Zeitdruck","Sehr klar","Gute Starthand","Schlüsselkarte nicht gezogen","Gegner-Fehler","Neue Liste getestet"];
+const MULL = ["0","1","2","3","4","5","6","7"].map(v => [v, v]);
+const PERF = ["1","2","3","4","5"];
+const BO3 = [["2-0","W"],["2-1","W"],["1-2","L"],["0-2","L"]];
+const GAMES_PLAYED = { "2-0": 2, "2-1": 3, "1-2": 3, "0-2": 2 };
+/* Meta-Zeiträume, fest für alle. Neues Set: eine Zeile anhängen, der vorige Zeitraum endet automatisch. */
+const METAS = [
+  { id: "s14", name: "Set 14", from: "2026-10-03" },
+];
+const periodStart = p => new Date(p.from + "T00:00:00").getTime();
+function periodOf(ts){ let cur = "pre"; METAS.forEach(p => { if (ts >= periodStart(p)) cur = p.id; }); return cur; }
+const CUR_PERIOD = METAS[METAS.length - 1].id;
+const fmtDay = iso => new Date(iso + "T00:00:00").toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric" });
+
+/* ---------- lokale Vorlieben (pro Gerät) ---------- */
+const LS = {
+  get(k, d){ try { const v = localStorage.getItem("ml-"+k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v){
+    try { const t = JSON.stringify(v); localStorage.setItem("ml-"+k, t); if (localStorage.getItem("ml-"+k) !== t) throw 0; return true; }
+    catch { storageFailed(); return false; }
+  }
+};
+const prefs = {
+  player: LS.get("player",""),
+  decks: LS.get("decks", []),          // [{name, colors}]
+  deckKey: LS.get("deckKey", null),
+  format: LS.get("format","bo1"),
+  event: LS.get("event", EVENTS[0]),
+  meta: LS.get("meta","Core S14"),
+  customTags: LS.get("customTags", []),
+  hiddenTags: LS.get("hiddenTags", []),
+  tagOrder: LS.get("tagOrder", []),
+  archetypes: LS.get("archetypes", {}),  // { "Amber+Steel": ["Steel Aggro", ...] }
+  pinOpp: LS.get("pinOpp", false),
+  weight: LS.get("weight", "game"),       // game | scaled | match
+  trendRes: LS.get("trendRes", "week"),   // day | week
+  weekGoal: LS.get("weekGoal", 0),        // 0 = kein Ziel
+};
+const cardNames = LS.get("cardNames", {});
+function rememberNames(map){ if (!map) return; Object.assign(cardNames, map); LS.set("cardNames", cardNames); }
+const cardName = id => cardNames[id] || id;
+let tagEdit = false, showHidden = false;
+
+/* ---------- Formular-Zustand ---------- */
+const blankGame = () => ({ r: null, s: null, mull: null, tags: [], turns: null, openMe: null, openOpp: null });
+const form = { opp: [], result: null, games: null, start: null, tags: [], newDeckColors: [], mull: null, perf: null, arch: null, archAdd: false, openMe: null, openOpp: null, seriesId: null,
+  perGame: false, gl: [blankGame(), blankGame(), blankGame()], gAdd: false, myList: null, oppSeen: [], oppSeenN: {}, archSuggest: null, deckPending: null, deckHint: null };
+
+/* ---------- Speicher: geteilte Datenbank, sonst lokal ---------- */
+let matches = [];
+let myId = null;
+const store = {
+  mode: "local",
+  db: null,
+  async init(){
+    this.loadLocal();
+    renderAll();
+  },
+  loadLocal(){ matches = LS.get("matches", []); },
+  async add(m){
+    if (this.mode === "db") {
+      try { const ref = await this.db.collection("matches").add(m); return ref.id; }
+      catch (e) {
+        if (e && e.code === "invalid_argument") showBanner("readonly");
+        else if (e && e.code === "quota_exceeded") showBanner("full");
+        else showBanner("error");
+        return null;
+      }
+    }
+    const id = "l" + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+    matches.push({ id, ...m }); LS.set("matches", matches); renderAll(); return id;
+  },
+  async update(id, patch){
+    if (this.mode === "db") { try { await this.db.doc("matches/"+id).update(patch); return true; } catch { showBanner("error"); return false; } }
+    matches = matches.map(m => m.id === id ? { ...m, ...patch } : m); LS.set("matches", matches); renderAll(); return true;
+  },
+  async remove(id){
+    if (this.mode === "db") { try { await this.db.doc("matches/"+id).delete(); } catch { showBanner("error"); } return; }
+    matches = matches.filter(m => m.id !== id); LS.set("matches", matches); renderAll();
+  }
+};
+/* Persönliche Knöpfe und Decks: pro Person in der Datenbank, damit sie auf jedem Gerät da sind */
+const PREF_KEYS = ["customTags","hiddenTags","decks","tagOrder","archetypes"];
+const prefBody = () => ({ customTags: prefs.customTags, hiddenTags: prefs.hiddenTags, decks: prefs.decks, tagOrder: prefs.tagOrder, archetypes: prefs.archetypes });
+function prefsDoc(){ return store.db && myId ? store.db.doc("data/users/" + myId + "/prefs") : null; }
+async function syncPrefsFromDb(){
+  const ref = prefsDoc(); if (!ref) return;
+  try {
+    const snap = await ref.get();
+    const remote = snap.exists ? snap.data() : {};
+    let changed = false;
+    // Zusammenführen: nichts, was auf diesem Gerät neu ist, geht verloren
+    for (const k of ["customTags","hiddenTags"]) {
+      const merged = [...new Set([...(remote[k] || []), ...prefs[k]])];
+      if (merged.length !== (remote[k] || []).length) changed = true;
+      prefs[k] = merged; LS.set(k, merged);
+    }
+    // Reihenfolge: die gespeicherte gilt, lokal Neues wird hinten angehängt
+    const ro = remote.tagOrder || [];
+    const order = [...ro, ...prefs.tagOrder.filter(t => !ro.includes(t))];
+    if (order.length !== ro.length) changed = true;
+    prefs.tagOrder = order; LS.set("tagOrder", order);
+    const dm = new Map();
+    [...(remote.decks || []), ...prefs.decks].forEach(d => dm.set(deckKeyOf(d), d));
+    if (dm.size !== (remote.decks || []).length) changed = true;
+    prefs.decks = [...dm.values()]; LS.set("decks", prefs.decks);
+    if (changed || !snap.exists) await ref.set(prefBody());
+    renderEntry();
+  } catch {}
+}
+let prefWrite = Promise.resolve();
+
+/* ---------- Gegner-Archetyp-Varianten pro Farbkombination ---------- */
+function archListFor(ok){
+  if (!ok) return [];
+  const saved = prefs.archetypes[ok] || [];
+  // Varianten, die nur in alten Matches vorkommen, aber noch nicht gespeichert sind, mitnehmen
+  const seen = matches.filter(m => m.oppColors && pairKey(m.oppColors) === ok && m.oppArch).map(m => m.oppArch);
+  return [...new Set([...saved, ...seen])];
+}
+function renderArch(){
+  const box = $("#archChips"); if (!box) return;
+  const ok = form.opp.length > 0 ? pairKey(form.opp) : null;
+  if (!ok){
+    box.innerHTML = '<span class="note">Erst Gegnerfarben wählen</span>';
+    $("#archAddRow").hidden = true; form.arch = null; return;
+  }
+  const list = archListFor(ok);
+  if (form.arch && !list.includes(form.arch)) form.arch = null;
+  const chips = list.map(a => `<button class="chip" type="button" data-arch="${esc(a)}" aria-pressed="${a === form.arch}">${esc(a)}</button>`).join("");
+  box.innerHTML = chips + `<button class="chip linkish" type="button" data-arch-add="1">${form.archAdd ? "Abbrechen" : "+ Variante"}</button>`;
+  $("#archAddRow").hidden = !form.archAdd;
+  const sg = form.archSuggest, hint = $("#archHint");
+  hint.hidden = !(sg && form.arch === sg.name);
+  if (!hint.hidden) hint.textContent = `${sg.sure ? "Erkannt" : "Vermutlich"} an ${sg.shared} Karten, die du bei dieser Variante schon gesehen hast. Antippen zum Ändern.`;
+}
+/* Archetyp-Erkennung: gesehene Gegnerkarten mit früheren Matches derselben Farbkombi vergleichen */
+function archProfiles(ok){
+  const prof = {};
+  matches.forEach(m => {
+    if (!m.oppArch || !Array.isArray(m.oppSeen) || !m.oppSeen.length || pairKey(m.oppColors || []) !== ok) return;
+    const p = prof[m.oppArch] || (prof[m.oppArch] = { n: 0, c: {} });
+    p.n++; m.oppSeen.forEach(id => p.c[id] = (p.c[id] || 0) + 1);
+  });
+  return prof;
+}
+function detectArch(ok, seen){
+  if (!ok || !seen || !seen.length) return null;
+  const scored = Object.entries(archProfiles(ok)).map(([name, p]) => {
+    let score = 0, shared = 0;
+    seen.forEach(id => { const f = (p.c[id] || 0) / p.n; if (f > 0){ shared++; score += f; } });
+    return { name, score, shared };
+  }).filter(x => x.shared > 0).sort((a, b) => b.score - a.score);
+  const [a, b] = scored;
+  if (!a || a.shared < 2) return null;
+  return { ...a, sure: a.shared >= 3 && (!b || a.score >= b.score * 1.5) };
+}
+document.addEventListener("click", e => {
+  const chip = e.target.closest("#archChips [data-arch]");
+  if (chip){ const a = chip.dataset.arch; form.arch = form.arch === a ? null : a; renderArch(); return; }
+  const add = e.target.closest("#archChips [data-arch-add]");
+  if (add){ form.archAdd = !form.archAdd; renderArch(); if (form.archAdd) setTimeout(() => $("#newArch").focus(), 0); return; }
+});
+function saveArch(){
+  const ok = form.opp.length > 0 ? pairKey(form.opp) : null;
+  const v = $("#newArch").value.trim();
+  if (!ok || !v) return;
+  const cur = prefs.archetypes[ok] || [];
+  if (!cur.includes(v)) prefs.archetypes[ok] = [...cur, v];
+  savePrefs();
+  form.arch = v; form.archAdd = false; $("#newArch").value = "";
+  renderArch();
+}
+function savePrefs(){
+  PREF_KEYS.forEach(k => LS.set(k, prefs[k]));
+  const ref = prefsDoc(); if (!ref) return;
+  prefWrite = prefWrite.then(() => ref.set(prefBody())).catch(() => {});
+}
+/* ---------- Speichern im Browser prüfen ---------- */
+let storageWarned = false;
+function storageProbe(){
+  try { const k = "ml-__probe", v = String(Date.now()); localStorage.setItem(k, v); const ok = localStorage.getItem(k) === v; localStorage.removeItem(k); return ok; }
+  catch { return false; }
+}
+function storageFailed(){
+  if (storageWarned) return; storageWarned = true;
+  const b = document.getElementById("storeWarn"); if (!b) return;
+  b.innerHTML = `<b>Achtung: Diese Ansicht kann nichts dauerhaft speichern.</b> Der Browser blockiert hier den Speicher. Eingetragene Matches verschwinden, sobald du die Seite schließt oder neu lädst.`
+    + `<br>So klappt es: die App immer über dieselbe Adresse im normalen Browser öffnen, nicht aus WhatsApp oder einer anderen App heraus. Bis dahin nach jedem Abend unten im Verlauf „Sicherung exportieren“ tippen.`
+    + `<div class="acts"><button class="chip" type="button" id="warnExport">Jetzt Sicherung herunterladen</button></div>`;
+  b.hidden = false;
+  const x = document.getElementById("warnExport"); if (x) x.onclick = () => exportBackup();
+}
+function showBanner(kind){
+  const b = $("#banner");
+  const text = {
+    local: "Gemeinsames Speichern ist in dieser Ansicht nicht verfügbar. Einträge bleiben vorerst nur auf diesem Gerät.",
+    readonly: "Du hast nur Leserechte. Bitte den Ersteller, dich als Mitwirkenden freizugeben, damit du Matches eintragen kannst.",
+    full: "Die Datenbank ist voll (5.000 Einträge). Alte Einträge löschen oder eine neue Saison-Version anlegen.",
+    error: "Verbindung zur gemeinsamen Datenbank unterbrochen. Neue Einträge werden gespeichert, sobald sie wieder steht."
+  }[kind];
+  b.textContent = text; b.hidden = false;
+}
+
+/* ---------- Helfer ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pairKey = cols => [...cols].sort((a,b) => INKS.findIndex(i=>i.k===a) - INKS.findIndex(i=>i.k===b)).join("+");
+const pairName = key => key ? key.split("+").map(k => INK[k]?.n || k).join("/") : "–";
+const mini = key => key ? `<span class="mini" aria-hidden="true">${key.split("+").map(k => `<i style="--c:${INK[k]?.c||"#888"}"></i>`).join("")}</span>` : "";
+const deckKeyOf = d => (d.name || "") + "|" + pairKey(d.colors);
+const pct = (w, n) => n ? Math.round(100 * w / n) : 0;
+const cleanUrl = v => { try { const u = new URL(String(v).trim()); return /^https?:$/.test(u.protocol) ? u.href : ""; } catch { return ""; } };
+const numOrNull = v => { const n = parseInt(v, 10); return Number.isFinite(n) ? n : null; };
+
+function gemButtons(container, selected, onTap){
+  container.innerHTML = INKS.map(i =>
+    `<button type="button" class="gem" data-k="${i.k}" aria-pressed="${selected.includes(i.k)}"><span class="hex" style="--c:${i.c}"></span>${i.n}</button>`
+  ).join("");
+  container.onclick = e => { const b = e.target.closest(".gem"); if (b) onTap(b.dataset.k); };
+}
+function toggleTwo(arr, k){
+  if (arr.includes(k)) return arr.filter(x => x !== k);
+  return arr.length >= 2 ? [arr[1], k] : [...arr, k];
+}
+
+/* ---------- Decks ---------- */
+const deckLists = LS.get("deckLists", {});   // { deckKey: {kartenId: anzahl} } letzte bekannte Liste
+function rememberDeckList(key, list){ if (!key || !list) return; deckLists[key] = list; LS.set("deckLists", deckLists); }
+function listSim(a, b){
+  if (!a || !b) return 0;
+  let same = 0, ta = 0, tb = 0;
+  for (const k in a){ ta += a[k]; if (b[k]) same += Math.min(a[k], b[k]); }
+  for (const k in b) tb += b[k];
+  return Math.max(ta, tb) ? same / Math.max(ta, tb) : 0;
+}
+/* Passendes eigenes Deck zu einer Replay-Liste finden */
+function matchDeck(colors, list){
+  const key = pairKey(colors);
+  const cands = allMyDecks().filter(([k, d]) => pairKey(d.colors) === key);
+  let best = null;
+  cands.forEach(([k, d]) => { const sim = listSim(list, deckLists[k]); if (!best || sim > best.sim) best = { k, d, sim }; });
+  if (best && best.sim >= 0.75) return best;
+  const named = cands.filter(([k, d]) => d.name && !deckLists[k]);
+  if (named.length === 1 && cands.filter(([k]) => deckLists[k]).length === 0) return { k: named[0][0], d: named[0][1], sim: null };
+  return null;
+}
+function mergeSeen(a, b){ const o = { ...(a || {}) }; for (const k in (b || {})) o[k] = Math.max(o[k] || 0, b[k]); return o; }
+function seenEntries(m){
+  if (m.oppSeenN && Object.keys(m.oppSeenN).length) return Object.entries(m.oppSeenN);
+  return (m.oppSeen || []).map(id => [id, 0]);
+}
+
+/* ---------- Eröffnung (erste Züge) anzeigen ---------- */
+function openingSideHtml(title, turns){
+  if (!turns || !turns.length) return "";
+  const rows = turns.map(t => `<div class="otrow"><span class="ot">T${t.t}</span><span class="ol">${t.lines.map(esc).join("<br>")}</span></div>`).join("");
+  return `<div class="oside"><div class="oh">${esc(title)}</div>${rows}</div>`;
+}
+function matchOpenings(m){
+  // Bo1: m.openMe/openOpp; Bo3: je Spiel in gameList
+  if (Array.isArray(m.gameList) && m.gameList.some(g => g.openMe || g.openOpp)){
+    return m.gameList.map((g, i) => ({ label: `Spiel ${i + 1}`, me: g.openMe, opp: g.openOpp })).filter(x => x.me || x.opp);
+  }
+  if (m.openMe || m.openOpp) return [{ label: "", me: m.openMe, opp: m.openOpp }];
+  return [];
+}
+function openingHtml(m){
+  const games = matchOpenings(m);
+  if (!games.length) return "";
+  const body = games.map(g => `${g.label ? `<div class="og">${esc(g.label)}</div>` : ""}<div class="opening">${openingSideHtml("Ich", g.me)}${openingSideHtml("Gegner", g.opp)}</div>`).join("");
+  return `<details class="seen"><summary>Eröffnung: erste Züge</summary>${body}</details>`;
+}
+
+function seenHtml(entries, open){
+  if (!entries.length) return "";
+  const rows = entries.map(([id, n]) => [cardName(id), n]).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "de"));
+  const total = rows.reduce((t, [, n]) => t + (n || 1), 0);
+  return `<details class="seen"${open ? " open" : ""}><summary>Gesehene Gegnerkarten: ${rows.length} verschiedene, ${total} Exemplare</summary>
+    <ul class="seenlist">${rows.map(([nm, n]) => `<li><span class="n">${n ? n + "×" : "·"}</span>${esc(nm)}</li>`).join("")}</ul></details>`;
+}
+
+function allMyDecks(){
+  const map = new Map();
+  prefs.decks.forEach(d => map.set(deckKeyOf(d), d));
+  matches.filter(m => m.player && m.player === prefs.player).forEach(m => {
+    const d = { name: m.deckName || "", colors: m.deckColors || [] };
+    if (d.colors.length) map.set(deckKeyOf(d), d);
+  });
+  return [...map.entries()];
+}
+function currentDeck(){
+  const found = allMyDecks().find(([k]) => k === prefs.deckKey);
+  return found ? found[1] : null;
+}
+
+/* ---------- Bo3: Einzelspiele ---------- */
+function visibleGames(){
+  const g = form.gl;
+  return g.slice(0, (g[0].r && g[1].r && g[0].r !== g[1].r) ? 3 : 2);
+}
+function seriesOf(gl){
+  const w = gl.filter(x => x.r === "W").length, l = gl.filter(x => x.r === "L").length;
+  return { w, l, done: w === 2 || l === 2, result: w === 2 ? "W" : l === 2 ? "L" : null, score: `${w}-${l}` };
+}
+function renderGames(){
+  const bo3 = prefs.format === "bo3";
+  if (!bo3) form.perGame = false;
+  const pg = form.perGame;
+  $("#perGameRow").hidden = !bo3;
+  $("#perGameToggle").textContent = pg ? "Doch pauschal eintragen" : "Spiele einzeln erfassen (optional)";
+  $("#perGameToggle").setAttribute("aria-pressed", pg);
+  $("#resultBox").hidden = pg; $("#startBlock").hidden = pg;
+  $("#tagGrp").hidden = pg; $("#mullGrp").hidden = pg; $("#turnsGrp").hidden = pg;
+  const box = $("#gameBoxes"); box.hidden = !pg; $("#gAddRow").hidden = !(pg && form.gAdd);
+  if (!pg){ box.innerHTML = ""; return; }
+  const vis = visibleGames();
+  const tags = orderedTags().filter(t => !prefs.hiddenTags.includes(t));
+  const ser = seriesOf(vis.filter(g => g.r));
+  box.innerHTML = vis.map((g, i) => `<div class="game${g.r ? " done" : ""}" data-gi="${i}">
+    <div class="game-h">Spiel ${i + 1}<span class="seg">${[["play","Ich fange an"],["draw","Gegner"]].map(([v, l]) => `<button type="button" data-gs="${v}" aria-pressed="${g.s === v}">${l}</button>`).join("")}</span></div>
+    <div class="result"><button type="button" class="res w" data-gr="W" aria-pressed="${g.r === "W"}">Sieg</button><button type="button" class="res l" data-gr="L" aria-pressed="${g.r === "L"}">Niederlage</button></div>
+    <div class="chips tight"><span class="note" style="align-self:center">Mulligan</span>${MULL.map(([v]) => `<button type="button" class="chip" data-gm="${v}" aria-pressed="${g.mull === Number(v)}">${v}</button>`).join("")}</div>
+    <div class="chips tight">${tags.map(t => `<button type="button" class="chip" data-gt="${esc(t)}" aria-pressed="${g.tags.includes(t)}">${prefs.customTags.includes(t) ? "★ " : ""}${esc(t)}</button>`).join("")}<button type="button" class="chip linkish" data-gadd>${form.gAdd ? "Abbrechen" : "+ Eigener Knopf"}</button></div>
+    ${g.turns ? `<span class="note">${g.turns} Züge</span>` : ""}
+  </div>`).join("") + `<div class="series">${ser.done ? (ser.result === "W" ? "Match gewonnen, " : "Match verloren, ") + ser.score : "Stand " + ser.score}</div>`;
+}
+
+/* ---------- Eintragen: Rendering ---------- */
+function renderEntry(){
+  dupConfirmed = false;
+  const decks = allMyDecks();
+  if (!prefs.deckKey && decks.length && !form.deckPending) prefs.deckKey = decks[0][0];
+  $("#deckChips").innerHTML = decks.map(([k, d]) =>
+    `<button class="chip" data-k="${esc(k)}" aria-pressed="${k === prefs.deckKey}">${mini(pairKey(d.colors))}${esc(d.name || pairName(pairKey(d.colors)))}</button>`
+  ).join("") + `<button class="chip add" id="addDeck">+ Neues Deck</button>`;
+
+  const dh = $("#deckHint");
+  if (form.deckPending){
+    const same = decks.filter(([k, d]) => pairKey(d.colors) === pairKey(form.deckPending.colors));
+    dh.hidden = false; dh.className = "deckhint";
+    dh.textContent = `Welches Deck hast du gespielt? Das Replay zeigt ${pairName(pairKey(form.deckPending.colors))}. `
+      + (same.length ? "Tippe auf dein Deck oder lege unten eine neue Version mit Namen an." : "Gib dem Deck unten einen Namen.");
+  } else if (form.deckHint){ dh.hidden = false; dh.className = "deckhint ok"; dh.textContent = form.deckHint; }
+  else dh.hidden = true;
+  $("#seenBox").innerHTML = seenHtml(Object.entries(form.oppSeenN || {}), false);
+  gemButtons($("#oppGems"), form.opp, k => { form.opp = toggleTwo(form.opp, k); renderEntry(); });
+
+  document.querySelectorAll("#fmtSeg button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === prefs.format));
+  const rb = $("#resultBox");
+  if (prefs.format === "bo1") {
+    rb.className = "result";
+    rb.innerHTML = `<button class="res w" data-r="W" aria-pressed="${form.result==="W"}">Sieg</button><button class="res l" data-r="L" aria-pressed="${form.result==="L"}">Niederlage</button>`;
+  } else {
+    rb.className = "result bo3";
+    rb.innerHTML = BO3.map(([g, r]) => `<button class="res ${r==="W"?"w":"l"}" data-r="${r}" data-g="${g}" aria-pressed="${form.games===g}">${g}</button>`).join("");
+  }
+  $("#startLabel").textContent = prefs.format === "bo3" ? "Wer hat Spiel 1 angefangen?" : "Wer hat angefangen?";
+  document.querySelectorAll("#playSeg button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === form.start));
+
+  $("#eventChips").innerHTML = EVENTS.map(ev => `<button class="chip" data-v="${esc(ev)}" aria-pressed="${ev===prefs.event}">${esc(ev)}</button>`).join("");
+  renderTags();
+  const chipRow = (sel, items, cur) => $(sel).innerHTML = items.map(([v, l]) => `<button class="chip" data-v="${esc(v)}" aria-pressed="${cur === v}">${esc(l)}</button>`).join("");
+  chipRow("#mullChips", MULL, form.mull);
+  chipRow("#perfChips", PERF.map(p => [p, p]), form.perf);
+  const tNow = $("#tourney").value.trim();
+  const ta = $("#tourneyActive");
+  ta.hidden = !tNow;
+  if (tNow) ta.innerHTML = `<button class="chip" aria-pressed="true" data-act="endT">🏆 ${esc(tNow)}${$("#round").value ? ", Runde " + esc($("#round").value) : ""}<span class="x" aria-hidden="true">✕</span></button>`;
+  const tn = uniq(matches.map(m => m.tourney));
+  $("#tourneyList").innerHTML = tn.map(t => `<option value="${esc(t)}">`).join("");
+  const nRep = prefs.format === "bo3" ? 3 : 1;
+  const box = $("#replayInputs");
+  if (box.childElementCount !== nRep) {
+    const keep = [...box.querySelectorAll("input")].map(i => i.value);
+    box.innerHTML = Array.from({ length: nRep }, (_, i) => `<input class="field" type="url" inputmode="url" data-rep="${i}" placeholder="${nRep > 1 ? `Replay-Link Spiel ${i + 1}` : "Replay-Link einfügen"}" value="${esc(keep[i] || "")}">`).join("");
+  }
+
+  renderArch();
+  renderGames();
+  $("#pinOpp").textContent = prefs.pinOpp ? "Gegner bleibt fürs nächste Match stehen" : "Gegner fürs nächste Match behalten";
+  $("#pinOpp").setAttribute("aria-pressed", prefs.pinOpp);
+  const names = [...new Set(matches.map(m => m.oppName).filter(Boolean))].sort();
+  $("#nameList").innerHTML = names.map(n => `<option value="${esc(n)}">`).join("");
+
+  if (!$("#newDeck").hidden) gemButtons($("#newDeckGems"), form.newDeckColors, k => { form.newDeckColors = toggleTwo(form.newDeckColors, k); renderEntry(); });
+  updateSave();
+}
+function orderedTags(){
+  const all = [...prefs.customTags, ...TAGS];
+  return [...prefs.tagOrder.filter(t => all.includes(t)), ...all.filter(t => !prefs.tagOrder.includes(t))];
+}
+function renderTags(){
+  const list = orderedTags().filter(t => tagEdit || showHidden || !prefs.hiddenTags.includes(t));
+  const html = list.map((t, i) => {
+    const custom = prefs.customTags.includes(t);
+    const hid = !custom && prefs.hiddenTags.includes(t);
+    const label = `${custom ? "★ " : ""}${esc(t)}`;
+    if (!tagEdit) return `<button class="chip${hid ? " hiddenTag" : ""}" data-v="${esc(t)}" aria-pressed="${form.tags.includes(t)}">${label}</button>`;
+    return `<span class="chip editing${hid ? " hiddenTag" : ""}" data-v="${esc(t)}" data-custom="${custom ? 1 : 0}">
+      <button class="mv" data-mv="first" ${i === 0 ? "disabled" : ""} aria-label="${esc(t)} ganz nach vorne">⇤</button>
+      <button class="mv" data-mv="-1" ${i === 0 ? "disabled" : ""} aria-label="${esc(t)} nach vorne">◀</button>
+      <span>${label}</span>
+      <button class="mv" data-mv="1" ${i === list.length - 1 ? "disabled" : ""} aria-label="${esc(t)} nach hinten">▶</button>
+      <button class="x" data-rm aria-label="${custom ? "entfernen" : hid ? "wieder einblenden" : "ausblenden"}">${hid ? "↺" : "✕"}</button></span>`;
+  }).join("");
+  $("#tagChips").innerHTML = html +
+    (tagEdit ? "" : `<button class="chip add" data-act="add">+ Eigener Knopf</button>`) +
+    `<button class="chip linkish" data-act="edit">${tagEdit ? "Fertig" : "Knöpfe bearbeiten"}</button>` +
+    (prefs.hiddenTags.length && !tagEdit ? `<button class="chip linkish" data-act="hidden">${showHidden ? "Ausgeblendete verbergen" : "Ausgeblendete zeigen"}</button>` : "");
+}
+function moveTag(t, how){
+  const full = orderedTags();
+  const visible = full.filter(x => tagEdit || !prefs.hiddenTags.includes(x));
+  const vi = visible.indexOf(t); if (vi < 0) return;
+  let target;
+  if (how === "first") target = visible[0];
+  else target = visible[vi + Number(how)];
+  if (!target || target === t) return;
+  const without = full.filter(x => x !== t);
+  let at = without.indexOf(target);
+  if (how === "1") at += 1;
+  without.splice(at, 0, t);
+  prefs.tagOrder = without; savePrefs(); renderTags();
+  const again = document.querySelector(`#tagChips [data-v="${CSS.escape(t)}"] [data-mv="${how === "first" ? "1" : how}"]`);
+  if (again && !again.disabled) again.focus();
+}
+function addCustomTag(){
+  const v = $("#newTag").value.trim().replace(/\s+/g, " ");
+  if (!v) return;
+  if (!prefs.customTags.includes(v) && !TAGS.includes(v)) { prefs.customTags = [...prefs.customTags, v]; prefs.tagOrder = [v, ...orderedTags().filter(x => x !== v)]; savePrefs(); }
+  if (!form.tags.includes(v)) form.tags = [...form.tags, v];
+  $("#newTag").value = ""; $("#addTagRow").hidden = true; renderEntry();
+}
+function missing(){
+  const m = [];
+  if (!prefs.player.trim()) m.push("Spielername oben");
+  if (!currentDeck()) m.push("dein Deck");
+  if (!form.opp.length) m.push("Gegnerfarben");
+  if (form.perGame && prefs.format === "bo3"){
+    const vis = visibleGames();
+    if (vis.some(g => !g.r)) m.push("Ergebnis je Spiel");
+    if (vis.some(g => !g.s && !g.missing)) m.push("wer je Spiel angefangen hat");
+  } else {
+    if (!form.result) m.push("Ergebnis");
+    if (!form.start) m.push("wer angefangen hat");
+  }
+  return m;
+}
+function updateSave(){
+  const m = missing();
+  $("#saveBtn").disabled = m.length > 0;
+  $("#saveHint").textContent = m.length ? "Fehlt noch: " + m.join(", ") : "";
+}
+
+/* ---------- Matches nachträglich bearbeiten ---------- */
+var editState = null;   // { id, ts, by, saved:{format,event,meta,deckKey}, queue:[ids], pos }
+function blankForm(){
+  Object.assign(form, { opp: [], result: null, games: null, start: null, tags: [], mull: null, perf: null, arch: null, archAdd: false,
+    perGame: false, gl: [blankGame(), blankGame(), blankGame()], gAdd: false, myList: null, oppSeen: [], oppSeenN: {}, archSuggest: null, deckPending: null, deckHint: null });
+  ["#notes", "#keyCards", "#turns", "#oppName", "#tourney", "#round"].forEach(s => $(s).value = "");
+  document.querySelectorAll("#replayInputs input").forEach(i => i.value = "");
+}
+function loadIntoForm(m){
+  blankForm();
+  const dk = { name: m.deckName || "", colors: m.deckColors || [] };
+  if (dk.colors.length && !allMyDecks().some(([k]) => k === deckKeyOf(dk))){ prefs.decks = [...prefs.decks, dk]; savePrefs(); }
+  prefs.deckKey = deckKeyOf(dk);
+  prefs.format = m.format === "bo3" ? "bo3" : "bo1";
+  if (m.event) prefs.event = m.event;
+  if (m.meta) prefs.meta = m.meta;
+  $("#meta").value = prefs.meta;
+  form.opp = (m.oppColors || []).slice(0, 2);
+  form.arch = m.oppArch || null;
+  form.myList = m.myList || null;
+  form.oppSeen = [...(m.oppSeen || [])];
+  form.oppSeenN = { ...(m.oppSeenN || {}) };
+  form.perf = m.perf != null ? String(m.perf) : null;
+  form.seriesId = m.seriesId || null;
+  if (Array.isArray(m.gameList) && m.gameList.length){
+    form.perGame = true;
+    const gl = m.gameList.map(g => ({ ...g, r: g.r || null, s: g.s || null, mull: g.mull ?? null, tags: [...(g.tags || [])], turns: g.turns ?? null, openMe: g.openMe || null, openOpp: g.openOpp || null }));
+    while (gl.length < 3) gl.push(blankGame());
+    form.gl = gl;
+  } else {
+    form.result = m.result || null; form.games = m.games || null; form.start = m.start || null;
+    form.openMe = m.openMe || null; form.openOpp = m.openOpp || null;
+    form.tags = [...(m.tags || [])];
+    form.mull = m.mull != null ? String(m.mull) : null;
+    $("#turns").value = m.turns ?? "";
+  }
+  $("#oppName").value = m.oppName || "";
+  $("#tourney").value = m.tourney || "";
+  $("#round").value = m.round ?? "";
+  $("#notes").value = m.notes || "";
+  $("#keyCards").value = m.keyCards || "";
+  renderEntry();
+  const reps = m.replays || [];
+  document.querySelectorAll("#replayInputs input").forEach((inp, i) => inp.value = reps[i] || "");
+  renderSecSummaries();
+}
+function startEdit(id, queue){
+  const m = matches.find(x => x.id === id); if (!m) return;
+  if (!editState) editState = { saved: { format: prefs.format, event: prefs.event, meta: prefs.meta, deckKey: prefs.deckKey } };
+  editState.id = id; editState.ts = m.ts; editState.by = m.by || null; editState.player = m.player || prefs.player;
+  if (queue){ editState.queue = queue; }
+  editState.pos = editState.queue ? editState.queue.indexOf(id) : -1;
+  document.body.classList.add("editing");
+  $("#importStatus").hidden = true;
+  switchTab("entry");
+  loadIntoForm(m);
+  document.querySelectorAll("details.sec").forEach(d => d.open = true);
+  renderEditBar();
+  window.scrollTo({ top: 0 });
+}
+function renderEditBar(){
+  const bar = $("#editBar");
+  if (!editState){ bar.hidden = true; bar.innerHTML = ""; $("#saveBtn").textContent = "Match speichern"; return; }
+  const m = matches.find(x => x.id === editState.id) || {};
+  const q = editState.queue, pos = editState.pos, last = !q || pos >= q.length - 1;
+  bar.hidden = false;
+  bar.innerHTML = `<span class="et"><b>Match bearbeiten${q ? ` (${pos + 1} von ${q.length})` : ""}</b>${esc(fmtDate(editState.ts))}${m.oppName ? " gegen " + esc(m.oppName) : ""}</span>
+    <span class="acts">${q && !last ? '<button class="chip" type="button" data-ed="skip">Überspringen</button>' : ""}<button class="chip" type="button" data-ed="cancel">${q ? "Fertig" : "Abbrechen"}</button></span>`;
+  $("#saveBtn").textContent = q && !last ? "Speichern und weiter" : "Änderungen speichern";
+}
+function endEdit(){
+  if (!editState) return;
+  const sv = editState.saved;
+  prefs.format = sv.format; prefs.event = sv.event; prefs.meta = sv.meta; prefs.deckKey = sv.deckKey;
+  $("#meta").value = prefs.meta;
+  editState = null;
+  document.body.classList.remove("editing");
+  blankForm();
+  document.querySelectorAll("details.sec").forEach(d => d.open = !!secOpen[d.dataset.sec]);
+  renderEditBar();
+  switchTab("log");
+}
+function nextEdit(){
+  const q = editState && editState.queue;
+  if (q && editState.pos < q.length - 1){ startEdit(q[editState.pos + 1]); return true; }
+  return false;
+}
+$("#editBar").addEventListener("click", e => {
+  const b = e.target.closest("[data-ed]"); if (!b) return;
+  if (b.dataset.ed === "cancel") endEdit();
+  else if (b.dataset.ed === "skip") nextEdit();
+});
+
+/* ---------- Weitere Angaben: Abschnitte ---------- */
+const secOpen = LS.get("secOpen", {});
+document.querySelectorAll("details.sec").forEach(d => {
+  if (secOpen[d.dataset.sec]) d.open = true;
+  d.addEventListener("toggle", () => { if (editState) return; secOpen[d.dataset.sec] = d.open; LS.set("secOpen", secOpen); });
+});
+function openSec(k){ const d = document.querySelector(`details.sec[data-sec="${k}"]`); if (d) d.open = true; }
+function renderSecSummaries(){
+  const v = id => ($(id) ? $(id).value.trim() : "");
+  const pg = form.perGame && prefs.format === "bo3";
+  const play = [];
+  if (!pg){
+    if (form.tags.length) play.push(form.tags.length === 1 ? form.tags[0] : form.tags.length + " Markierungen");
+    if (form.mull != null) play.push("Mulligan " + form.mull);
+    if (v("#turns")) play.push(v("#turns") + " Züge");
+  }
+  if (form.perf) play.push("Leistung " + form.perf + "/5");
+  const opp = [v("#oppName"), v("#tourney") ? v("#tourney") + (v("#round") ? ", R" + v("#round") : "") : ""].filter(Boolean);
+  const notes = [v("#keyCards") ? "Schlüsselkarten" : "", v("#notes") ? "Notiz" : ""].filter(Boolean);
+  const nRep = [...document.querySelectorAll("#replayInputs input")].filter(i => i.value.trim()).length;
+  const rep = [nRep ? (nRep === 1 ? "1 Replay" : nRep + " Replays") : "", v("#meta")].filter(Boolean);
+  const set = (k, arr) => { const el = document.querySelector(`[data-sv="${k}"]`); if (el) el.textContent = arr.join(", "); };
+  set("play", play); set("opp", opp); set("notes", notes); set("rep", rep);
+}
+$("#more").addEventListener("input", renderSecSummaries);
+{ const base = renderEntry; renderEntry = function(){ base(); renderSecSummaries(); }; }
+
+/* ---------- Eintragen: Interaktion ---------- */
+$("#player").value = prefs.player;
+$("#player").addEventListener("input", e => { prefs.player = e.target.value; LS.set("player", prefs.player); prefs.deckKey = LS.get("deckKey", null); renderEntry(); });
+$("#meta").value = prefs.meta;
+$("#meta").addEventListener("change", e => { prefs.meta = e.target.value.trim() || "Core S14"; LS.set("meta", prefs.meta); });
+
+$("#deckChips").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.id === "addDeck") { $("#newDeck").hidden = false; form.newDeckColors = []; renderEntry(); $("#newDeckName").focus(); return; }
+  prefs.deckKey = b.dataset.k; LS.set("deckKey", prefs.deckKey);
+  if (form.deckPending){ form.deckPending = null; form.deckHint = null; }
+  renderEntry();
+});
+$("#newDeckCancel").onclick = () => { $("#newDeck").hidden = true; };
+$("#newDeckSave").onclick = () => {
+  if (!form.newDeckColors.length) { $("#newDeckName").placeholder = "Erst die Deckfarben antippen"; return; }
+  const d = { name: $("#newDeckName").value.trim(), colors: [...form.newDeckColors] };
+  prefs.decks = [...prefs.decks.filter(x => deckKeyOf(x) !== deckKeyOf(d)), d];
+  savePrefs();
+  prefs.deckKey = deckKeyOf(d); LS.set("deckKey", prefs.deckKey);
+  if (form.deckPending){ rememberDeckList(prefs.deckKey, form.deckPending.list); form.deckPending = null; form.deckHint = null; }
+  $("#newDeckName").value = ""; $("#newDeck").hidden = true; renderEntry();
+};
+$("#fmtSeg").onclick = e => { const b = e.target.closest("button"); if (!b) return; prefs.format = b.dataset.v; LS.set("format", prefs.format); form.result = null; form.games = null; renderEntry(); renderCounter(); };
+$("#perGameToggle").onclick = () => {
+  form.perGame = !form.perGame;
+  if (form.perGame && form.start && !form.gl[0].s) form.gl[0].s = form.start;
+  renderEntry();
+};
+$("#gameBoxes").onclick = e => {
+  const card = e.target.closest("[data-gi]"), b = e.target.closest("button");
+  if (!card || !b) return;
+  const i = Number(card.dataset.gi), g = form.gl[i];
+  if (b.dataset.gs) g.s = g.s === b.dataset.gs ? null : b.dataset.gs;
+  else if (b.dataset.gr){
+    g.r = g.r === b.dataset.gr ? null : b.dataset.gr;
+    const nx = form.gl[i + 1];
+    if (g.r && nx && !nx.s) nx.s = g.r === "L" ? "play" : "draw"; // Verlierer fängt meist an
+  }
+  else if (b.dataset.gm != null){ const v = Number(b.dataset.gm); g.mull = g.mull === v ? null : v; }
+  else if (b.dataset.gt){ const t = b.dataset.gt; g.tags = g.tags.includes(t) ? g.tags.filter(x => x !== t) : [...g.tags, t]; }
+  else if (b.hasAttribute("data-gadd")){ form.gAdd = !form.gAdd; renderGames(); if (form.gAdd) $("#gNewTag").focus(); return; }
+  renderGames(); updateSave(); renderCounter();
+};
+function addGameTag(){
+  const v = $("#gNewTag").value.trim().replace(/\s+/g, " ");
+  if (!v) return;
+  if (!prefs.customTags.includes(v) && !TAGS.includes(v)) { prefs.customTags = [...prefs.customTags, v]; prefs.tagOrder = [v, ...orderedTags().filter(x => x !== v)]; savePrefs(); }
+  $("#gNewTag").value = ""; form.gAdd = false; renderEntry();
+}
+$("#gNewTagSave").onclick = addGameTag;
+$("#gNewTag").addEventListener("keydown", e => { if (e.key === "Enter"){ e.preventDefault(); addGameTag(); } });
+$("#pinOpp").onclick = () => { prefs.pinOpp = !prefs.pinOpp; LS.set("pinOpp", prefs.pinOpp); renderEntry(); };
+$("#resultBox").onclick = e => { const b = e.target.closest(".res"); if (!b) return; form.result = b.dataset.r; form.games = b.dataset.g || null; renderEntry(); };
+$("#playSeg").onclick = e => { const b = e.target.closest("button"); if (!b) return; form.start = b.dataset.v; renderEntry(); };
+$("#eventChips").onclick = e => { const b = e.target.closest("button"); if (!b) return; prefs.event = b.dataset.v; LS.set("event", prefs.event); renderEntry(); };
+$("#tagChips").onclick = e => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.act === "add") { $("#addTagRow").hidden = false; $("#newTag").focus(); return; }
+  if (b.dataset.act === "edit") { tagEdit = !tagEdit; renderTags(); return; }
+  if (b.dataset.act === "hidden") { showHidden = !showHidden; renderTags(); return; }
+  if (tagEdit) {
+    const wrap = b.closest(".editing"); if (!wrap) return;
+    const t = wrap.dataset.v;
+    if (b.dataset.mv) { moveTag(t, b.dataset.mv); return; }
+    if (b.hasAttribute("data-rm")) {
+      if (wrap.dataset.custom === "1") { prefs.customTags = prefs.customTags.filter(x => x !== t); prefs.tagOrder = prefs.tagOrder.filter(x => x !== t); }
+      else prefs.hiddenTags = prefs.hiddenTags.includes(t) ? prefs.hiddenTags.filter(x => x !== t) : [...prefs.hiddenTags, t];
+      form.tags = form.tags.filter(x => x !== t);
+      savePrefs(); renderTags();
+    }
+    return;
+  }
+  const t = b.dataset.v; if (!t) return;
+  form.tags = form.tags.includes(t) ? form.tags.filter(x => x !== t) : [...form.tags, t]; renderTags();
+};
+$("#newTagSave").onclick = addCustomTag;
+$("#saveArch").onclick = saveArch;
+$("#newArch").addEventListener("keydown", e => { if (e.key === "Enter"){ e.preventDefault(); saveArch(); } });
+$("#tourneyActive").onclick = e => { if (!e.target.closest("[data-act=endT]")) return; $("#tourney").value = ""; $("#round").value = ""; renderEntry(); };
+["#tourney", "#round"].forEach(sel => $(sel).addEventListener("change", () => renderEntry()));
+$("#newTag").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); addCustomTag(); } });
+const pick = (sel, key) => $(sel).onclick = e => { const b = e.target.closest("button"); if (!b) return; form[key] = form[key] === b.dataset.v ? null : b.dataset.v; renderEntry(); };
+pick("#mullChips", "mull"); pick("#perfChips", "perf");
+let lastSavedId = null, toastTimer = null, dupConfirmed = false;
+function isLikelyDuplicate(m){
+  const H = 2 * 3600 * 1000; // zwei Stunden
+  return matches.some(x =>
+    Date.now() - x.ts < H &&
+    x.result === m.result &&
+    (x.oppName || "") === (m.oppName || "") &&
+    pairKey(x.oppColors || []) === pairKey(m.oppColors || []) &&
+    deckKeyOf({ name: x.deckName, colors: x.deckColors || [] }) === deckKeyOf({ name: m.deckName, colors: m.deckColors || [] }) &&
+    (x.games || "") === (m.games || "")
+  );
+}
+$("#saveBtn").onclick = async () => {
+  if (missing().length) return;
+  if ($("#newArch").value.trim()) saveArch();
+  const d = currentDeck();
+  const pg = form.perGame && prefs.format === "bo3";
+  const gameList = pg ? visibleGames().map(g => ({ ...g, r: g.r, s: g.s, mull: g.mull, tags: [...g.tags], turns: g.turns ?? null, openMe: g.openMe || null, openOpp: g.openOpp || null })) : null;
+  const ser = pg ? seriesOf(gameList) : null;
+  const m = {
+    ts: Date.now(),
+    player: prefs.player.trim(),
+    deckName: d.name || "",
+    deckColors: pairKey(d.colors).split("+"),
+    oppColors: pairKey(form.opp).split("+"),
+    oppArch: form.arch || "",
+    oppName: $("#oppName").value.trim(),
+    format: prefs.format,
+    result: pg ? ser.result : form.result,
+    games: pg ? ser.score : form.games,
+    start: pg ? gameList[0].s : form.start,
+    gameList,
+    turns: pg ? null : numOrNull($("#turns").value),
+    seriesId: form.seriesId || null,
+    incomplete: pg ? !ser.done : false,
+    openMe: pg ? null : (form.openMe || null),
+    openOpp: pg ? null : (form.openOpp || null),
+    myList: form.myList || null,
+    oppSeen: form.oppSeen.length ? [...form.oppSeen] : null,
+    oppSeenN: Object.keys(form.oppSeenN || {}).length ? { ...form.oppSeenN } : null,
+    event: prefs.event,
+    meta: prefs.meta,
+    tags: pg ? [] : form.tags,
+    notes: $("#notes").value.trim(),
+    keyCards: $("#keyCards").value.trim(),
+    mull: pg ? gameList[0].mull : (form.mull == null ? null : Number(form.mull)),
+    perf: form.perf == null ? null : Number(form.perf),
+    tourney: $("#tourney").value.trim(),
+    round: numOrNull($("#round").value),
+    replays: [...document.querySelectorAll("#replayInputs input")].map(i => cleanUrl(i.value)).filter(Boolean),
+    by: myId || null,
+  };
+  const badUrl = [...document.querySelectorAll("#replayInputs input")].some(i => i.value.trim() && !cleanUrl(i.value));
+  if (badUrl) { openSec("rep"); $("#saveHint").textContent = "Ein Replay-Link ist keine gültige Adresse (muss mit https:// beginnen)."; return; }
+  if (editState){
+    m.ts = editState.ts; m.by = editState.by; m.player = editState.player;
+    $("#saveBtn").disabled = true;
+    const ok = await store.update(editState.id, m);
+    if (!ok){ updateSave(); return; }
+    if (m.myList) rememberDeckList(prefs.deckKey, m.myList);
+    toast("Änderungen gespeichert.");
+    if (!nextEdit()) endEdit();
+    return;
+  }
+  if (!dupConfirmed && isLikelyDuplicate(m)) {
+    $("#saveHint").textContent = "Sieht aus wie ein eben erfasstes Match (gleicher Gegner, gleiches Deck, gleiches Ergebnis). Nochmal auf Speichern tippen, wenn es wirklich ein weiteres ist.";
+    dupConfirmed = true;
+    return;
+  }
+  dupConfirmed = false;
+  $("#saveBtn").disabled = true;
+  const id = await store.add(m);
+  if (!id) { updateSave(); return; }
+  lastSavedId = id;
+  if (m.myList) rememberDeckList(prefs.deckKey, m.myList);
+  const keepOpp = prefs.pinOpp ? { opp: form.opp, arch: form.arch } : { opp: [], arch: null };
+  Object.assign(form, { result: null, games: null, start: null, tags: [], mull: null, perf: null, archAdd: false,
+    gl: [blankGame(), blankGame(), blankGame()], gAdd: false, myList: null, oppSeen: [], oppSeenN: {}, archSuggest: null, deckPending: null, deckHint: null }, keepOpp);
+  ["#notes", "#keyCards", "#turns"].forEach(s => $(s).value = "");
+  if (!prefs.pinOpp) $("#oppName").value = "";
+  // Turniername bleibt für die nächste Runde stehen, die Runde zählt hoch
+  if (m.tourney && m.round) $("#round").value = m.round + 1; else $("#round").value = "";
+  document.querySelectorAll("#replayInputs input").forEach(i => i.value = "");
+  renderEntry();
+  $("#importStatus").hidden = true;
+  toast(`Gespeichert: ${m.result === "W" ? "Sieg" : "Niederlage"} gegen ${pairName(pairKey(m.oppColors))}`, true);
+  window.scrollTo({ top: 0 });
+};
+function toast(msg, undo = false){
+  $("#toastMsg").textContent = msg; $("#toast").classList.add("show"); $("#toastUndo").hidden = !undo;
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => $("#toast").classList.remove("show"), 6000);
+}
+$("#toastUndo").onclick = async () => { if (lastSavedId) await store.remove(lastSavedId); lastSavedId = null; $("#toast").classList.remove("show"); };
+
+/* ---------- Filter ---------- */
+const deckOff = new Set(LS.get("deckOff", []));
+const filt = { period: CUR_PERIOD, range: "all", player: "", deck: "", opp: "", event: "", format: "", meta: "", start: "", tag: "", tourney: "", opening: "" };
+const tagsOf = m => [...new Set([...(m.tags || []), ...((m.gameList || []).flatMap(g => g.tags || []))])];
+function uniq(arr){ return [...new Set(arr.filter(Boolean))].sort((a,b) => a.localeCompare(b, "de")); }
+function renderFilters(target){
+  const decks = uniq(matches.map(m => deckKeyOf({ name: m.deckName, colors: m.deckColors || [] })));
+  const opps = uniq(matches.map(m => pairKey(m.oppColors || [])));
+  const opt = (v, label, cur) => `<option value="${esc(v)}" ${v===cur?"selected":""}>${esc(label)}</option>`;
+  const sel = (key, label, options) => `<label>${label}<select data-f="${key}">${options}</select></label>`;
+  target.innerHTML =
+    sel("period","Meta-Zeitraum", [...METAS].reverse().map(p => opt(p.id, `${p.name} (ab ${fmtDay(p.from).slice(0,6)})`, filt.period)).join("")
+      + (matches.some(m => periodOf(m.ts) === "pre") ? opt("pre", "Vor " + METAS[0].name, filt.period) : "") + opt("", "Alle Zeiträume", filt.period)) +
+    sel("range","Zeitraum", opt("all","Alles",filt.range)+opt("today","Heute",filt.range)+opt("7","Letzte 7 Tage",filt.range)+opt("30","Letzte 30 Tage",filt.range)) +
+    sel("player","Spieler", opt("","Ganzes Team",filt.player)+uniq(matches.map(m=>m.player)).map(p=>opt(p,p,filt.player)).join("")) +
+    sel("deck","Mein Deck", opt("","Alle Decks",filt.deck)+decks.map(k=>{const [n,c]=k.split("|");return opt(k,(n||pairName(c)),filt.deck)}).join("")) +
+    sel("opp","Gegnerfarben", opt("","Alle",filt.opp)+opps.map(k=>opt(k,pairName(k),filt.opp)).join("")) +
+    sel("event","Event", opt("","Alle",filt.event)+uniq(matches.map(m=>m.event)).map(v=>opt(v,v,filt.event)).join("")) +
+    sel("format","Bo1 / Bo3", opt("","Beide",filt.format)+opt("bo1","Bo1",filt.format)+opt("bo3","Bo3",filt.format)) +
+    sel("start","Angefangen", opt("","Egal",filt.start)+opt("play","Ich",filt.start)+opt("draw","Gegner",filt.start)) +
+    sel("meta","Format", opt("","Alle",filt.meta)+uniq(matches.map(m=>m.meta)).map(v=>opt(v,v,filt.meta)).join("")) +
+    sel("tag","Markierung", opt("","Alle",filt.tag)+uniq(matches.flatMap(tagsOf)).map(v=>opt(v,v,filt.tag)).join("")) +
+    (matches.some(m=>m.tourney) ? sel("tourney","Turnier", opt("","Alle",filt.tourney)+uniq(matches.map(m=>m.tourney)).map(v=>opt(v,v,filt.tourney)).join("")) : "") +
+    (matches.some(m => openingText(m)) ? `<label>Eröffnung<input type="text" data-fo="opening" value="${esc(filt.opening)}" placeholder="z. B. 2P Mickey"></label>` : "");
+  const active = Object.entries(filt).filter(([k, v]) => k === "period" ? v !== CUR_PERIOD : v && !(k === "range" && v === "all")).length;
+  document.querySelectorAll("[data-sum]").forEach(el => el.textContent = active ? `Filter (${active} aktiv)` : "Filter");
+  target.onchange = e => { const s = e.target.closest("select"); if (!s) return; filt[s.dataset.f] = s.value; renderFilters($("#filters")); renderFilters($("#filtersLog")); renderStats(); renderLog(); };
+  target.oninput = e => { const i = e.target.closest("[data-fo]"); if (!i) return; filt.opening = i.value; renderStats(); renderLog(); };
+}
+
+/* Eröffnungssuche: Begriffe wie "2P Mickey", "C Elsa", "Mickey". Per Komma getrennte Begriffe müssen alle vorkommen. */
+function openingLines(m){
+  const out = [];
+  const add = turns => (turns || []).forEach(t => t.lines.forEach(l => out.push(("t" + t.t + " " + l).toLowerCase())));
+  if (Array.isArray(m.gameList)) m.gameList.forEach(g => { add(g.openMe); add(g.openOpp); });
+  add(m.openMe); add(m.openOpp);
+  return out;
+}
+function openingText(m){ return openingLines(m).join(" "); }
+function matchesOpening(m, query){
+  const lines = openingLines(m);
+  if (!lines.length) return false;
+  return query.toLowerCase().split(",").map(x => x.trim()).filter(Boolean).every(term => {
+    const mt = term.match(/^t?(\d)\s*([pics])?\s*(.*)$/i);
+    if (mt && mt[1]){
+      const turn = "t" + mt[1], kind = (mt[2] || "").toLowerCase(), rest = (mt[3] || "").trim();
+      return lines.some(line => line.startsWith(turn + " ") && (!kind || line.includes(turn + " " + kind + " ") || line.includes(" " + kind + " ")) && (!rest || line.includes(rest)));
+    }
+    return lines.some(line => line.includes(term));
+  });
+}
+
+function filtered(){
+  const now = Date.now();
+  return matches.filter(m => {
+    if (filt.period && periodOf(m.ts) !== filt.period) return false;
+    if (filt.range === "today"){ const d = new Date(); d.setHours(0,0,0,0); if (m.ts < d.getTime()) return false; }
+    else if (filt.range !== "all" && m.ts < now - Number(filt.range) * 864e5) return false;
+    if (filt.player && m.player !== filt.player) return false;
+    if (filt.deck && deckKeyOf({ name: m.deckName, colors: m.deckColors || [] }) !== filt.deck) return false;
+    if (deckOff.size && deckOff.has(deckKeyOf({ name: m.deckName, colors: m.deckColors || [] }))) return false;
+    if (filt.opp && pairKey(m.oppColors || []) !== filt.opp) return false;
+    if (filt.event && m.event !== filt.event) return false;
+    if (filt.format && m.format !== filt.format) return false;
+    if (filt.start && m.start !== filt.start) return false;
+    if (filt.meta && m.meta !== filt.meta) return false;
+    if (filt.tag && !tagsOf(m).includes(filt.tag)) return false;
+    if (filt.tourney && m.tourney !== filt.tourney) return false;
+    if (filt.opening && !matchesOpening(m, filt.opening)) return false;
+    return true;
+  });
+}
+
+/* ---------- Auswerten ---------- */
+function group(list, keyFn){
+  const g = new Map();
+  list.forEach(m => { const k = keyFn(m); if (!g.has(k)) g.set(k, { n:0, w:0, list:[] }); const x = g.get(k); x.n++; if (m.result === "W") x.w++; x.list.push(m); });
+  return [...g.entries()].sort((a, b) => b[1].n - a[1].n);
+}
+const MIN_N = 5;
+function wrRow(label, x, total, extra = ""){
+  return `<tr class="${x.n < MIN_N ? "thin" : ""}"><td>${label}</td>${extra}<td class="num">${x.w}–${x.n - x.w}</td><td class="num"><b>${pct(x.w, x.n)}%</b></td><td style="width:30%"><div class="bar"><b style="width:${pct(x.w, x.n)}%"></b></div></td></tr>`;
+}
+function cellColor(wr){
+  // 50 % neutral, darüber grün, darunter rot – über color-mix, damit hell/dunkel passt
+  const d = Math.min(1, Math.abs(wr - 50) / 35);
+  const col = wr >= 50 ? "var(--win)" : "var(--loss)";
+  return `background:color-mix(in srgb, ${col} ${Math.round(12 + d * 60)}%, var(--surface));${d > .55 ? "color:#fff" : ""}`;
+}
+/* Zähleinheiten: je nach Zählweise ein Bo3 als Match oder als Einzelspiele */
+function units(m, mode){
+  const gl0 = m.format === "bo3" && Array.isArray(m.gameList) ? m.gameList.filter(g => g.r) : null;
+  const gl = gl0 && gl0.length ? gl0 : null;
+  if (gl && mode !== "match") return gl.map(g => ({ result: g.r, start: g.s, mull: g.mull, tags: g.tags || [], turns: g.turns ?? null, w: 1, m }));
+  if (gl) { const t = gl.map(g => g.turns).filter(Boolean); return [{ result: m.result, start: gl[0].s, mull: gl[0].mull, tags: tagsOf(m), turns: t.length ? Math.round(t.reduce((a, b) => a + b, 0) / t.length) : null, w: 1, m }]; }
+  const w = mode === "scaled" && m.format === "bo3" && GAMES_PLAYED[m.games] ? GAMES_PLAYED[m.games] : 1;
+  return [{ result: m.result, start: m.start, mull: m.mull, tags: m.tags || [], turns: m.turns ?? null, w, m }];
+}
+function aggU(us){ let n = 0, w = 0; us.forEach(u => { n += u.w; if (u.result === "W") w += u.w; }); return { n, w }; }
+function groupU(us, keyFn){
+  const g = new Map();
+  us.forEach(u => { const k = keyFn(u); if (k == null) return; if (!g.has(k)) g.set(k, []); g.get(k).push(u); });
+  return [...g.entries()].map(([k, l]) => [k, aggU(l)]).sort((a, b) => b[1].n - a[1].n);
+}
+const qTxt = a => a.n ? `${pct(a.w, a.n)}% (${a.n})` : "–";
+const WEIGHT_TXT = {
+  game: "Einzeln erfasste Bo3-Spiele zählen je Spiel, ein pauschaler Bo3-Eintrag zählt einmal.",
+  scaled: "Wie „pro Spiel“, aber ein pauschaler Bo3-Eintrag zählt so oft, wie gespielt wurde: 2-0 doppelt, 2-1 dreifach.",
+  match: "Jedes Match zählt einmal. Markierungen gelten, wenn sie in irgendeinem Spiel gesetzt wurden; Mulligan und Anfangen aus Spiel 1."
+};
+function trendHtml(list){
+  const res = prefs.trendRes;
+  const keyOf = ts => { const d = new Date(ts); d.setHours(0, 0, 0, 0); if (res === "week") d.setDate(d.getDate() - (d.getDay() + 6) % 7); return d.getTime(); };
+  const g = new Map();
+  list.forEach(m => { const k = keyOf(m.ts); const x = g.get(k) || { n: 0, w: 0 }; x.n++; if (m.result === "W") x.w++; g.set(k, x); });
+  const rows = [...g.entries()].sort((a, b) => a[0] - b[0]).slice(-30);
+  const seg = `<span class="seg">${[["day","Tag"],["week","Woche"]].map(([v, l]) => `<button type="button" data-tr="${v}" aria-pressed="${res === v}">${l}</button>`).join("")}</span>`;
+  let body;
+  if (!rows.length) body = `<p class="note">Noch keine Daten.</p>`;
+  else {
+    const bw = 36, gap = 14, H = 120, top = 8, W = Math.max(rows.length * (bw + gap) + gap, 120), Ht = top + H + 38;
+    const bars = rows.map(([k, x], i) => {
+      const wr = pct(x.w, x.n), h = Math.max(2, H * wr / 100), X = gap + i * (bw + gap);
+      const d = new Date(k), lab = d.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" });
+      return `<g opacity="${x.n < MIN_N ? .45 : 1}"><title>${res === "week" ? "Woche ab " : ""}${lab}: ${wr} % aus ${x.n}</title>
+        <rect x="${X}" y="${top + H - h}" width="${bw}" height="${h}" rx="3" style="fill:${wr >= 50 ? "var(--win)" : "var(--loss)"}"/>
+        <text x="${X + bw / 2}" y="${top + H - h - 3}" text-anchor="middle" style="fill:var(--ink);font-weight:600">${wr}</text>
+        <text x="${X + bw / 2}" y="${top + H + 15}" text-anchor="middle">${lab}</text>
+        <text x="${X + bw / 2}" y="${top + H + 30}" text-anchor="middle">${x.n}</text></g>`;
+    }).join("");
+    body = `<div class="scroll trend"><svg width="${W}" height="${Ht}" viewBox="0 0 ${W} ${Ht}" role="img" aria-label="Siegquote je ${res === "week" ? "Woche" : "Tag"}">
+      <line x1="0" x2="${W}" y1="${top + H / 2}" y2="${top + H / 2}" stroke="currentColor" stroke-opacity=".35" stroke-dasharray="4 4"/>${bars}</svg></div>
+      <p class="statnote">Balken = Siegquote in %, darunter Datum${res === "week" ? " (Wochenbeginn)" : ""} und Zahl der Matches. Gestrichelt: 50 %. Blasse Balken haben unter ${MIN_N} Matches.</p>`;
+  }
+  return `<section class="block"><h2>Siegquote im Zeitverlauf ${seg}</h2>${body}</section>`;
+}
+function cardSwapHtml(list){
+  const withList = list.filter(m => m.myList && Object.keys(m.myList).length);
+  if (!withList.length) return `<section class="block"><h2>Kartenwahl</h2><p class="note">Füllt sich mit eingelesenen Replays: Dann siehst du, mit welcher Kartenanzahl deine Decks öfter gewinnen.</p></section>`;
+  const decks = group(withList, m => deckKeyOf({ name: m.deckName, colors: m.deckColors || [] })).filter(([, x]) => x.n >= 2).slice(0, 3);
+  let html = `<section class="block"><h2>Kartenwahl <small>aus Replays</small></h2><p class="statnote">Nur Karten, deren Anzahl zwischen deinen Listen wechselte. „0×“ heißt: nicht im Deck. Blass: unter ${MIN_N} Matches, noch Zufall.</p>`;
+  if (!decks.length) return html + `<p class="note">Pro Deck braucht es mindestens zwei eingelesene Listen.</p></section>`;
+  decks.forEach(([dk, x]) => {
+    const [n, c] = dk.split("|");
+    const ids = [...new Set(x.list.flatMap(m => Object.keys(m.myList)))];
+    const rows = ids.map(id => {
+      const v = new Map();
+      x.list.forEach(m => { const k = m.myList[id] || 0; const a = v.get(k) || { n: 0, w: 0 }; a.n++; if (m.result === "W") a.w++; v.set(k, a); });
+      if (v.size < 2) return null;
+      const rates = [...v.values()].map(a => pct(a.w, a.n));
+      return { id, v: [...v.entries()].sort((a, b) => b[0] - a[0]), spread: Math.max(...rates) - Math.min(...rates) };
+    }).filter(Boolean).sort((a, b) => b.spread - a.spread).slice(0, 15);
+    html += `<p class="sub-h" style="margin-top:12px">${mini(c)} ${esc(n || pairName(c))} <span class="note">(${x.n} Listen)</span></p>`;
+    html += rows.length ? `<table class="stats"><tbody>${rows.map(r => `<tr><td style="white-space:normal">${esc(cardName(r.id))}</td><td><div class="cardvars">${r.v.map(([k, a]) => `<span class="${a.n < MIN_N ? "thin" : ""}">${k}×: <b>${pct(a.w, a.n)}%</b> (${a.n})</span>`).join("")}</div></td></tr>`).join("")}</tbody></table>`
+      : `<p class="note">Alle Listen dieses Decks waren gleich.</p>`;
+  });
+  return html + `</section>`;
+}
+
+/* ---------- Deck-Auswahl in der Auswertung ---------- */
+function statDecks(){
+  const base = matches.filter(m => {
+    if (filt.period && periodOf(m.ts) !== filt.period) return false;
+    if (filt.range === "today"){ const d = new Date(); d.setHours(0,0,0,0); if (m.ts < d.getTime()) return false; }
+    else if (filt.range !== "all" && m.ts < Date.now() - Number(filt.range) * 864e5) return false;
+    if (filt.player && m.player !== filt.player) return false;
+    if (filt.event && m.event !== filt.event) return false;
+    if (filt.format && m.format !== filt.format) return false;
+    if (filt.start && m.start !== filt.start) return false;
+    if (filt.meta && m.meta !== filt.meta) return false;
+    if (filt.tag && !tagsOf(m).includes(filt.tag)) return false;
+    if (filt.tourney && m.tourney !== filt.tourney) return false;
+    return true;
+  });
+  const g = new Map();
+  base.forEach(m => {
+    const k = deckKeyOf({ name: m.deckName, colors: m.deckColors || [] });
+    if (!g.has(k)) g.set(k, { k, name: m.deckName || "", colors: m.deckColors || [], n: 0, w: 0 });
+    const x = g.get(k); x.n++; if (m.result === "W") x.w++;
+  });
+  return [...g.values()].sort((a, b) => b.n - a.n);
+}
+function deckPickHtml(){
+  const decks = statDecks();
+  if (decks.length < 2) return "";
+  const allOn = !decks.some(d => deckOff.has(d.k));
+  const onCount = decks.filter(d => !deckOff.has(d.k)).length;
+  const DOT = " \u00b7 ";
+  const chips = decks.map(d => {
+    const on = !deckOff.has(d.k);
+    return `<button type="button" class="chip" data-deckpick="${esc(d.k)}" aria-pressed="${on}">${mini(pairKey(d.colors))}${esc(d.name || pairName(pairKey(d.colors)))} <span class="dq">${pct(d.w, d.n)}%${DOT}${d.n}</span></button>`;
+  }).join("");
+  return `<section class="block deckpick"><div class="row" style="justify-content:space-between">
+      <h2 style="margin:0">Decks</h2>
+      <button type="button" class="chip small" data-deckpick="__all" aria-pressed="${allOn}">${allOn ? "Alle ausgew\u00e4hlt" : "Alle ausw\u00e4hlen"}</button>
+    </div>
+    <div class="chips" style="margin-top:8px">${chips}</div>
+    <p class="statnote" style="margin-top:8px">${allOn ? "Alle Decks z\u00e4hlen. Tippe Decks weg, um die Auswertung einzugrenzen." : onCount + " von " + decks.length + " Decks z\u00e4hlen in dieser Auswertung."}</p>
+  </section>`;
+}
+
+function renderStats(){
+  const list = filtered();
+  const out = $("#statsOut");
+  const per = METAS.find(p => p.id === filt.period);
+  if (!matches.length) { out.innerHTML = `<div class="empty">Noch keine Matches. Trag euer erstes unter „Eintragen“ ein – die Auswertung füllt sich dann automatisch.</div>`; return; }
+  if (!list.length) {
+    const pick = deckPickHtml();
+    const msg = (pick && deckOff.size) ? "Keine Decks ausgewählt. Tippe oben mindestens ein Deck an." : (per && !matches.some(m => periodOf(m.ts) === per.id)
+    ? `Im Meta-Zeitraum ${esc(per.name)} (ab ${fmtDay(per.from)}) gibt es noch keine Matches. Ältere Einträge zeigt der Filter „Meta-Zeitraum“ mit „Alle Zeiträume“.`
+    : "Keine Matches für diese Filter. Lockere einen Filter, zum Beispiel den Zeitraum.");
+    out.innerHTML = pick + `<div class="empty">${msg}</div>`;
+    return;
+  }
+
+  const mode = prefs.weight;
+  const hasBo3 = list.some(m => m.format === "bo3");
+  const U = list.flatMap(m => units(m, mode));
+  const unitWord = hasBo3 && mode !== "match" ? "Spiele" : "Matches";
+  const w = list.filter(m => m.result === "W").length;
+  const pl = aggU(U.filter(u => u.start === "play")), dr = aggU(U.filter(u => u.start === "draw"));
+  const byGame = hasBo3 && mode !== "match";
+  const tot = byGame ? aggU(U) : { n: list.length, w };
+
+  let html = per ? `<p class="statnote">Meta-Zeitraum ${esc(per.name)}, ab ${fmtDay(per.from)}</p>` : "";
+  html += `<div class="headline"><div class="big">${pct(tot.w, tot.n)}<span>%</span></div>
+    <dl><dt>${byGame ? "Spiele" : "Matches"}</dt><dd>${tot.n}${byGame ? ` <span class="note">(${list.length} Matches)</span>` : ""}</dd><dt>Bilanz</dt><dd>${tot.w}–${tot.n - tot.w}</dd>
+    <dt>Angefangen</dt><dd>${pct(pl.w, pl.n)}% (${pl.n})</dd><dt>Nachgezogen</dt><dd>${pct(dr.w, dr.n)}% (${dr.n})</dd></dl></div>`;
+  html += `<div class="row" style="margin:4px 0 10px"><button type="button" class="ghost" data-shot="1">Auswertungskarte als Bild</button></div>`;
+  html += deckPickHtml();
+  if (hasBo3) html += `<section class="block"><div class="row"><span class="note">Bo3 zählen</span><span class="seg">${[["game","pro Spiel"],["scaled","hochgerechnet"],["match","pro Match"]].map(([v, l]) => `<button type="button" data-wv="${v}" aria-pressed="${mode === v}">${l}</button>`).join("")}</span></div>
+    <p class="statnote" style="margin-top:6px">${WEIGHT_TXT[mode]} Gilt für die große Siegquote, Matchups, Decks, Anfangen, Mulligan, Markierungen und Spieldauer.</p></section>`;
+
+  html += trendHtml(list);
+
+  // Matchups mit Anfangen/Nachziehen
+  const byOpp = group(list, m => pairKey(m.oppColors || []));
+  html += `<section class="block"><h2>Matchups</h2><div class="scroll"><table class="stats">
+    <thead><tr><th>Gegner</th><th class="num">Anteil</th><th class="num">S–N</th><th class="num">Quote</th></tr></thead><tbody>
+    ${byOpp.map(([k, x]) => { const us = U.filter(u => pairKey(u.m.oppColors || []) === k), a = byGame ? aggU(us) : x;
+      return `<tr class="${a.n < MIN_N ? "thin" : ""}"><td style="white-space:normal">${mini(k)} ${esc(pairName(k))}<br><span class="note">angefangen ${qTxt(aggU(us.filter(u => u.start === "play")))}, nachgezogen ${qTxt(aggU(us.filter(u => u.start === "draw")))}</span></td><td class="num">${pct(a.n, tot.n)}%</td><td class="num">${a.w}–${a.n - a.w}</td><td class="num"><b>${pct(a.w, a.n)}%</b></td></tr>`; }).join("")}
+    </tbody></table></div><p class="statnote">Unter jeder Farbkombi: Siegquote und Zahl der ${unitWord}, je nachdem wer angefangen hat.</p></section>`;
+
+  // Matrix Deck x Gegner
+  const decks = group(list, m => deckKeyOf({ name: m.deckName, colors: m.deckColors || [] }));
+  const topOpps = byOpp.slice(0, 8).map(([k]) => k);
+  if (decks.length && topOpps.length > 1) {
+    html += `<section class="block"><h2>Deck gegen Farbkombi</h2><div class="scroll"><table class="matrix"><thead><tr><th></th>${topOpps.map(k => `<th title="${esc(pairName(k))}">${mini(k)}</th>`).join("")}</tr></thead><tbody>
+      ${decks.map(([dk, dx]) => {
+        const [n, c] = dk.split("|");
+        return `<tr><th class="rowh">${mini(c)} ${esc(n || pairName(c))}</th>${topOpps.map(ok => {
+          const sub = dx.list.filter(m => pairKey(m.oppColors || []) === ok);
+          if (!sub.length) return `<td style="opacity:.35">–</td>`;
+          const sw = sub.filter(m => m.result === "W").length, r = pct(sw, sub.length);
+          return `<td style="${cellColor(r)}${sub.length < MIN_N ? ";opacity:.6" : ""}">${r}%<small>${sub.length}</small></td>`;
+        }).join("")}</tr>`;
+      }).join("")}</tbody></table></div></section>`;
+  }
+
+  html += `<section class="block"><h2>Decks</h2><div class="scroll"><table class="stats"><thead><tr><th>Deck</th><th class="num">S–N</th><th class="num">Quote</th><th></th></tr></thead><tbody>
+    ${decks.map(([k, x]) => { const [n, c] = k.split("|"); return wrRow(`${mini(c)} ${esc(n || pairName(c))}`, byGame ? aggU(U.filter(u => deckKeyOf({ name: u.m.deckName, colors: u.m.deckColors || [] }) === k)) : x); }).join("")}</tbody></table></div></section>`;
+
+  // Archetypen + Steckbriefe
+  const arch = group(list.filter(m => m.oppArch), m => pairKey(m.oppColors || []) + "|" + m.oppArch);
+  if (arch.length) {
+    html += `<section class="block"><h2>Gegner-Archetypen</h2><div class="scroll"><table class="stats"><thead><tr><th>Archetyp</th><th class="num">S–N</th><th class="num">Quote</th><th></th></tr></thead><tbody>
+      ${arch.map(([k, x]) => { const [c, a] = k.split("|"); return wrRow(`${mini(c)} ${esc(a)}`, x); }).join("")}</tbody></table></div></section>`;
+    const prof = arch.map(([k, x]) => [k, x.list.filter(m => Array.isArray(m.oppSeen) && m.oppSeen.length)]).filter(([, l]) => l.length);
+    if (prof.length) html += `<section class="block"><h2>Archetyp-Steckbriefe <small>gesehene Karten</small></h2>${prof.map(([k, l]) => {
+      const [c, a] = k.split("|"); const cnt = {};
+      l.forEach(m => m.oppSeen.forEach(id => cnt[id] = (cnt[id] || 0) + 1));
+      const top = Object.entries(cnt).sort((p, q) => q[1] - p[1]).slice(0, 10);
+      return `<div class="profile"><b>${mini(c)} ${esc(a)}</b> <span class="note">${l.length} Matches mit Replay</span><p>${top.map(([id, n]) => `${esc(cardName(id))} ${pct(n, l.length)}%`).join(", ")}</p></div>`;
+    }).join("")}<p class="statnote" style="margin-top:8px">Prozent = in wie vielen dieser Matches die Karte zu sehen war. Hohe Werte sind Kernkarten, niedrige eher Tech-Karten.</p></section>`;
+  }
+
+  // Spielmuster: Markierungen mit/ohne
+  const tagSet = uniq(U.flatMap(u => u.tags));
+  if (tagSet.length) {
+    const rows = tagSet.map(t => { const a = aggU(U.filter(u => u.tags.includes(t))), o = aggU(U.filter(u => !u.tags.includes(t))); return { t, a, o, d: pct(a.w, a.n) - pct(o.w, o.n) }; }).sort((x, y) => y.a.n - x.a.n);
+    html += `<section class="block"><h2>Spielmuster</h2><div class="scroll"><table class="stats"><thead><tr><th>Markierung</th><th class="num">${unitWord}</th><th class="num">mit</th><th class="num">ohne</th><th class="num">±</th></tr></thead><tbody>
+      ${rows.map(r => `<tr class="${r.a.n < MIN_N ? "thin" : ""}"><td style="white-space:normal">${esc(r.t)}</td><td class="num">${r.a.n}</td><td class="num">${pct(r.a.w, r.a.n)}%</td><td class="num">${r.o.n ? pct(r.o.w, r.o.n) + "%" : "–"}</td><td class="num" style="color:${r.d >= 0 ? "var(--win)" : "var(--loss)"};font-weight:600">${r.o.n ? (r.d > 0 ? "+" : "") + r.d : "–"}</td></tr>`).join("")}
+      </tbody></table></div><p class="statnote">Siegquote der ${unitWord} mit und ohne diese Markierung. ± ist der Unterschied in Prozentpunkten.</p></section>`;
+  }
+
+  // Mulligan
+  const mg = groupU(U.filter(u => u.mull != null), u => String(u.mull)).sort((a, b) => Number(a[0]) - Number(b[0]));
+  if (mg.length) html += `<section class="block"><h2>Mulligan <small>Karten zurückgelegt</small></h2><table class="stats"><thead><tr><th>Karten</th><th class="num">S–N</th><th class="num">Quote</th><th></th></tr></thead><tbody>
+    ${mg.map(([k, x]) => wrRow(esc(k), x)).join("")}</tbody></table></section>`;
+
+  // Spieldauer
+  const T = U.filter(u => u.turns);
+  if (T.length) {
+    const B = [["bis Zug 6", t => t <= 6], ["Zug 7–8", t => t >= 7 && t <= 8], ["Zug 9–10", t => t >= 9 && t <= 10], ["ab Zug 11", t => t >= 11]];
+    const avg = arr => arr.length ? (arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(1).replace(".", ",") : "–";
+    html += `<section class="block"><h2>Spieldauer</h2><table class="stats"><thead><tr><th>Länge</th><th class="num">S–N</th><th class="num">Quote</th><th></th></tr></thead><tbody>
+      ${B.map(([l, f]) => [l, aggU(T.filter(u => f(u.turns)))]).filter(([, x]) => x.n).map(([l, x]) => wrRow(l, x)).join("")}</tbody></table>
+      <p class="statnote" style="margin-top:6px">Im Schnitt ${avg(T.filter(u => u.result === "W").map(u => u.turns))} Züge bei Sieg, ${avg(T.filter(u => u.result === "L").map(u => u.turns))} bei Niederlage. Züge kommen aus Replays, dem Zähler oder deiner Eingabe.</p></section>`;
+  }
+
+  html += cardSwapHtml(list);
+
+  // Eigene Leistung
+  const avg1 = arr => arr.length ? (arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(1).replace(".", ",") : "–";
+  const perfW = list.filter(m => m.result === "W" && m.perf).map(m => m.perf), perfL = list.filter(m => m.result === "L" && m.perf).map(m => m.perf);
+  if (perfW.length + perfL.length) {
+    html += `<section class="block"><h2>Eigene Leistung</h2><table class="stats"><thead><tr><th></th><th class="num">bei Sieg</th><th class="num">bei Niederlage</th></tr></thead><tbody>
+      <tr><td>Durchschnitt (1–5)</td><td class="num">${avg1(perfW)}</td><td class="num">${avg1(perfL)}</td></tr></tbody></table></section>`;
+  }
+  if (!filt.player) {
+    const byPlayer = group(list, m => m.player || "?");
+    if (byPlayer.length > 1) html += `<section class="block"><h2>Spieler</h2><table class="stats"><thead><tr><th>Spieler</th><th class="num">S–N</th><th class="num">Quote</th><th></th></tr></thead><tbody>
+      ${byPlayer.map(([p, x]) => wrRow(esc(p), x)).join("")}</tbody></table></section>`;
+  }
+  out.innerHTML = html;
+}
+function makeStatCard(){
+  const list = filtered();
+  if (!list.length){ toast("Keine Matches für diese Filter."); return; }
+  const mode = prefs.weight;
+  const hasBo3 = list.some(m => m.format === "bo3");
+  const unitWord = hasBo3 && mode !== "match" ? "Spiele" : "Matches";
+  const w = list.filter(m => m.result === "W").length;
+  const U = list.flatMap(m => units(m, mode));
+  const pl = aggU(U.filter(u => u.start === "play")), dr = aggU(U.filter(u => u.start === "draw"));
+  const per = METAS.find(x => x.id === filt.period);
+
+  // Matchups nach Farbkombi, nur aussagekräftige
+  const byOpp = group(list, m => pairKey(m.oppColors || []))
+    .map(([k, x]) => ({ k, n: x.n, w: x.w, q: x.n ? x.w / x.n : 0 }))
+    .filter(o => o.n >= MIN_N);
+  const best = byOpp.slice().sort((a, b) => b.q - a.q || b.n - a.n).slice(0, 3);
+  const worst = byOpp.slice().sort((a, b) => a.q - b.q || b.n - a.n).slice(0, 3);
+
+  const DPR = 2, W = 540, pad = 28;
+  let rows = 3 + (best.length ? 1 + best.length : 0) + (worst.length ? 1 + worst.length : 0);
+  const H = 150 + 150 + rows * 30 + 60;
+  const cv = document.createElement("canvas");
+  cv.width = W * DPR; cv.height = H * DPR;
+  const g = cv.getContext("2d"); g.scale(DPR, DPR);
+  const FN = "-apple-system, Segoe UI, Roboto, sans-serif";
+
+  g.fillStyle = "#10152A"; g.fillRect(0, 0, W, H);
+  g.fillStyle = "#1A2140"; g.fillRect(0, 0, W, 92);
+  g.fillStyle = "#E6E9F4"; g.font = "700 26px " + FN; g.textBaseline = "alphabetic";
+  g.fillText("Match-Log", pad, 42);
+  g.fillStyle = "#98A0BE"; g.font = "15px " + FN;
+  g.fillText((per ? per.name : "Alle Zeiträume") + "  ·  " + list.length + " Matches", pad, 70);
+
+  // große Quote
+  let y = 150;
+  g.fillStyle = "#E0B84A"; g.font = "700 58px " + FN;
+  g.fillText(pct(w, list.length) + "%", pad, y);
+  g.fillStyle = "#98A0BE"; g.font = "16px " + FN;
+  g.fillText("Siegquote", pad, y + 26);
+  g.fillStyle = "#E6E9F4"; g.font = "600 20px " + FN; g.textAlign = "right";
+  g.fillText(w + "–" + (list.length - w), W - pad, y - 20);
+  g.fillStyle = "#98A0BE"; g.font = "15px " + FN;
+  g.fillText("angefangen " + pct(pl.w, pl.n) + "%  ·  nachgezogen " + pct(dr.w, dr.n) + "%", W - pad, y + 6);
+  g.textAlign = "left";
+
+  function line(label, q, n, col){
+    g.fillStyle = col; g.fillRect(pad, y - 11, 8, 8);
+    g.fillStyle = "#E6E9F4"; g.font = "16px " + FN;
+    const name = pairName(label);
+    g.fillText(name.length > 30 ? name.slice(0, 29) + "…" : name, pad + 18, y);
+    g.fillStyle = "#98A0BE"; g.textAlign = "right";
+    g.fillText(q + "%  (" + n + ")", W - pad, y);
+    g.textAlign = "left";
+  }
+  function head(t){ g.fillStyle = "#98A0BE"; g.font = "600 13px " + FN; g.fillText(t.toUpperCase(), pad, y); }
+
+  y += 70;
+  if (best.length){ head("Beste Matchups"); y += 26;
+    best.forEach(o => { line(o.k, pct(o.w, o.n), o.n, "#4CC486"); y += 30; }); y += 8; }
+  if (worst.length){ head("Schwerste Matchups"); y += 26;
+    worst.forEach(o => { line(o.k, pct(o.w, o.n), o.n, "#F06078"); y += 30; }); }
+
+  g.fillStyle = "#6B7398"; g.font = "13px " + FN;
+  g.fillText("ab " + MIN_N + " " + unitWord + " je Matchup  ·  " + new Date().toLocaleDateString("de-DE"), pad, H - 20);
+
+  cv.toBlob(async b => {
+    const buf = new Uint8Array(await b.arrayBuffer());
+    const ok = await downloadFile("match-log-auswertung.png", buf, "image/png");
+    toast(ok ? "Auswertungskarte gespeichert." : "Download abgelehnt.");
+  }, "image/png");
+}
+
+$("#statsOut").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.wv){ prefs.weight = b.dataset.wv; LS.set("weight", prefs.weight); renderStats(); }
+  else if (b.dataset.tr){ prefs.trendRes = b.dataset.tr; LS.set("trendRes", prefs.trendRes); renderStats(); }
+  else if (b.dataset.shot){ makeStatCard(); }
+  else if (b.dataset.deckpick){
+    const k = b.dataset.deckpick;
+    if (k === "__all"){ deckOff.clear(); }
+    else if (deckOff.has(k)) deckOff.delete(k); else deckOff.add(k);
+    LS.set("deckOff", [...deckOff]); renderStats();
+  }
+});
+
+/* ---------- Verlauf ---------- */
+const fmtDate = ts => new Date(ts).toLocaleString("de-DE", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
+/* Bo3-Einträge, denen Folgespiele als eigene Bo1-Einträge fehlen */
+function bo3Repairs(){
+  const all = [...matches].sort((a, b) => a.ts - b.ts), used = new Set(), out = [];
+  all.forEach(m => {
+    if (used.has(m.id) || m.seriesId || m.format !== "bo3" || !Array.isArray(m.gameList) || !m.gameList.length || !m.oppName) return;
+    if (m.by && myId && m.by !== myId) return;
+    let gl = m.gameList.slice(), last = m.ts; const take = [];
+    if (seriesOf(gl).done) return;
+    for (const x of all){
+      if (x.ts <= m.ts || used.has(x.id) || x.id === m.id) continue;
+      if (x.ts - last > 3600e3) break;
+      if (x.seriesId || x.format === "bo3" || x.player !== m.player || x.oppName !== m.oppName) continue;
+      take.push(x); gl.push({ r: x.result }); last = x.ts;
+      if (seriesOf(gl).done) break;
+    }
+    if (take.length){ used.add(m.id); take.forEach(x => used.add(x.id)); out.push({ m, take }); }
+  });
+  return out;
+}
+async function applyBo3Repairs(){
+  const todo = bo3Repairs(); let n = 0;
+  for (const { m, take } of todo){
+    const gameList = [...m.gameList, ...take.map(x => ({ r: x.result, s: x.start || null, mull: x.mull ?? null, tags: [...(x.tags || [])], turns: x.turns ?? null, openMe: x.openMe || null, openOpp: x.openOpp || null }))];
+    const ser = seriesOf(gameList);
+    const result = ser.result || (ser.w > ser.l ? "W" : ser.l > ser.w ? "L" : gameList[gameList.length - 1].r);
+    const seenN = take.reduce((o, x) => mergeSeen(o, x.oppSeenN || {}), { ...(m.oppSeenN || {}) });
+    const ok = await store.update(m.id, {
+      gameList, result, games: ser.score,
+      replays: [...(m.replays || []), ...take.flatMap(x => x.replays || [])],
+      oppSeenN: Object.keys(seenN).length ? seenN : null,
+      oppSeen: Object.keys(seenN).length ? Object.keys(seenN) : (m.oppSeen || null),
+      notes: [m.notes, ...take.map(x => x.notes)].filter(Boolean).join(" · ").slice(0, 500)
+    });
+    if (!ok) continue;
+    for (const x of take) await store.remove(x.id);
+    n++;
+  }
+  return n;
+}
+function renderLog(){
+  renderArchMgr();
+  const list = filtered().sort((a, b) => b.ts - a.ts);
+  const out = $("#logOut");
+  if (!list.length) { out.innerHTML = `<div class="empty">${matches.length ? "Keine Matches für diese Filter." : "Noch keine Matches eingetragen."}</div>`; return; }
+  const fix = bo3Repairs(), fixN = fix.reduce((a, x) => a + x.take.length, 0);
+  out.innerHTML = (fix.length ? `<div class="repair"><b>${fixN} ${fixN === 1 ? "Einzelspiel gehört" : "Einzelspiele gehören"} vermutlich zu ${fix.length === 1 ? "einem Bo3" : fix.length + " Bo3"}.</b> Beim Import wurden sie als eigene Bo1 gespeichert. <button class="chip" type="button" aria-pressed="true" data-fixbo3="1">Jetzt zusammenführen</button></div>` : "")
+    + `<ul class="log">${list.slice(0, 300).map(m => {
+    const dk = pairKey(m.deckColors || []), ok = pairKey(m.oppColors || []);
+    const mine = !m.by || !myId || m.by === myId;
+    const bits = [fmtDate(m.ts), m.player, m.tourney ? m.tourney + (m.round ? " R" + m.round : "") : m.event, m.format === "bo3" ? (m.incomplete ? "Bo3 (unvollständig)" : "Bo3") : "Bo1", m.gameList ? "" : (m.start === "play" ? "angefangen" : "nachgezogen"),
+      !m.gameList && m.mull != null ? "Mulligan " + m.mull : "", m.turns ? m.turns + " Züge" : "", m.perf ? "Leistung " + m.perf + "/5" : "", ...(m.tags || [])].filter(Boolean);
+    const pack = Array.isArray(m.gameList) && m.gameList.length > 0;
+    const glHtml = pack ? `<span class="games">${m.gameList.map((g, i) => `<span class="grow${g.missing ? " miss" : ""}"><span class="gb ${g.r === "W" ? "W" : g.r === "L" ? "L" : "Q"}">${g.r === "W" ? "S" : g.r === "L" ? "N" : "?"}</span><span>Spiel ${i + 1} · ${g.missing ? (g.r ? "fehlt im Export, Ergebnis aus dem Spielstand" : "fehlt im Export") : (g.s === "play" ? "angefangen" : g.s === "draw" ? "nachgezogen" : "?") + (g.mull != null ? ", Mulligan " + g.mull : "") + (g.turns ? ", " + g.turns + " Züge" : "")}${(g.tags || []).length ? ", " + esc(g.tags.join(", ")) : ""}</span></span>`).join("")}</span>` : "";
+    const perGameReps = pack && m.gameList.some(g => g.rep);
+    const reps = perGameReps ? [] : (m.replays || []).map(cleanUrl).filter(Boolean);
+    const repLinksHtml = perGameReps ? m.gameList.map((g, i) => g.rep ? `<a href="https://duels.ink/replay/${esc(g.rep)}" target="_blank" rel="noopener noreferrer">Replay Spiel ${i + 1}</a>` : "").join("") : "";
+    return `<li class="${pack ? "pack" : ""}"><span class="badge ${m.result}">${m.games || (m.result === "W" ? "S" : "N")}</span>
+      <span class="main">${selMode ? `<input type="checkbox" class="selbox" data-sel="${esc(m.id)}" ${selIds.has(m.id) ? "checked" : ""} aria-label="Auswählen"> ` : ""}${mini(dk)} ${esc(m.deckName || pairName(dk))} gegen ${mini(ok)} ${esc(m.oppArch || pairName(ok))}${m.oppName ? ` <span class="note">(${esc(m.oppName)})</span>` : ""}</span>
+      ${mine ? `<button class="del" data-id="${esc(m.id)}">Löschen</button>` : "<span></span>"}
+      <span class="sub">${esc(bits.join(", "))}${glHtml}${m.keyCards ? `<br>Schlüsselkarten: ${esc(m.keyCards)}` : ""}${m.notes ? `<br>${esc(m.notes)}` : ""}${seenHtml(seenEntries(m), false)}${openingHtml(m)}</span>
+      <span class="links">${repLinksHtml}${reps.map((u, i) => `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${reps.length > 1 ? "Replay Spiel " + (i + 1) : "Replay ansehen"}</a>`).join("")}${mine ? `<button class="del" data-edit="${esc(m.id)}">Bearbeiten</button>` : ""}</span>
+      ${editing === m.id ? `<div class="edit" data-for="${esc(m.id)}">
+        ${Array.from({ length: m.format === "bo3" ? 3 : 1 }, (_, i) => `<input class="field" type="url" data-rep="${i}" placeholder="Replay-Link${m.format === "bo3" ? " Spiel " + (i + 1) : ""}" value="${esc((m.replays || [])[i] || "")}">`).join("")}
+        <select class="field" data-archsel>${["", ...archListFor(ok)].map(a => `<option value="${esc(a)}" ${a === (m.oppArch || "") ? "selected" : ""}>${a ? esc(a) : "Gegner-Variante: unbekannt"}</option>`).join("")}</select>
+        <textarea class="field" rows="2" data-notes placeholder="Notiz">${esc(m.notes || "")}</textarea>
+        <div class="row"><button class="chip" aria-pressed="true" data-save="${esc(m.id)}">Speichern</button><button class="chip" data-cancel>Abbrechen</button><span class="note" data-err></span></div>
+      </div>` : ""}</li>`;
+  }).join("")}</ul>${list.length > 300 ? `<p class="note">Die neuesten 300 von ${list.length} werden angezeigt. Filter eingrenzen für ältere.</p>` : ""}`;
+  renderSelBar(list.slice(0, 300));
+}
+/* ---------- Mehrere Matches auf einmal: Gegner-Variante zuweisen ---------- */
+let selMode = false; const selIds = new Set(); let selVisible = [];
+async function bulkPatch(ids, fn){
+  const set = new Set(ids);
+  if (store.mode === "db"){ for (const m of matches.filter(x => set.has(x.id))) await store.update(m.id, fn(m)); return; }
+  matches = matches.map(m => set.has(m.id) ? { ...m, ...fn(m) } : m);
+  LS.set("matches", matches); renderAll();
+}
+function renderSelBar(visible){
+  selVisible = visible || selVisible;
+  const bar = $("#selBar"); if (!bar) return;
+  $("#selBtn").textContent = selMode ? "Auswahl beenden" : "Mehrere auswählen";
+  $("#selBtn").setAttribute("aria-pressed", selMode);
+  if (!selMode){ bar.hidden = true; bar.innerHTML = ""; return; }
+  [...selIds].forEach(id => { if (!matches.some(m => m.id === id)) selIds.delete(id); });
+  const sel = matches.filter(m => selIds.has(m.id));
+  const pairs = [...new Set(sel.map(m => pairKey(m.oppColors || [])))];
+  const allOn = selVisible.length && selVisible.every(m => selIds.has(m.id));
+  let act = "";
+  if (!sel.length) act = `<span class="note">Matches im Verlauf antippen. Tipp: vorher im Filter die Gegnerfarben wählen.</span>`;
+  else if (pairs.length > 1) act = `<span class="note">Die Auswahl hat verschiedene Gegnerfarben. Varianten gehören zu einer Farbkombi, bitte nur eine auswählen.</span>`;
+  else {
+    const ok = pairs[0];
+    act = `<select class="field" id="selArch">${["", ...archListFor(ok)].map(a => `<option value="${esc(a)}">${a ? esc(a) : "Variante: unbekannt"}</option>`).join("")}<option value="__new">Neue Variante …</option></select>`
+      + `<input class="field" id="selArchNew" placeholder="Name der neuen Variante" maxlength="40" hidden>`
+      + `<button class="chip" type="button" aria-pressed="true" id="selApply">Zuweisen</button>`;
+  }
+  bar.innerHTML = `<div class="selhead"><b>${sel.length} ausgewählt</b>${pairs.length === 1 && sel.length ? ` ${mini(pairs[0])} <span class="note">${esc(pairName(pairs[0]))}</span>` : ""}<span style="flex:1"></span>`
+    + `<button class="chip small" type="button" id="selAll">${allOn ? "Keine" : "Alle sichtbaren"}</button><button class="chip small" type="button" id="selDone">Fertig</button></div>`
+    + `<div class="selact">${act}</div>`;
+  bar.hidden = false;
+}
+$("#tab-log").addEventListener("change", e => {
+  const cb = e.target.closest(".selbox");
+  if (cb){ cb.checked ? selIds.add(cb.dataset.sel) : selIds.delete(cb.dataset.sel); renderSelBar(); return; }
+  if (e.target.id === "selArch"){ const n = $("#selArchNew"); n.hidden = e.target.value !== "__new"; if (!n.hidden) n.focus(); }
+});
+$("#tab-log").addEventListener("click", async e => {
+  const t = e.target;
+  if (t.id === "selBtn" || t.id === "selDone"){ selMode = t.id === "selBtn" ? !selMode : false; if (!selMode) selIds.clear(); renderLog(); return; }
+  if (t.id === "selAll"){ const allOn = selVisible.every(m => selIds.has(m.id)); selVisible.forEach(m => allOn ? selIds.delete(m.id) : selIds.add(m.id)); renderLog(); return; }
+  if (t.id === "selApply"){
+    let v = $("#selArch").value;
+    if (v === "__new"){ v = $("#selArchNew").value.trim(); if (!v){ $("#selArchNew").focus(); return; } }
+    const ids = [...selIds], ok = pairKey((matches.find(m => m.id === ids[0]) || {}).oppColors || []);
+    if (v && ok){ const cur = prefs.archetypes[ok] || []; if (!cur.includes(v)){ prefs.archetypes[ok] = [...cur, v]; savePrefs(); } }
+    await bulkPatch(ids, () => ({ oppArch: v }));
+    toast(`${ids.length} ${ids.length === 1 ? "Match" : "Matches"}: Variante ${v ? "„" + v + "“" : "entfernt"}.`);
+    selIds.clear(); selMode = false; renderLog(); return;
+  }
+  if (selMode && !t.closest("a,button,input,select,textarea,details,summary,.selbar")){
+    const li = t.closest("#logOut ul.log > li"); const cb = li && li.querySelector(".selbox");
+    if (cb){ cb.checked = !cb.checked; cb.dispatchEvent(new Event("change", { bubbles: true })); }
+  }
+  if (t.id === "archMgrBtn"){ const box = $("#archMgr"); box.hidden = !box.hidden; t.setAttribute("aria-pressed", !box.hidden); if (!box.hidden) renderArchMgr(); return; }
+  const rn = t.closest("[data-arch-rename]");
+  if (rn){
+    const [ok, old] = JSON.parse(rn.dataset.archRename);
+    const inp = rn.parentElement.querySelector("input"), nv = inp.value.trim();
+    if (!nv || nv === old) return;
+    const list = archListFor(ok), merge = list.includes(nv);
+    prefs.archetypes[ok] = [...new Set(list.map(a => a === old ? nv : a))];
+    savePrefs();
+    const ids = matches.filter(m => pairKey(m.oppColors || []) === ok && m.oppArch === old).map(m => m.id);
+    await bulkPatch(ids, () => ({ oppArch: nv }));
+    toast(merge ? `„${old}“ mit „${nv}“ zusammengelegt (${ids.length} Matches).` : `„${old}“ heißt jetzt „${nv}“ (${ids.length} Matches).`);
+    renderArchMgr(); return;
+  }
+  const dl = t.closest("[data-arch-del]");
+  if (dl){
+    if (dl.dataset.confirm !== "1"){ dl.dataset.confirm = "1"; dl.textContent = "Wirklich?"; return; }
+    const [ok, old] = JSON.parse(dl.dataset.archDel);
+    prefs.archetypes[ok] = (prefs.archetypes[ok] || []).filter(a => a !== old); savePrefs();
+    const ids = matches.filter(m => pairKey(m.oppColors || []) === ok && m.oppArch === old).map(m => m.id);
+    await bulkPatch(ids, () => ({ oppArch: "" }));
+    toast(`„${old}“ gelöscht${ids.length ? `, ${ids.length} Matches jetzt ohne Variante` : ""}.`);
+    renderArchMgr(); return;
+  }
+});
+$("#archMgr").addEventListener("keydown", e => { if (e.key === "Enter" && e.target.matches("input")){ e.preventDefault(); const b = e.target.parentElement.querySelector("[data-arch-rename]"); if (b) b.click(); } });
+/* ---------- Varianten verwalten: umbenennen, zusammenlegen, löschen ---------- */
+function renderArchMgr(){
+  const box = $("#archMgr"); if (!box || box.hidden) return;
+  const pairs = [...new Set([...Object.keys(prefs.archetypes).filter(k => (prefs.archetypes[k] || []).length), ...matches.filter(m => m.oppArch).map(m => pairKey(m.oppColors || []))])].filter(Boolean)
+    .sort((a, b) => pairName(a).localeCompare(pairName(b), "de"));
+  if (!pairs.length){ box.innerHTML = `<p class="note">Noch keine Gegner-Varianten angelegt. Das geht beim Eintragen unter „Gegner“ mit „+ Variante“.</p>`; return; }
+  box.innerHTML = `<p class="note">Neuen Namen eintippen und „Umbenennen“ tippen. Alle Matches mit dieser Variante ändern sich mit. Tippst du den Namen einer anderen Variante derselben Farbkombi ein, werden beide zusammengelegt.</p>`
+    + pairs.map(ok => `<div class="amgroup"><p class="sub-h">${mini(ok)} ${esc(pairName(ok))}</p>${archListFor(ok).map(a => {
+        const n = matches.filter(m => pairKey(m.oppColors || []) === ok && m.oppArch === a).length, key = esc(JSON.stringify([ok, a]));
+        return `<div class="amrow"><input class="field" value="${esc(a)}" maxlength="40" aria-label="Name der Variante"><span class="note">${n} ${n === 1 ? "Match" : "Matches"}</span>`
+          + `<button class="chip small" type="button" data-arch-rename="${key}">Umbenennen</button><button class="chip small" type="button" data-arch-del="${key}">Löschen</button></div>`;
+      }).join("")}</div>`).join("");
+}
+let editing = null;
+$("#logOut").onclick = async e => {
+  if (e.target.closest("[data-fixbo3]")) { const n = await applyBo3Repairs(); toast(n === 1 ? "Ein Bo3 zusammengeführt." : n + " Bo3 zusammengeführt."); return; }
+  const ed = e.target.closest("[data-edit]"); if (ed) { startEdit(ed.dataset.edit); return; }
+  if (e.target.closest("[data-cancel]")) { editing = null; renderLog(); return; }
+  const sv = e.target.closest("[data-save]");
+  if (sv) {
+    const box = sv.closest(".edit");
+    const raw = [...box.querySelectorAll("input[data-rep]")].map(i => i.value.trim());
+    if (raw.some(v => v && !cleanUrl(v))) { box.querySelector("[data-err]").textContent = "Link muss mit https:// beginnen."; return; }
+    const ok = await store.update(sv.dataset.save, { replays: raw.map(cleanUrl).filter(Boolean), notes: box.querySelector("[data-notes]").value.trim().slice(0, 500), oppArch: box.querySelector("[data-archsel]").value });
+    if (ok) { editing = null; renderLog(); }
+    return;
+  }
+  const b = e.target.closest(".del[data-id]"); if (!b) return;
+  if (b.dataset.confirm !== "1") { b.dataset.confirm = "1"; b.textContent = "Wirklich löschen?"; return; }
+  await store.remove(b.dataset.id);
+};
+
+/* Lokaler Download per Blob, kein Server nötig */
+let dlCap = null;
+(async () => { try { if (window.claude && typeof window.claude.use === "function") dlCap = await window.claude.use("downloads"); } catch {} })();
+async function downloadFile(filename, data, mime){
+  if (dlCap) {
+    try { await dlCap.save({ filename, data }); return true; }
+    catch (e) { if (e && (e.code === "declined" || e.code === "rate_limited")) return false; }
+  }
+  return blobDownload(filename, data, mime);
+}
+function blobDownload(filename, data, mime){
+  const blob = new Blob([data], { type: mime || "application/octet-stream" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 0);
+  return true;
+}
+$("#csvBtn").hidden = false;
+$("#csvBtn").onclick = async () => {
+  const cols = ["datum","spieler","deck","deckfarben","gegnerfarben","gegner_archetyp","gegnername","format","ergebnis","spiele","angefangen","event","set_format","markierungen","notiz","schluesselkarten","gegnerkarten_gesehen","mulligan","leistung","turnier","runde","replays","zuege","meta_zeitraum","einzelspiele"];
+  const q = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const rows = filtered().sort((a, b) => a.ts - b.ts).map(m => [
+    new Date(m.ts).toISOString(), m.player, m.deckName, (m.deckColors||[]).join("/"), (m.oppColors||[]).join("/"), m.oppArch, m.oppName,
+    m.format, m.result === "W" ? "Sieg" : "Niederlage", m.games || "", m.start === "play" ? "ja" : "nein", m.event, m.meta, (m.tags||[]).join("; "), m.notes,
+    m.keyCards, seenEntries(m).map(([id, n]) => (n ? n + "x " : "") + cardName(id)).join("; "), m.mull ?? "", m.perf ?? "", m.tourney || "", m.round ?? "", (m.replays||[]).join(" "),
+    m.turns ?? "", (METAS.find(p => p.id === periodOf(m.ts)) || { name: "vorher" }).name,
+    (m.gameList || []).map((g, i) => `S${i + 1} ${g.r === "W" ? "Sieg" : "Niederlage"} ${g.s === "play" ? "angef." : "nachgez."}${g.mull != null ? " Mull " + g.mull : ""}${g.turns ? " " + g.turns + "Z" : ""}${(g.tags || []).length ? " [" + g.tags.join(", ") + "]" : ""}`).join(" | ")
+  ].map(q).join(";"));
+  downloadFile(`match-log-${new Date().toISOString().slice(0,10)}.csv`, "\ufeff" + [cols.join(";"), ...rows].join("\n"), "text/csv;charset=utf-8");
+};
+
+/* ---------- Tabs ---------- */
+let curTab = "entry";
+function switchTab(tab){
+  curTab = tab;
+  document.querySelectorAll("nav.tabs button").forEach(x => x.setAttribute("aria-selected", x.dataset.tab === tab));
+  ["entry", "counter", "stats", "log"].forEach(t => $("#tab-" + t).hidden = t !== tab);
+  $("#savebar").hidden = tab !== "entry";
+  setWake(tab === "counter");
+  renderAll();
+  window.scrollTo({ top: 0 });
+}
+let showCounter = LS.get("showCounter", true);
+function applyCounterVis(){
+  const b = document.querySelector('nav.tabs [data-tab="counter"]'); if (b) b.hidden = !showCounter;
+  const cb = $("#showCounter"); if (cb) cb.checked = showCounter;
+  if (!showCounter && curTab === "counter") switchTab("entry");
+}
+$("#showCounter").addEventListener("change", e => { showCounter = e.target.checked; LS.set("showCounter", showCounter); applyCounterVis(); toast(showCounter ? "Zähler-Tab wird angezeigt." : "Zähler-Tab ausgeblendet. Hier unten wieder einschaltbar."); });
+applyCounterVis();
+document.querySelector("nav.tabs").onclick = e => { const b = e.target.closest("button"); if (b) switchTab(b.dataset.tab); };
+
+/* ---------- Lore-Zähler fürs Papierspiel ---------- */
+let wakeLock = null;
+async function setWake(on){
+  try {
+    if (on && !wakeLock && "wakeLock" in navigator){ wakeLock = await navigator.wakeLock.request("screen"); wakeLock.addEventListener("release", () => { wakeLock = null; }); }
+    else if (!on && wakeLock){ await wakeLock.release(); wakeLock = null; }
+  } catch {}
+}
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && curTab === "counter") setWake(true); });
+const ctr = Object.assign({ me: 0, opp: 0, turn: 1, start: null, done: null, note: "" }, LS.get("counter", {}));
+const saveCtr = () => LS.set("counter", ctr);
+const WIN_LORE = 20;
+function renderCounter(){
+  if (!$("#loreMid")) return;
+  $("#loreMe").textContent = ctr.me; $("#loreOpp").textContent = ctr.opp;
+  const won = ctr.me >= WIN_LORE ? "W" : ctr.opp >= WIN_LORE ? "L" : ctr.done;
+  const active = !ctr.start || won ? null : ((ctr.turn % 2 === 1) === (ctr.start === "play") ? "me" : "opp");
+  $("#sideMe").classList.toggle("active", active === "me"); $("#sideOpp").classList.toggle("active", active === "opp");
+  $("#sideMe").classList.toggle("win", ctr.me >= WIN_LORE); $("#sideOpp").classList.toggle("win", ctr.opp >= WIN_LORE);
+  const bo3 = prefs.format === "bo3";
+  const gi = bo3 && form.perGame ? visibleGames().findIndex(g => !g.r) : 0;
+  const label = bo3 ? `Bo3, Spiel ${Math.max(gi, 0) + 1}` : "Bo1";
+  const mid = $("#loreMid");
+  if (!ctr.start){
+    mid.innerHTML = `<span class="msg">${ctr.note ? esc(ctr.note) + " " : ""}${label}: Wer fängt an?</span><button type="button" class="big-btn" data-c="start-play">Ich</button><button type="button" class="big-btn" data-c="start-draw">Gegner</button>`;
+    return;
+  }
+  if (won){
+    mid.innerHTML = `<span class="msg">${won === "W" ? "Sieg" : "Niederlage"} nach ${ctr.turn} Zügen.${ctr.done ? "" : " Verzählt? Mit − korrigieren."}</span>
+      <button type="button" class="big-btn" data-c="take-${won}">Ins Match übernehmen</button>${ctr.done ? `<button type="button" class="chip" data-c="undo">Weiterspielen</button>` : ""}`;
+    return;
+  }
+  mid.innerHTML = `<span class="turn">Zug ${ctr.turn}</span><button type="button" class="big-btn" data-c="next">Zug beenden</button>
+    <button type="button" class="chip" data-c="end-W">Gegner gibt auf</button><button type="button" class="chip" data-c="end-L">Ich gebe auf</button><button type="button" class="chip linkish" data-c="reset">Neu</button>`;
+}
+$("#lore").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.side){
+    const k = b.dataset.side; ctr[k] = Math.max(0, Math.min(99, ctr[k] + Number(b.dataset.d)));
+    try { navigator.vibrate && navigator.vibrate(8); } catch {}
+    saveCtr(); renderCounter(); return;
+  }
+  const c = b.dataset.c; if (!c) return;
+  if (c === "reset" && b.dataset.confirm !== "1"){ b.dataset.confirm = "1"; b.textContent = "Wirklich neu?"; return; }
+  if (c.startsWith("start-")){ ctr.start = c === "start-play" ? "play" : "draw"; ctr.note = ""; }
+  else if (c === "next") ctr.turn++;
+  else if (c.startsWith("end-")) ctr.done = c.slice(-1);
+  else if (c === "undo") ctr.done = null;
+  else if (c === "reset") Object.assign(ctr, { me: 0, opp: 0, turn: 1, start: null, done: null, note: "" });
+  else if (c.startsWith("take-")){ takeCounter(c.slice(-1)); return; }
+  saveCtr(); renderCounter();
+});
+function takeCounter(res){
+  const turns = ctr.turn, start = ctr.start;
+  let note = "", toEntry = true;
+  if (prefs.format === "bo3"){
+    form.perGame = true;
+    let i = visibleGames().findIndex(g => !g.r);
+    if (i < 0){ form.gl = [blankGame(), blankGame(), blankGame()]; i = 0; }
+    Object.assign(form.gl[i], { r: res, s: start, turns });
+    const nx = form.gl[i + 1]; if (nx && !nx.s) nx.s = res === "L" ? "play" : "draw";
+    const ser = seriesOf(visibleGames().filter(g => g.r));
+    if (!ser.done){ toEntry = false; note = `Spiel ${i + 1} übernommen (${res === "W" ? "Sieg" : "Niederlage"}), Stand ${ser.score}.`; }
+  } else {
+    form.result = res; form.games = null; form.start = start; $("#turns").value = turns;
+  }
+  Object.assign(ctr, { me: 0, opp: 0, turn: 1, start: null, done: null, note });
+  saveCtr(); renderEntry();
+  if (toEntry){ switchTab("entry"); toast("Vom Zähler übernommen. Deck und Gegner prüfen, dann speichern."); }
+  else renderCounter();
+}
+
+
+/* ---------- Sicherung + Erinnerung ---------- */
+async function exportBackup(){
+  const data = JSON.stringify({ app: "match-log", version: 2, exportedAt: new Date().toISOString(), matches, prefs, cardNames });
+  const ok = await downloadFile(`match-log-sicherung-${new Date().toISOString().slice(0,10)}.json`, data, "application/json");
+  if (ok) { LS.set("lastBackup", { ts: Date.now(), count: matches.length }); renderBackupNag(); const m=$("#backupMsg"); if (m) m.textContent = "Sicherung erstellt."; }
+}
+function renderBackupNag(){
+  const nag = $("#backupNag"); if (!nag) return;
+  const lb = LS.get("lastBackup", { ts: 0, count: 0 });
+  const fresh = Math.max(0, matches.length - (lb.count || 0));
+  const days = lb.ts ? Math.floor((Date.now() - lb.ts) / 864e5) : null;
+  const show = fresh >= 5 || (fresh > 0 && (days === null || days >= 7));
+  nag.hidden = !show;
+  if (show) $("#backupNagMsg").textContent = `${fresh} ${fresh === 1 ? "Match" : "Matches"} noch nicht gesichert.`;
+}
+$("#backupNagBtn").onclick = exportBackup;
+try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch {}
+
+function renderAll(){
+  renderBackupNag();
+  renderGoal();
+  renderEntry();
+  renderSecSummaries();
+  renderCounter();
+  renderFilters($("#filters")); renderFilters($("#filtersLog"));
+  renderStats(); renderLog();
+}
+
+/* ============================================================
+   Replay einlesen (rein lokal) — portiert aus dem getesteten Parser
+   ============================================================ */
+async function gunzip(buf){
+  if (typeof DecompressionStream === "undefined") throw new Error("Dieser Browser kann .gz nicht entpacken. Bitte die entpackte .replay-Datei nutzen.");
+  const ds = new DecompressionStream("gzip");
+  const stream = new Response(buf).body.pipeThrough(ds);
+  return new Uint8Array(await new Response(stream).arrayBuffer());
+}
+async function inflateRaw(buf){
+  const ds = new DecompressionStream("deflate-raw");
+  const stream = new Response(buf).body.pipeThrough(ds);
+  return new Uint8Array(await new Response(stream).arrayBuffer());
+}
+/* Minimaler ZIP-Leser: liest lokale Dateikoepfe, Methode 0 (stored) und 8 (deflate) */
+async function readZip(bytes){
+  const dv = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  const out = [];
+  let i = 0;
+  while (i + 4 <= bytes.length && dv.getUint32(i, true) === 0x04034b50){
+    const method = dv.getUint16(i+8, true);
+    let compSize = dv.getUint32(i+18, true);
+    const nameLen = dv.getUint16(i+26, true);
+    const extraLen = dv.getUint16(i+28, true);
+    const flags = dv.getUint16(i+6, true);
+    const nameStart = i+30;
+    const name = new TextDecoder().decode(bytes.subarray(nameStart, nameStart+nameLen));
+    let dataStart = nameStart + nameLen + extraLen;
+    if (flags & 0x08){ // Größe steht erst im Data-Descriptor: bis zur nächsten Signatur suchen
+      let j = dataStart;
+      while (j+4 <= bytes.length){
+        const sig = dv.getUint32(j, true);
+        if (sig === 0x08074b50 || sig === 0x04034b50 || sig === 0x02014b50) break;
+        j++;
+      }
+      compSize = j - dataStart;
+    }
+    const comp = bytes.subarray(dataStart, dataStart+compSize);
+    let data;
+    try { data = method === 0 ? comp : await inflateRaw(comp); }
+    catch { data = null; }
+    if (data && /\.(replay|json)(\.gz)?$/i.test(name)){
+      out.push({ name, data: name.toLowerCase().endsWith(".gz") ? await gunzip(data) : data });
+    }
+    i = dataStart + compSize;
+    if (flags & 0x08) i += (dv.getUint32(i, true) === 0x08074b50) ? 16 : 12;
+  }
+  return out;
+}
+async function fileToReplays(file){
+  const buf = new Uint8Array(await file.arrayBuffer());
+  const n = file.name.toLowerCase();
+  const isZip = buf[0]===0x50 && buf[1]===0x4b;
+  const isGz  = buf[0]===0x1f && buf[1]===0x8b;
+  const results = [];
+  if (n.endsWith(".zip") || (isZip && !n.endsWith(".replay") && !n.endsWith(".json"))){
+    for (const e of await readZip(buf)) results.push({ name: e.name, json: JSON.parse(new TextDecoder().decode(e.data)) });
+  } else if (n.endsWith(".gz") || isGz){
+    results.push({ name: file.name, json: JSON.parse(new TextDecoder().decode(await gunzip(buf))) });
+  } else {
+    results.push({ name: file.name, json: JSON.parse(new TextDecoder().decode(buf)) });
+  }
+  return results;
+}
+
+/* --- Kernparser: aus einem Replay-JSON die bestätigten Felder ziehen --- */
+function collectCards(o, map){
+  if (Array.isArray(o)){ for (const v of o) collectCards(v, map); }
+  else if (o && typeof o === "object"){
+    if (typeof o.id === "string" && Array.isArray(o.colors)) map[o.id] = o;
+    for (const k in o) collectCards(o[k], map);
+  }
+}
+function parseReplay(d){
+  const b = d.baseSnapshot || {};
+  const me = d.perspective, opp = 3 - me;
+  const cards = {}; collectCards(d, cards);
+  let first = b.firstPlayer;
+  for (const f of (d.frames||[])) for (const p of (f.patch||[]))
+    if (p.path === "/firstPlayer" && p.value) first = p.value;
+  const mull = {}; const oppCards = {};
+  for (const l of (d.logs||[])){
+    if (l.type === "MULLIGAN")
+      mull[l.player] = (l.data && l.data.mulliganCount != null) ? l.data.mulliganCount : Math.floor((l.cardRefs||[]).length/2);
+    if (l.player === opp && ["CARD_PLAYED","CARD_INKED","CARD_REVEALED"].includes(l.type))
+      for (const r of (l.cardRefs||[]).slice(0,1)) oppCards[r.id] = (oppCards[r.id]||0)+1;
+  }
+  const colorsOf = ids => { const s=new Set(); ids.forEach(i => (cards[i]?.colors||[]).forEach(c=>s.add(c))); return [...s]; };
+  const rv0 = b.roomView || {};
+  const deckIds = (rv0.mySetup && Array.isArray(rv0.mySetup.deckCardIds) && rv0.mySetup.deckCardIds.length) ? rv0.mySetup.deckCardIds : (d.decklist || []);
+  const myList = {}; deckIds.forEach(id => myList[id] = (myList[id] || 0) + 1);
+  const nameMap = {}; Object.values(cards).forEach(c => { if (c.id) nameMap[c.id] = c.fullName || c.name || c.id; });
+  const myColors = colorsOf([...deckIds, ...(d.decklist || [])]);
+  const oppColors = colorsOf([...Object.keys(oppCards), ...(function(){ const ids=[]; const w=o=>{ if(Array.isArray(o)) o.forEach(w); else if(o&&typeof o==="object"){ if(typeof o.id==="string"&&o.instanceId!=null) ids.push(o.id); for(const k in o) w(o[k]); } }; w(b.opponent); for (const f of (d.frames||[])) for (const p of (f.patch||[])) if (/^\/opponent\//.test(p.path||"")) w(p.value); return ids; })()]);
+  const rv = b.roomView || {};
+  let start = d.createdAt;
+  for (const f of (d.frames||[])) for (const p of (f.patch||[])) if (p.path === "/gameStartedAt") start = p.value;
+  const names = d.playerNames || {};
+  /* Exemplare: jede Karte hat in den Spielständen eine eigene instanceId */
+  const inst = {};
+  const walkInst = o => {
+    if (Array.isArray(o)) o.forEach(walkInst);
+    else if (o && typeof o === "object"){
+      if (typeof o.id === "string" && o.instanceId != null) (inst[o.id] = inst[o.id] || new Set()).add(o.instanceId);
+      for (const k in o) walkInst(o[k]);
+    }
+  };
+  walkInst(b.opponent);
+  for (const f of (d.frames||[])) for (const p of (f.patch||[])) if (/^\/opponent\//.test(p.path || "")) walkInst(p.value);
+  const oppSeenN = {};
+  new Set([...Object.keys(oppCards), ...Object.keys(inst)]).forEach(id => oppSeenN[id] = Math.max(1, inst[id] ? inst[id].size : 0));
+  const oppCardList = Object.keys(oppCards).map(id => ({ id, name: cards[id]?.name || id, n: oppCards[id] }));
+
+  /* ---- Eröffnung: erste 5 Züge je Seite, Aktionen P/I/C/A/S ---- */
+  const shortName = nm => String(nm || "").split(" - ")[0];
+  function buildOpening(side){
+    const perTurn = {};
+    const push = (t, kind, text) => { (perTurn[t] = perTurn[t] || { P:[], I:[], S:[], A:[], C:[] })[kind].push(text); };
+    for (const l of (d.logs||[])){
+      if (l.player !== side) continue;
+      const t = l.turnNumber; if (!t) continue;
+      const refs = l.cardRefs || [];
+      const nm = (l.data && l.data.cardName) || (refs[0] && refs[0].name) || "";
+      if (l.type === "CARD_PLAYED"){
+        if (l.data && l.data.isSung){ push(t, "S", shortName(nm) + (refs[1] ? " \u2192 " + shortName(refs[1].name) : "")); }
+        else push(t, "P", shortName(nm)); // Shift-Grundkarte (refs[1]) ist kein Ziel
+      }
+      else if (l.type === "CARD_INKED") push(t, "I", shortName(nm));
+      else if (l.type === "ABILITY_ACTIVATED") push(t, "A", shortName(nm) + (refs[1] ? " \u2192 " + shortName(refs[1].name) : ""));
+      else if (l.type === "CARD_ATTACK"){ if (!(l.data && l.data.rawDamageToDefender != null)) continue; push(t, "C", shortName((refs[0] && refs[0].name) || nm) + (refs[1] ? " \u2192 " + shortName(refs[1].name) : "")); }
+    }
+    // globale Zugnummern dieser Seite auf 1..5 umnummerieren
+    const turns = Object.keys(perTurn).map(Number).sort((a,b)=>a-b).slice(0,5);
+    return turns.map((t, i) => {
+      const p = perTurn[t];
+      const lines = [];
+      ["P","I","C","A","S"].forEach(k => { if (p[k].length){ const seen = new Set(), uniq = p[k].filter(x => (seen.has(x) ? false : seen.add(x))); lines.push(k + " " + uniq.join(", ")); } });
+      return { t: i + 1, lines };
+    }).filter(x => x.lines.length);
+  }
+  const openMe = buildOpening(me), openOpp = buildOpening(opp);
+
+  /* Bo3-Serie: matchView trägt Serien-ID, Spielnummer und Siege VOR diesem Spiel */
+  const mv0 = b.matchView || null; let nextGame = null;
+  for (const f of (d.frames||[])) for (const p of (f.patch||[])) if (p.path === "/matchView/nextGameId" && p.value) nextGame = p.value;
+  const series = mv0 && mv0.id ? {
+    id: mv0.id, no: Number(mv0.currentGameNumber) || 1, fmt: mv0.format || null,
+    before: [Number(mv0["player" + me + "Wins"]) || 0, Number(mv0["player" + opp + "Wins"]) || 0],
+    next: nextGame
+  } : null;
+  const tsNum = new Date(start).getTime();
+  return {
+    series,
+    ts: Number.isFinite(tsNum) && tsNum > 0 ? tsNum : Date.now(),
+    myList, cardNames: nameMap, oppSeen: Object.keys(oppSeenN), oppSeenN,
+    me: names[String(me)] || "", opp: names[String(opp)] || "",
+    win: d.winner === me, reason: d.victoryReason, turns: d.turnCount,
+    start: first === me ? "play" : (first === opp ? "draw" : null),
+    mullMe: mull[me] ?? null, mullOpp: mull[opp] ?? null,
+    myColors, oppColors,
+    format: (series && series.fmt) || rv.matchFormat || "bo1", set: rv.gameFormat || "",
+    replayId: b.replayId || d.gameId, gameId: d.gameId,
+    openMe, openOpp,
+    oppCards: oppCardList
+  };
+}
+
+/* --- Ein geparstes Replay ins Eingabeformular übernehmen. Gibt bei Bo3 die Spielnummer (0-basiert) zurück. --- */
+function prefillFromReplay(r){
+  rememberNames(r.cardNames);
+  const hit = matchDeck(r.myColors.slice(0, 2), r.myList);
+  if (hit){
+    prefs.deckKey = hit.k; LS.set("deckKey", prefs.deckKey); form.deckPending = null;
+    form.deckHint = `Deck erkannt: ${hit.d.name || pairName(pairKey(hit.d.colors))}` + (hit.sim != null ? ` (${Math.round(hit.sim * 60)} von 60 Karten gleich)` : "") + ". Falsch? Einfach anderes Deck antippen.";
+  } else {
+    prefs.deckKey = ""; form.deckHint = null;
+    form.deckPending = { colors: r.myColors.slice(0, 2), list: r.myList };
+    form.newDeckColors = r.myColors.slice(0, 2);
+    $("#newDeck").hidden = false;
+  }
+  const openSeries = (r.series && form.seriesId === r.series.id) || form.perGame && prefs.format === "bo3" && form.gl.some(g => g.r)
+    && !seriesOf(visibleGames().filter(g => g.r)).done
+    && !!r.opp && $("#oppName").value.trim() === r.opp;
+  const bo3 = r.format === "bo3" || openSeries;
+  const newOpp = pairKey(r.oppColors.slice(0, 2));
+  const curName = $("#oppName").value.trim();
+  const same = bo3 && form.perGame && prefs.format === "bo3" && form.gl.some(g => g.r)
+    && (curName && r.opp ? curName === r.opp : pairKey(form.opp) === newOpp)
+    && !seriesOf(visibleGames().filter(g => g.r)).done;
+  if (!same){
+    form.gl = [blankGame(), blankGame(), blankGame()]; form.oppSeen = []; form.oppSeenN = {}; form.arch = null; form.archSuggest = null; form.openMe = null; form.openOpp = null; form.seriesId = null;
+    $("#notes").value = "";
+    document.querySelectorAll("#replayInputs input").forEach(i => i.value = "");
+  }
+  if (!same || r.oppColors.length >= form.opp.length) form.opp = r.oppColors.slice(0, 2);
+  prefs.format = bo3 ? "bo3" : "bo1"; LS.set("format", prefs.format);
+  form.myList = r.myList;
+  form.oppSeen = [...new Set([...form.oppSeen, ...r.oppSeen])];
+  form.oppSeenN = mergeSeen(form.oppSeenN, r.oppSeenN);
+  let slot = 0;
+  if (bo3){
+    form.perGame = true;
+    slot = visibleGames().findIndex(g => !g.r); if (slot < 0) slot = 0;
+    if (r.series){
+      form.seriesId = r.series.id;
+      slot = Math.min(2, Math.max(0, r.series.no - 1));
+      let dw = r.series.before[0] - form.gl.slice(0, slot).filter(g => g.r === "W").length;
+      let dl = r.series.before[1] - form.gl.slice(0, slot).filter(g => g.r === "L").length;
+      for (let i = 0; i < slot; i++) if (!form.gl[i].r){
+        const rr = dw > 0 ? (dw--, "W") : dl > 0 ? (dl--, "L") : null;
+        if (rr) Object.assign(form.gl[i], { r: rr, missing: true });
+      }
+    }
+    Object.assign(form.gl[slot], { r: r.win ? "W" : "L", s: r.start, mull: r.mullMe, turns: r.turns || null, openMe: r.openMe || null, openOpp: r.openOpp || null, missing: false, no: r.series ? r.series.no : null, wb: r.series ? r.series.before : null, rep: String(r.replayId) });
+    const nx = form.gl[slot + 1]; if (nx && !nx.s) nx.s = r.win ? "draw" : "play";
+  } else {
+    form.result = r.win ? "W" : "L"; form.games = null; form.start = r.start;
+    form.mull = r.mullMe != null ? String(r.mullMe) : null;
+    form.openMe = r.openMe || null; form.openOpp = r.openOpp || null;
+  }
+  const sug = detectArch(pairKey(form.opp), form.oppSeen);
+  form.archSuggest = sug;
+  if (sug && !form.arch) form.arch = sug.name;
+  renderEntry();
+  $("#oppName").value = r.opp || curName;
+  $("#turns").value = bo3 ? "" : (r.turns || "");
+  const inp = document.querySelectorAll("#replayInputs input")[slot]; if (inp) inp.value = "https://duels.ink/replay/" + r.replayId;
+  return slot;
+}
+
+/* --- Mehrere Replays: Bo3-Spiele desselben Gegners zu einem Match bündeln --- */
+function groupReplays(parsed){
+  const groups = [], bySeries = new Map();
+  /* duels.ink markiert oft nur Spiel 1 als Bo3, die Folgespiele als Bo1.
+     Darum: Folgespiel gegen denselben Gegner innerhalb einer Stunde gehört zum offenen Bo3. */
+  [...parsed].sort((a, b) => a.ts - b.ts).forEach(r => {
+    if (r.series){
+      let S = bySeries.get(r.series.id);
+      if (!S){ S = { bo3: r.format === "bo3", seriesId: r.series.id, list: [] }; bySeries.set(r.series.id, S); groups.push(S); }
+      if (!S.list.some(x => x.series.no === r.series.no)) S.list.push(r);
+      if (r.format === "bo3") S.bo3 = true;
+      return;
+    }
+    const g = groups.find(G => !G.seriesId && (G.bo3 || r.format === "bo3")
+      && !seriesOf(G.list.map(x => ({ r: x.win ? "W" : "L" }))).done
+      && (G.list[0].opp && r.opp ? G.list[0].opp === r.opp : pairKey(G.list[0].oppColors) === pairKey(r.oppColors))
+      && r.ts - G.list[G.list.length - 1].ts < 3600e3);
+    if (g){ g.list.push(r); g.bo3 = true; return; }
+    groups.push({ bo3: r.format === "bo3", list: [r] });
+  });
+  groups.forEach(G => { if (G.seriesId) G.list.sort((a, b) => a.series.no - b.series.no); });
+  return groups;
+}
+
+/* --- Import-Ablauf: eine oder mehrere Dateien --- */
+function gameOfReplay(x){
+  return { no: x.series ? x.series.no : null, r: x.win ? "W" : "L", s: x.start, mull: x.mullMe, tags: [], turns: x.turns || null,
+    openMe: x.openMe || null, openOpp: x.openOpp || null, wb: x.series ? x.series.before : null, rep: String(x.replayId), next: x.series ? x.series.next : null };
+}
+/* Bekannte Spiele nach Nummer ordnen; Lücken (vom Export verschluckt) aus dem Spielstand der Folgespiele erschließen */
+function buildSeriesGames(known){
+  const ks = [...known].sort((a, b) => a.no - b.no), out = [];
+  let w = 0, l = 0;
+  for (const g of ks){
+    let dw = 0, dl = 0;
+    if (g.wb){ dw = Math.max(0, g.wb[0] - w); dl = Math.max(0, g.wb[1] - l); }
+    while (out.length < g.no - 1){
+      const r = dw > 0 ? (dw--, "W") : dl > 0 ? (dl--, "L") : null;
+      out.push({ no: out.length + 1, r, s: null, mull: null, tags: [], turns: null, missing: true });
+    }
+    if (g.wb){ w = g.wb[0]; l = g.wb[1]; }
+    out.push({ ...g, missing: false });
+    if (g.r === "W") w++; else if (g.r === "L") l++;
+  }
+  const ser = seriesOf(out);
+  if (!ser.done && out.length < 3) out.push({ no: out.length + 1, r: null, s: null, mull: null, tags: [], turns: null, missing: true });
+  return out;
+}
+function knownReplayIds(){
+  const set = new Set();
+  matches.forEach(m => (m.replays || []).forEach(u => replayIdsFrom(u).forEach(id => set.add(id))));
+  return set;
+}
+async function handleReplayFiles(fileList){
+  const box = $("#importStatus"); box.hidden = false; box.className = "import-status";
+  box.textContent = "Lese ein …";
+  const parsed = [];
+  const errors = [];
+  for (const file of fileList){
+    try {
+      for (const { json } of await fileToReplays(file)){
+        if (json && json.format && String(json.format).startsWith("duels-replay")) parsed.push(parseReplay(json));
+        else errors.push(file.name + ": kein duels-Replay");
+      }
+    } catch(e){ errors.push(file.name + ": " + e.message); }
+  }
+  const known = knownReplayIds(), single = parsed.length === 1; let skipped = 0;
+  const knownSer = new Set(matches.filter(m => m.seriesId).flatMap(m => (m.replays || []).flatMap(u => replayIdsFrom(u))));
+  for (let i = parsed.length - 1; i >= 0; i--){
+    const id = String(parsed[i].replayId);
+    if (known.has(id) && (single || !parsed[i].series || knownSer.has(id))) { parsed.splice(i, 1); skipped++; }
+  }
+  if (!parsed.length && skipped){
+    box.className = "import-status ok";
+    box.textContent = skipped === 1 ? "Dieses Replay ist schon eingetragen." : `Alle ${skipped} Replays sind schon eingetragen, nichts Neues dabei.`;
+    return;
+  }
+  if (!parsed.length){
+    box.className = "import-status err";
+    box.innerHTML = "Nichts eingelesen." + (errors.length ? "<ul><li>"+errors.map(esc).join("</li><li>")+"</li></ul>" : "");
+    return;
+  }
+  if (parsed.length === 1){
+    const slot = prefillFromReplay(parsed[0]);
+    const r = parsed[0];
+    box.className = "import-status ok";
+    box.innerHTML = `Übernommen: <b>${esc(r.me)}</b> (${r.myColors.map(c=>INK[c]?.n||c).join("/")}) `
+      + `gegen <b>${esc(r.opp)}</b> (${r.oppColors.map(c=>INK[c]?.n||c).join("/")}) — `
+      + `${r.win?"Sieg":"Niederlage"}, ${r.start==="play"?"ich angefangen":"Gegner angefangen"}, `
+      + (r.mullMe != null ? `Mulligan ${r.mullMe}. ` : "")
+      + (prefs.format === "bo3"
+        ? (seriesOf(visibleGames().filter(g => g.r)).done ? `Spiel ${slot + 1} eingetragen, das Bo3 ist komplett. Prüfen und speichern.` : `Als Spiel ${slot + 1} des Bo3 eingetragen. Das nächste Replay einfach hinterher einlesen.`)
+        : "Bitte prüfen, Markierungen ergänzen, speichern.")
+      + (form.deckPending ? " <b>Noch offen: welches Deck?</b>" : "");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  } else {
+    // mehrere: direkt als Einträge anlegen, Bo3-Spiele gebündelt
+    let ok = 0, fixed = 0, gaps = 0; const unknown = []; const savedIds = [];
+    for (const G of groupReplays(parsed)){
+      const L = G.list, r = L[0];
+      L.forEach(x => rememberNames(x.cardNames));
+      /* frühere Einträge derselben Serie oder mit denselben Replays (z. B. falsch zerlegte Bo3) */
+      const gIds = L.map(x => String(x.replayId));
+      const old = matches.filter(m => (G.seriesId && m.seriesId === G.seriesId) || (m.replays || []).some(u => replayIdsFrom(u).some(id => gIds.includes(id))))
+        .filter(m => !(m.by && myId && m.by !== myId)).sort((a, b) => a.ts - b.ts);
+      const base = old[0] || null;
+      const tagsByRep = {};
+      old.forEach(m => {
+        if (Array.isArray(m.gameList)) m.gameList.forEach((g, i) => { const id = g.rep || replayIdsFrom((m.replays || [])[i] || "")[0]; if (id && (g.tags || []).length) tagsByRep[id] = g.tags; });
+        else if ((m.tags || []).length) (m.replays || []).forEach(u => replayIdsFrom(u).forEach(id => tagsByRep[id] = m.tags));
+      });
+      const hit = matchDeck(r.myColors.slice(0, 2), r.myList);
+      const oppColors = pairKey([...new Set(L.flatMap(x => x.oppColors))].slice(0, 2)).split("+").filter(Boolean);
+      const seen = [...new Set(L.flatMap(x => x.oppSeen))];
+      const seenN = L.reduce((o, x) => mergeSeen(o, x.oppSeenN), {});
+      const sug = detectArch(pairKey(oppColors), seen);
+      let gameList = null;
+      if (G.bo3){
+        const fresh = L.map(gameOfReplay).map(g => ({ ...g, tags: tagsByRep[g.rep] || [] }));
+        if (G.seriesId){
+          const byNo = new Map();
+          old.filter(m => m.seriesId === G.seriesId).forEach(m => (m.gameList || []).forEach(g => { if (g.no && !g.missing) byNo.set(g.no, g); }));
+          fresh.forEach(g => { if (!byNo.has(g.no)) byNo.set(g.no, g); });
+          gameList = buildSeriesGames([...byNo.values()]);
+        } else gameList = fresh;
+      }
+      const ser = gameList ? seriesOf(gameList) : null;
+      const incomplete = !!(ser && !ser.done);
+      if (gameList && gameList.some(g => g.missing)) gaps++;
+      const lastR = gameList ? [...gameList].reverse().find(g => g.r) : null;
+      const result = ser ? (ser.result || (ser.w > ser.l ? "W" : ser.l > ser.w ? "L" : (lastR ? lastR.r : "L"))) : (r.win ? "W" : "L");
+      const firstKnown = gameList ? gameList.find(g => !g.missing) : null;
+      const repLinks = [...new Set([
+        ...(gameList ? gameList.filter(g => g.rep).map(g => "https://duels.ink/replay/" + g.rep) : L.map(x => "https://duels.ink/replay/" + x.replayId)),
+        ...old.flatMap(m => m.replays || [])
+      ])];
+      const seenAll = old.reduce((o, x) => mergeSeen(o, x.oppSeenN || {}), seenN);
+      const m = {
+        ts: Math.min(r.ts, ...old.map(x => x.ts)), player: base ? base.player : (prefs.player.trim() || r.me || ""),
+        deckName: base && base.deckName ? base.deckName : (hit ? hit.d.name || "" : ""),
+        deckColors: base && base.deckColors && base.deckColors.length ? base.deckColors : r.myColors.slice(0, 2), oppColors,
+        oppArch: base && base.oppArch ? base.oppArch : (sug && sug.sure ? sug.name : ""), oppName: r.opp || (base ? base.oppName : ""),
+        format: G.bo3 ? "bo3" : "bo1", seriesId: G.seriesId || null, incomplete,
+        result, games: ser ? ser.score : null, start: firstKnown ? firstKnown.s : r.start,
+        gameList, turns: G.bo3 ? null : (r.turns || null),
+        myList: r.myList, oppSeen: Object.keys(seenAll), oppSeenN: seenAll,
+        openMe: G.bo3 ? null : (r.openMe || null), openOpp: G.bo3 ? null : (r.openOpp || null),
+        event: base ? base.event : prefs.event, meta: base ? base.meta : prefs.meta, tags: G.bo3 ? [] : (tagsByRep[String(r.replayId)] || []),
+        notes: [...new Set(old.map(x => x.notes).filter(Boolean))].join(" · ").slice(0, 500), keyCards: base ? base.keyCards || "" : "",
+        mull: firstKnown ? firstKnown.mull : r.mullMe, perf: base ? base.perf ?? null : null, tourney: base ? base.tourney || "" : "", round: base ? base.round ?? null : null,
+        replays: repLinks, by: base ? base.by || null : null
+      };
+      let id = null;
+      if (base){
+        if (await store.update(base.id, m)){ id = base.id; for (const x of old.slice(1)) await store.remove(x.id); fixed++; }
+      } else id = await store.add(m);
+      if (id){
+        if (!base) ok++;
+        savedIds.push(id);
+        if (m.deckName) { if (hit) rememberDeckList(hit.k, r.myList); }
+        else if (hit) rememberDeckList(hit.k, r.myList);
+        else {
+          const ck = pairKey(m.deckColors);
+          let u = unknown.find(x => x.ck === ck && listSim(x.list, r.myList) >= 0.75);
+          if (!u){ u = { ck, colors: m.deckColors, list: r.myList, ids: [] }; unknown.push(u); }
+          u.ids.push(id);
+        }
+      }
+    }
+    box.className = "import-status ok";
+    box.innerHTML = `<b>${ok}</b> neue Matches aus ${parsed.length} Replays gespeichert${parsed.length > ok + fixed ? " (Bo3-Spiele gebündelt)" : ""}.`
+      + (fixed ? ` <b>${fixed}</b> ${fixed === 1 ? "vorhandener Eintrag" : "vorhandene Einträge"} ergänzt oder repariert.` : "")
+      + (skipped ? ` ${skipped} schon vorhandene Replays übersprungen.` : "")
+      + (gaps ? ` <br>Achtung: Bei ${gaps} Bo3 fehlen im Export von duels.ink einzelne Spiele. Wo der Spielstand es verrät, ist das Ergebnis ergänzt; im Verlauf steht „fehlt im Export“.` : "")
+      + ` Gegner-Varianten kannst du im Verlauf unter „Bearbeiten“ setzen.`
+      + (errors.length ? "<ul><li>"+errors.map(esc).join("</li><li>")+"</li></ul>" : "")
+      + unknown.map((u, i) => `<div class="namerow" data-uk="${i}"><span style="color:var(--ink)">Unbekanntes Deck ${mini(u.ck)} ${esc(pairName(u.ck))}, ${u.ids.length} ${u.ids.length === 1 ? "Match" : "Matches"}:</span>`
+        + `<input class="field" placeholder="Deckname, z. B. ${esc(pairName(u.ck))} v2" maxlength="40"><button class="chip" type="button" aria-pressed="true" data-ukname="${i}">Übernehmen</button></div>`).join("");
+    if (savedIds.length) box.innerHTML += `<div class="acts"><button class="chip" type="button" aria-pressed="true" data-editall="1">${savedIds.length === 1 ? "Match jetzt ergänzen" : "Die " + savedIds.length + " Matches nacheinander ergänzen"}</button></div>`;
+    pendingImported = savedIds;
+    pendingUnknown = unknown;
+    renderAll();
+  }
+}
+
+(() => {
+  const inp = $("#replayFile"), zone = $("#dropZone");
+  if (!inp || !zone) return;
+  inp.addEventListener("change", () => { if (inp.files.length) handleReplayFiles([...inp.files]); inp.value = ""; });
+  ["dragenter","dragover"].forEach(ev => zone.addEventListener(ev, e => { e.preventDefault(); zone.classList.add("drag"); }));
+  ["dragleave","drop"].forEach(ev => zone.addEventListener(ev, e => { e.preventDefault(); zone.classList.remove("drag"); }));
+  zone.addEventListener("drop", e => { const fs = [...(e.dataTransfer?.files||[])]; if (fs.length) handleReplayFiles(fs); });
+})();
+
+let pendingUnknown = [], pendingImported = [];
+$("#importStatus").addEventListener("click", e => {
+  if (!e.target.closest("[data-editall]") || !pendingImported.length) return;
+  const q = [...pendingImported].sort((a, b) => (matches.find(x => x.id === a)?.ts || 0) - (matches.find(x => x.id === b)?.ts || 0));
+  startEdit(q[0], q);
+});
+$("#importStatus").addEventListener("click", async e => {
+  const b = e.target.closest("[data-ukname]"); if (!b) return;
+  const u = pendingUnknown[Number(b.dataset.ukname)]; if (!u) return;
+  const row = b.closest(".namerow"), inp = row.querySelector("input");
+  const name = inp.value.trim();
+  if (!name){ inp.focus(); inp.placeholder = "Bitte einen Namen eingeben"; return; }
+  const d = { name, colors: [...u.colors] };
+  if (!prefs.decks.some(x => deckKeyOf(x) === deckKeyOf(d))){ prefs.decks = [...prefs.decks, d]; savePrefs(); }
+  rememberDeckList(deckKeyOf(d), u.list);
+  for (const id of u.ids) await store.update(id, { deckName: name });
+  row.innerHTML = `<span>Deck „${esc(name)}“ für ${u.ids.length} ${u.ids.length === 1 ? "Match" : "Matches"} übernommen.</span>`;
+});
+
+/* --- Replay per Link --- */
+function replayIdsFrom(text){
+  const ids = [];
+  for (const raw of String(text).split(/\s+/)){
+    if (!raw) continue;
+    let u; try { u = new URL(raw.trim()); } catch { continue; }
+    if (!/(^|\.)duels\.ink$/i.test(u.hostname)) continue;
+    const m = u.pathname.match(/\/(?:r|replay|replays)\/([A-Za-z0-9_-]+)/);
+    if (m) ids.push(m[1]);
+  }
+  return [...new Set(ids)];
+}
+async function fetchReplay(id){
+  const urls = ["https://duels.ink/r/" + id, "https://duels.ink/replay/" + id];
+  let lastErr = "";
+  for (const url of urls){
+    try {
+      const res = await fetch(url, { headers: { Accept: "application/json, application/octet-stream" } });
+      if (!res.ok){ lastErr = "Antwort " + res.status; continue; }
+      const buf = new Uint8Array(await res.arrayBuffer());
+      const isGz = buf[0] === 0x1f && buf[1] === 0x8b;
+      const first = String.fromCharCode(buf[0] || 0);
+      if (!isGz && first !== "{" && first !== "P"){ lastErr = "Die Seite liefert die Ansicht, nicht die Replay-Datei"; continue; }
+      return new File([buf], id + (isGz ? ".replay.gz" : first === "P" ? ".zip" : ".replay"));
+    } catch (e) {
+      lastErr = "blocked";
+    }
+  }
+  throw new Error(lastErr);
+}
+async function handleReplayLinks(){
+  const inp = $("#replayLink"), box = $("#importStatus");
+  const ids = replayIdsFrom(inp.value);
+  box.hidden = false;
+  if (!ids.length){
+    box.className = "import-status err";
+    box.textContent = "Das ist kein Replay-Link von duels.ink. Er sieht etwa so aus: https://duels.ink/replay/abc123";
+    return;
+  }
+  box.className = "import-status"; box.textContent = ids.length > 1 ? `Lade ${ids.length} Replays …` : "Lade Replay …";
+  const files = [], failed = [];
+  let blocked = false;
+  for (const id of ids){
+    try { files.push(await fetchReplay(id)); }
+    catch (e) { failed.push(id); if (e.message === "blocked") blocked = true; }
+  }
+  if (files.length) {
+    await handleReplayFiles(files);
+    if (!failed.length) inp.value = "";
+  }
+  if (failed.length){
+    const links = failed.map(id => "https://duels.ink/replay/" + id);
+    const why = blocked
+      ? "duels.ink erlaubt dieser Seite nicht, Replays direkt abzuholen."
+      : "Unter diesem Link kam keine Replay-Datei zurück.";
+    const html = `<div>${files.length ? "Nicht alle Links ließen sich laden. " : ""}${why} So geht es trotzdem: Replay öffnen, dort herunterladen und die Datei oben bei „Replay-Datei einlesen“ auswählen.</div>`
+      + `<div class="acts">${links.map((l, i) => `<button class="chip" type="button" data-openrep="${esc(l)}">${links.length > 1 ? "Replay " + (i + 1) + " öffnen" : "Replay öffnen"}</button>`).join("")}</div>`;
+    if (files.length){ box.insertAdjacentHTML("beforeend", "<div style='margin-top:8px;color:var(--ink)'>" + html + "</div>"); }
+    else { box.className = "import-status err"; box.innerHTML = html; }
+  }
+}
+(() => {
+  const inp = $("#replayLink"), go = $("#replayLinkGo");
+  if (!inp || !go) return;
+  go.addEventListener("click", handleReplayLinks);
+  inp.addEventListener("keydown", e => { if (e.key === "Enter"){ e.preventDefault(); handleReplayLinks(); } });
+  inp.addEventListener("paste", () => setTimeout(() => { if (replayIdsFrom(inp.value).length) handleReplayLinks(); }, 0));
+  $("#importStatus").addEventListener("click", e => {
+    const b = e.target.closest("[data-openrep]"); if (b) window.open(b.dataset.openrep, "_blank", "noopener");
+  });
+})();
+
+/* --- Wochenziel --- */
+var goalEdit = false;
+function weekStart(d = new Date()){
+  const x = new Date(d); x.setHours(0, 0, 0, 0);
+  x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); // Montag
+  return x.getTime();
+}
+function renderGoal(){
+  const box = $("#goalBox"); if (!box) return;
+  const goal = prefs.weekGoal || 0;
+  if (goalEdit){
+    box.innerHTML = `<div class="goal-set"><span>Matches pro Woche:</span>
+      <input class="field" id="goalIn" type="number" inputmode="numeric" min="1" max="500" value="${goal || ""}" placeholder="20">
+      <button class="chip" type="button" data-goal="save" aria-pressed="true">Übernehmen</button>
+      ${goal ? '<button class="chip" type="button" data-goal="off">Kein Ziel</button>' : ""}
+      <button class="chip" type="button" data-goal="cancel">Abbrechen</button></div>`;
+    const gi = $("#goalIn"); gi.focus();
+    gi.addEventListener("keydown", e => { if (e.key === "Enter"){ e.preventDefault(); box.querySelector('[data-goal="save"]').click(); } });
+    return;
+  }
+  if (!goal){
+    box.innerHTML = `<div class="goal-set"><button class="chip" type="button" data-goal="edit">Wochenziel festlegen</button></div>`;
+    return;
+  }
+  const from = weekStart();
+  const n = matches.filter(m => m.ts >= from).length;
+  const pctDone = Math.min(100, Math.round(n / goal * 100));
+  box.innerHTML = `<div class="goal" role="button" tabindex="0" data-goal="edit" aria-label="Wochenziel ändern">
+    <span class="gbar"><span class="fill${n >= goal ? " done" : ""}" style="width:${pctDone}%"></span></span>
+    <span class="txt">Diese Woche <b>${n}</b> von ${goal}${n >= goal ? " ✓" : ""}</span></div>`;
+}
+(() => {
+  const box = $("#goalBox"); if (!box) return;
+  box.addEventListener("click", e => {
+    const b = e.target.closest("[data-goal]"); if (!b) return;
+    const a = b.dataset.goal;
+    if (a === "edit") goalEdit = true;
+    else if (a === "cancel") goalEdit = false;
+    else if (a === "off"){ prefs.weekGoal = 0; LS.set("weekGoal", 0); goalEdit = false; }
+    else if (a === "save"){
+      const v = Math.round(Number($("#goalIn").value));
+      if (!(v >= 1 && v <= 500)) { $("#goalIn").focus(); return; }
+      prefs.weekGoal = v; LS.set("weekGoal", v); goalEdit = false;
+    }
+    renderGoal();
+  });
+  box.addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === " ") && e.target.matches(".goal")){ e.preventDefault(); goalEdit = true; renderGoal(); } });
+})();
+
+function backupNote(){
+  const el = $("#backupMsg"); if (!el || !matches.length) return;
+  const lb = LS.get("lastBackup", null), t = lb && typeof lb === "object" ? lb.ts : (lb || 0), days = t ? Math.floor((Date.now() - t) / 864e5) : null;
+  el.textContent = t ? (days === 0 ? "Letzte Sicherung: heute" : `Letzte Sicherung: vor ${days} ${days === 1 ? "Tag" : "Tagen"}`) : "Noch keine Sicherung heruntergeladen.";
+}
+/* ============================================================
+   Sicherung: alles als JSON exportieren / importieren
+   ============================================================ */
+(() => {
+  const row = document.createElement("div");
+  row.className = "backup-row";
+  row.style.margin = "8px 0 22px";
+  row.innerHTML = '<span class="note" id="backupMsg" style="flex-basis:100%;text-align:right"></span>'
+    + '<button class="chip" id="expJson">Sicherung exportieren</button>'
+    + '<button class="chip" id="impJson">Sicherung importieren</button>'
+    + '<input type="file" id="impJsonFile" hidden>';
+  const log = $("#tab-log"); if (log) log.appendChild(row);
+  $("#expJson").onclick = async () => { await exportBackup(); backupNote(); };
+  backupNote();
+  $("#impJson").onclick = () => $("#impJsonFile").click();
+  $("#impJsonFile").onchange = async e => {
+    const f = e.target.files[0]; if (!f) return;
+    try {
+      const obj = JSON.parse(await f.text());
+      const incoming = Array.isArray(obj) ? obj : obj.matches;
+      if (!Array.isArray(incoming)) throw new Error("keine Matches gefunden");
+      const me = prefs.player.trim();
+      const own = !obj.prefs || !obj.prefs.player || !me || String(obj.prefs.player).trim() === me;
+      const idx = new Map(matches.map((m, i) => [m.id, i]));
+      let added = 0, updated = 0;
+      for (const m of incoming){
+        if (m.id && idx.has(m.id)){
+          const cur = matches[idx.get(m.id)];
+          if (cur.player !== me && JSON.stringify(cur) !== JSON.stringify(m)){ matches[idx.get(m.id)] = { ...m }; updated++; }
+          continue;
+        }
+        matches.push({ ...m, id: m.id || ("l"+Date.now().toString(36)+Math.random().toString(36).slice(2,6)) }); added++;
+      }
+      LS.set("matches", matches);
+      const who = [...new Set(incoming.map(m => m.player).filter(Boolean))];
+      if (own && obj.prefs && obj.prefs.decks){ const dm=new Map(); [...prefs.decks, ...obj.prefs.decks].forEach(d=>dm.set(deckKeyOf(d),d)); prefs.decks=[...dm.values()]; }
+      if (obj.prefs && obj.prefs.archetypes) for (const [k, v] of Object.entries(obj.prefs.archetypes)) prefs.archetypes[k] = [...new Set([...(prefs.archetypes[k] || []), ...v])];
+      if (obj.prefs && Array.isArray(obj.prefs.customTags)) prefs.customTags = [...new Set([...prefs.customTags, ...obj.prefs.customTags])];
+      if (obj.cardNames) rememberNames(obj.cardNames);
+      savePrefs();
+      renderAll();
+      $("#backupMsg").textContent = `${added} neue Matches importiert${updated ? `, ${updated} aktualisiert` : ""}${who.length ? " (" + who.join(", ") + ")" : ""}. Bereits vorhandene übersprungen.` + (own ? "" : " Im Filter „Spieler“ kannst du zwischen den Personen wechseln.");
+    } catch(err){ $("#backupMsg").textContent = "Import fehlgeschlagen: Die Datei ist keine Match-Log-Sicherung."; }
+    e.target.value = "";
+  };
+})();
+
+renderAll();
+if (!storageProbe()) storageFailed();
+store.init();
+})();
+</script>
+</body>
+</html>
