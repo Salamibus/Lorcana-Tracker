@@ -1940,8 +1940,9 @@ function takeCounter(res){
 
 
 /* ---------- Sicherung + Erinnerung ---------- */
+const backupData = () => JSON.stringify({ app: "match-log", version: 2, exportedAt: new Date().toISOString(), matches, prefs, cardNames });
 async function exportBackup(){
-  const data = JSON.stringify({ app: "match-log", version: 2, exportedAt: new Date().toISOString(), matches, prefs, cardNames });
+  const data = backupData();
   const ok = await downloadFile(`match-log-sicherung-${new Date().toISOString().slice(0,10)}.json`, data, "application/json");
   if (ok) { LS.set("lastBackup", { ts: Date.now(), count: matches.length }); renderBackupNag(); const m=$("#backupMsg"); if (m) m.textContent = "Sicherung erstellt."; }
 }
@@ -2574,15 +2575,44 @@ function backupNote(){
   row.innerHTML = '<span class="note" id="backupMsg" style="flex-basis:100%;text-align:right"></span>'
     + '<button class="chip" id="expJson">Sicherung exportieren</button>'
     + '<button class="chip" id="impJson">Sicherung importieren</button>'
-    + '<input type="file" id="impJsonFile" hidden>';
+    + '<button class="chip" id="copyJson">Als Text kopieren</button>'
+    + '<button class="chip" id="pasteJson">Text einfügen</button>'
+    + '<input type="file" id="impJsonFile" hidden>'
+    + '<div id="textBackup" style="flex-basis:100%;display:grid;gap:8px" hidden>'
+    + '<p class="note" id="textBackupHint" style="margin:0"></p>'
+    + '<textarea class="field" id="textBackupArea" rows="5" spellcheck="false" autocomplete="off" style="font-size:12px"></textarea>'
+    + '<div class="row" style="justify-content:flex-end"><button class="chip" id="textBackupGo" aria-pressed="true" hidden>Importieren</button><button class="chip" id="textBackupClose">Schließen</button></div></div>';
   const log = $("#tab-log"); if (log) log.appendChild(row);
   $("#expJson").onclick = async () => { await exportBackup(); backupNote(); };
   backupNote();
   $("#impJson").onclick = () => $("#impJsonFile").click();
+  const tb = $("#textBackup"), ta = $("#textBackupArea"), tHint = $("#textBackupHint"), tGo = $("#textBackupGo");
+  $("#copyJson").onclick = async () => {
+    const data = backupData();
+    tb.hidden = false; tGo.hidden = true; ta.readOnly = true; ta.value = data;
+    let ok = false;
+    try { await navigator.clipboard.writeText(data); ok = true; } catch {}
+    if (!ok) { try { ta.focus(); ta.select(); ok = document.execCommand("copy"); } catch {} }
+    tHint.textContent = ok
+      ? `Kopiert (${matches.length} Matches). Jetzt die neue App öffnen, im Verlauf auf „Text einfügen“ tippen und einfügen.`
+      : `Kopieren ging nicht automatisch: Text im Feld lange antippen, „Alles auswählen“ und „Kopieren“. Dann in der neuen App im Verlauf auf „Text einfügen“ tippen.`;
+    if (ok) { LS.set("lastBackup", { ts: Date.now(), count: matches.length }); renderBackupNag(); }
+  };
+  $("#pasteJson").onclick = () => {
+    tb.hidden = false; tGo.hidden = false; ta.readOnly = false; ta.value = "";
+    tHint.textContent = "Kopierten Sicherungs-Text hier einfügen (Feld lange antippen, „Einfügen“) und dann „Importieren“ tippen.";
+    ta.focus();
+  };
+  tGo.onclick = () => { if (importBackupText(ta.value)) { ta.value = ""; tb.hidden = true; } };
+  $("#textBackupClose").onclick = () => { tb.hidden = true; ta.value = ""; };
   $("#impJsonFile").onchange = async e => {
     const f = e.target.files[0]; if (!f) return;
+    importBackupText(await f.text());
+    e.target.value = "";
+  };
+  function importBackupText(text){
     try {
-      const obj = JSON.parse(await f.text());
+      const obj = JSON.parse(String(text).trim());
       const incoming = Array.isArray(obj) ? obj : obj.matches;
       if (!Array.isArray(incoming)) throw new Error("keine Matches gefunden");
       const me = prefs.player.trim();
@@ -2606,9 +2636,9 @@ function backupNote(){
       savePrefs();
       renderAll();
       $("#backupMsg").textContent = `${added} neue Matches importiert${updated ? `, ${updated} aktualisiert` : ""}${who.length ? " (" + who.join(", ") + ")" : ""}. Bereits vorhandene übersprungen.` + (own ? "" : " Im Filter „Spieler“ kannst du zwischen den Personen wechseln.");
-    } catch(err){ $("#backupMsg").textContent = "Import fehlgeschlagen: Die Datei ist keine Match-Log-Sicherung."; }
-    e.target.value = "";
-  };
+      return true;
+    } catch(err){ $("#backupMsg").textContent = "Import fehlgeschlagen: Das ist keine vollständige Match-Log-Sicherung."; return false; }
+  }
 })();
 
 renderAll();
