@@ -2374,7 +2374,7 @@ async function handleReplayFiles(fileList){
       + ` Gegner-Varianten kannst du im Verlauf unter „Bearbeiten“ setzen.`
       + (errors.length ? "<ul><li>"+errors.map(esc).join("</li><li>")+"</li></ul>" : "")
       + unknown.map((u, i) => `<div class="namerow" data-uk="${i}"><span style="color:var(--ink)">Welches <b>eigene</b> Deck war das? Deine Liste ${mini(u.ck)} ${esc(pairName(u.ck))} ist noch keinem Deck zugeordnet, ${u.ids.length} ${u.ids.length === 1 ? "Match" : "Matches"}:</span>`
-        + unknownDetails(u)
+        + unknownDetails(u, unknown)
         + `<input class="field" placeholder="Deckname, z. B. ${esc(pairName(u.ck))} v2" maxlength="40"><button class="chip" type="button" aria-pressed="true" data-ukname="${i}">Übernehmen</button></div>`).join("");
     if (savedIds.length) box.innerHTML += `<div class="acts"><button class="chip" type="button" aria-pressed="true" data-editall="1">${savedIds.length === 1 ? "Match jetzt ergänzen" : "Die " + savedIds.length + " Matches nacheinander ergänzen"}</button></div>`;
     pendingImported = savedIds;
@@ -2392,10 +2392,29 @@ async function handleReplayFiles(fileList){
   zone.addEventListener("drop", e => { const fs = [...(e.dataTransfer?.files||[])]; if (fs.length) handleReplayFiles(fs); });
 })();
 
-/* Hilfe zum Zuordnen einer unbekannten eigenen Liste: Hauptkarten und betroffene Matches */
-function unknownDetails(u){
-  const top = Object.entries(u.list || {}).sort((a, b) => b[1] - a[1] || cardName(a[0]).localeCompare(cardName(b[0]))).slice(0, 8);
-  const cards = top.length ? `<div class="note" style="flex-basis:100%">Hauptkarten: ${top.map(([id, n]) => `${n}× ${esc(cardName(id))}`).join(", ")}</div>` : "";
+/* Hilfe zum Zuordnen einer unbekannten eigenen Liste: Unterschiede zur ähnlichsten eigenen Liste und betroffene Matches */
+function unknownDetails(u, all){
+  const list = u.list || {};
+  const refs = [
+    ...allMyDecks().filter(([k, d]) => pairKey(d.colors) === u.ck && deckLists[k]).map(([k, d]) => ({ name: d.name ? `„${d.name}“` : "deiner gespeicherten Liste", list: deckLists[k] })),
+    ...(all || []).filter(x => x !== u && x.ck === u.ck).map(x => ({ name: `der anderen ${pairName(u.ck)}-Liste oben`, list: x.list }))
+  ].map(r => ({ ...r, sim: listSim(list, r.list) })).sort((a, b) => b.sim - a.sim);
+  const byName = (a, b) => cardName(a[0]).localeCompare(cardName(b[0]));
+  let cards = "";
+  if (refs.length){
+    const ref = refs[0], ids = new Set([...Object.keys(list), ...Object.keys(ref.list)]);
+    const diff = [...ids].map(id => [id, (list[id] || 0) - (ref.list[id] || 0)]).filter(([, d]) => d);
+    const more = diff.filter(([, d]) => d > 0).sort((a, b) => b[1] - a[1] || byName(a, b)).slice(0, 8);
+    const less = diff.filter(([, d]) => d < 0).sort((a, b) => a[1] - b[1] || byName(a, b)).slice(0, 8);
+    const fmt = ([id, d]) => `${d > 0 ? "+" : "−"}${Math.abs(d)} ${esc(cardName(id))}`;
+    cards = `<div class="note" style="flex-basis:100%">Am ähnlichsten zu ${esc(ref.name)} (${pct(ref.sim * 100, 100)} % gleich).`
+      + (more.length ? `<br>Zusätzlich drin: ${more.map(fmt).join(", ")}` : "")
+      + (less.length ? `<br>Weniger oder nicht drin: ${less.map(fmt).join(", ")}` : "")
+      + (!more.length && !less.length ? " Gleiche Karten." : "") + `</div>`;
+  } else {
+    const top = Object.entries(list).sort((a, b) => b[1] - a[1] || byName(a, b)).slice(0, 8);
+    if (top.length) cards = `<div class="note" style="flex-basis:100%">Karten (Auszug): ${top.map(([id, n]) => `${n}× ${esc(cardName(id))}`).join(", ")}</div>`;
+  }
   const rows = u.ids.map(id => matches.find(m => m.id === id)).filter(Boolean).sort((a, b) => a.ts - b.ts).map(m =>
     `<li>${esc(fmtDate(m.ts))} · ${m.result === "W" ? "Sieg" : "Niederlage"}${m.games ? " " + esc(m.games) : ""} gegen ${mini(pairKey(m.oppColors || []))} ${esc(pairName(pairKey(m.oppColors || [])))}${m.oppArch ? " (" + esc(m.oppArch) + ")" : ""}${m.oppName ? " · " + esc(m.oppName) : ""}</li>`).join("");
   return cards + (rows ? `<details class="seen" style="flex-basis:100%"><summary>Welche Matches?</summary><ul class="seenlist" style="columns:1">${rows}</ul></details>` : "");
