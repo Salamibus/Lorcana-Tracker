@@ -2373,7 +2373,8 @@ async function handleReplayFiles(fileList){
       + (gaps ? ` <br>Achtung: Bei ${gaps} Bo3 fehlen im Export von duels.ink einzelne Spiele. Wo der Spielstand es verrät, ist das Ergebnis ergänzt; im Verlauf steht „fehlt im Export“.` : "")
       + ` Gegner-Varianten kannst du im Verlauf unter „Bearbeiten“ setzen.`
       + (errors.length ? "<ul><li>"+errors.map(esc).join("</li><li>")+"</li></ul>" : "")
-      + unknown.map((u, i) => `<div class="namerow" data-uk="${i}"><span style="color:var(--ink)">Unbekanntes Deck ${mini(u.ck)} ${esc(pairName(u.ck))}, ${u.ids.length} ${u.ids.length === 1 ? "Match" : "Matches"}:</span>`
+      + unknown.map((u, i) => `<div class="namerow" data-uk="${i}"><span style="color:var(--ink)">Welches <b>eigene</b> Deck war das? Deine Liste ${mini(u.ck)} ${esc(pairName(u.ck))} ist noch keinem Deck zugeordnet, ${u.ids.length} ${u.ids.length === 1 ? "Match" : "Matches"}:</span>`
+        + unknownDetails(u)
         + `<input class="field" placeholder="Deckname, z. B. ${esc(pairName(u.ck))} v2" maxlength="40"><button class="chip" type="button" aria-pressed="true" data-ukname="${i}">Übernehmen</button></div>`).join("");
     if (savedIds.length) box.innerHTML += `<div class="acts"><button class="chip" type="button" aria-pressed="true" data-editall="1">${savedIds.length === 1 ? "Match jetzt ergänzen" : "Die " + savedIds.length + " Matches nacheinander ergänzen"}</button></div>`;
     pendingImported = savedIds;
@@ -2391,6 +2392,14 @@ async function handleReplayFiles(fileList){
   zone.addEventListener("drop", e => { const fs = [...(e.dataTransfer?.files||[])]; if (fs.length) handleReplayFiles(fs); });
 })();
 
+/* Hilfe zum Zuordnen einer unbekannten eigenen Liste: Hauptkarten und betroffene Matches */
+function unknownDetails(u){
+  const top = Object.entries(u.list || {}).sort((a, b) => b[1] - a[1] || cardName(a[0]).localeCompare(cardName(b[0]))).slice(0, 8);
+  const cards = top.length ? `<div class="note" style="flex-basis:100%">Hauptkarten: ${top.map(([id, n]) => `${n}× ${esc(cardName(id))}`).join(", ")}</div>` : "";
+  const rows = u.ids.map(id => matches.find(m => m.id === id)).filter(Boolean).sort((a, b) => a.ts - b.ts).map(m =>
+    `<li>${esc(fmtDate(m.ts))} · ${m.result === "W" ? "Sieg" : "Niederlage"}${m.games ? " " + esc(m.games) : ""} gegen ${mini(pairKey(m.oppColors || []))} ${esc(pairName(pairKey(m.oppColors || [])))}${m.oppArch ? " (" + esc(m.oppArch) + ")" : ""}${m.oppName ? " · " + esc(m.oppName) : ""}</li>`).join("");
+  return cards + (rows ? `<details class="seen" style="flex-basis:100%"><summary>Welche Matches?</summary><ul class="seenlist" style="columns:1">${rows}</ul></details>` : "");
+}
 let pendingUnknown = [], pendingImported = [];
 $("#importStatus").addEventListener("click", e => {
   if (!e.target.closest("[data-editall]") || !pendingImported.length) return;
