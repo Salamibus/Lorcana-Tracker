@@ -380,7 +380,7 @@ ul.log .del{border:0;background:none;color:var(--muted);font-size:13px;text-deco
           <p class="sub-h">Züge (Spieldauer)</p>
           <input class="field" id="turns" type="number" inputmode="numeric" min="1" max="40" placeholder="z. B. 8" style="max-width:9em">
         </div>
-        <div class="grp">
+        <div class="grp" id="perfGrp">
           <p class="sub-h">Eigene Leistung</p>
           <div class="chips" id="perfChips"></div>
         </div>
@@ -518,7 +518,10 @@ const cardName = id => cardNames[id] || id;
 let tagEdit = false, showHidden = false;
 
 /* ---------- Formular-Zustand ---------- */
-const blankGame = () => ({ r: null, s: null, mull: null, tags: [], turns: null, openMe: null, openOpp: null });
+const blankGame = () => ({ r: null, s: null, mull: null, perf: null, tags: [], turns: null, openMe: null, openOpp: null });
+/* Leistung eines Bo3: Schnitt der bewerteten Einzelspiele, eine Nachkommastelle */
+const avgPerf = gl => { const p = (gl || []).map(g => g.perf).filter(x => x != null); return p.length ? Math.round(p.reduce((a, b) => a + b, 0) / p.length * 10) / 10 : null; };
+const perfTxt = v => String(v).replace(".", ",");
 const form = { opp: [], result: null, games: null, start: null, tags: [], newDeckColors: [], mull: null, perf: null, arch: null, archAdd: false, openMe: null, openOpp: null, seriesId: null,
   perGame: false, gl: [blankGame(), blankGame(), blankGame()], gAdd: false, myList: null, oppSeen: [], oppSeenN: {}, archSuggest: null, deckPending: null, deckHint: null };
 
@@ -787,7 +790,7 @@ function renderGames(){
   $("#perGameToggle").textContent = pg ? "Doch pauschal eintragen" : "Spiele einzeln erfassen (optional)";
   $("#perGameToggle").setAttribute("aria-pressed", pg);
   $("#resultBox").hidden = pg; $("#startBlock").hidden = pg;
-  $("#tagGrp").hidden = pg; $("#mullGrp").hidden = pg; $("#turnsGrp").hidden = pg;
+  $("#tagGrp").hidden = pg; $("#mullGrp").hidden = pg; $("#turnsGrp").hidden = pg; $("#perfGrp").hidden = pg;
   const box = $("#gameBoxes"); box.hidden = !pg; $("#gAddRow").hidden = !(pg && form.gAdd);
   if (!pg){ box.innerHTML = ""; return; }
   const vis = visibleGames();
@@ -797,6 +800,7 @@ function renderGames(){
     <div class="game-h">Spiel ${i + 1}<span class="seg">${[["play","Ich fange an"],["draw","Gegner"]].map(([v, l]) => `<button type="button" data-gs="${v}" aria-pressed="${g.s === v}">${l}</button>`).join("")}</span></div>
     <div class="result"><button type="button" class="res w" data-gr="W" aria-pressed="${g.r === "W"}">Sieg</button><button type="button" class="res l" data-gr="L" aria-pressed="${g.r === "L"}">Niederlage</button></div>
     <div class="chips tight"><span class="note" style="align-self:center">Mulligan</span>${MULL.map(([v]) => `<button type="button" class="chip" data-gm="${v}" aria-pressed="${g.mull === Number(v)}">${v}</button>`).join("")}</div>
+    <div class="chips tight"><span class="note" style="align-self:center">Leistung</span>${PERF.map(v => `<button type="button" class="chip" data-gp="${v}" aria-pressed="${g.perf === Number(v)}">${v}</button>`).join("")}</div>
     <div class="chips tight">${tags.map(t => `<button type="button" class="chip" data-gt="${esc(t)}" aria-pressed="${g.tags.includes(t)}">${prefs.customTags.includes(t) ? "★ " : ""}${esc(t)}</button>`).join("")}<button type="button" class="chip linkish" data-gadd>${form.gAdd ? "Abbrechen" : "+ Eigener Knopf"}</button></div>
     ${g.turns ? `<span class="note">${g.turns} Züge</span>` : ""}
   </div>`).join("") + `<div class="series">${ser.done ? (ser.result === "W" ? "Match gewonnen, " : "Match verloren, ") + ser.score : "Stand " + ser.score}</div>`;
@@ -955,7 +959,7 @@ function loadIntoForm(m){
   form.seriesId = m.seriesId || null;
   if (Array.isArray(m.gameList) && m.gameList.length){
     form.perGame = true;
-    const gl = m.gameList.map(g => ({ ...g, r: g.r || null, s: g.s || null, mull: g.mull ?? null, tags: [...(g.tags || [])], turns: g.turns ?? null, openMe: g.openMe || null, openOpp: g.openOpp || null }));
+    const gl = m.gameList.map(g => ({ ...g, r: g.r || null, s: g.s || null, mull: g.mull ?? null, perf: g.perf ?? null, tags: [...(g.tags || [])], turns: g.turns ?? null, openMe: g.openMe || null, openOpp: g.openOpp || null }));
     while (gl.length < 3) gl.push(blankGame());
     form.gl = gl;
   } else {
@@ -1038,7 +1042,8 @@ function renderSecSummaries(){
     if (form.mull != null) play.push("Mulligan " + form.mull);
     if (v("#turns")) play.push(v("#turns") + " Züge");
   }
-  if (form.perf) play.push("Leistung " + form.perf + "/5");
+  if (pg){ const ap = avgPerf(visibleGames()); if (ap != null) play.push("Leistung Ø " + perfTxt(ap) + "/5"); }
+  else if (form.perf) play.push("Leistung " + form.perf + "/5");
   const opp = [v("#oppName"), v("#tourney") ? v("#tourney") + (v("#round") ? ", R" + v("#round") : "") : ""].filter(Boolean);
   const notes = [v("#keyCards") ? "Schlüsselkarten" : "", v("#notes") ? "Notiz" : ""].filter(Boolean);
   const nRep = [...document.querySelectorAll("#replayInputs input")].filter(i => i.value.trim()).length;
@@ -1089,6 +1094,7 @@ $("#gameBoxes").onclick = e => {
     if (g.r && nx && !nx.s) nx.s = g.r === "L" ? "play" : "draw"; // Verlierer fängt meist an
   }
   else if (b.dataset.gm != null){ const v = Number(b.dataset.gm); g.mull = g.mull === v ? null : v; }
+  else if (b.dataset.gp != null){ const v = Number(b.dataset.gp); g.perf = g.perf === v ? null : v; renderSecSummaries(); }
   else if (b.dataset.gt){ const t = b.dataset.gt; g.tags = g.tags.includes(t) ? g.tags.filter(x => x !== t) : [...g.tags, t]; }
   else if (b.hasAttribute("data-gadd")){ form.gAdd = !form.gAdd; renderGames(); if (form.gAdd) $("#gNewTag").focus(); return; }
   renderGames(); updateSave(); renderCounter();
@@ -1150,7 +1156,7 @@ $("#saveBtn").onclick = async () => {
   if ($("#newArch").value.trim()) saveArch();
   const d = currentDeck();
   const pg = form.perGame && prefs.format === "bo3";
-  const gameList = pg ? visibleGames().map(g => ({ ...g, r: g.r, s: g.s, mull: g.mull, tags: [...g.tags], turns: g.turns ?? null, openMe: g.openMe || null, openOpp: g.openOpp || null })) : null;
+  const gameList = pg ? visibleGames().map(g => ({ ...g, r: g.r, s: g.s, mull: g.mull, perf: g.perf ?? null, tags: [...g.tags], turns: g.turns ?? null, openMe: g.openMe || null, openOpp: g.openOpp || null })) : null;
   const ser = pg ? seriesOf(gameList) : null;
   const m = {
     ts: Date.now(),
@@ -1179,7 +1185,7 @@ $("#saveBtn").onclick = async () => {
     notes: $("#notes").value.trim(),
     keyCards: $("#keyCards").value.trim(),
     mull: pg ? gameList[0].mull : (form.mull == null ? null : Number(form.mull)),
-    perf: form.perf == null ? null : Number(form.perf),
+    perf: (pg ? avgPerf(gameList) : null) ?? (form.perf == null ? null : Number(form.perf)),
     tourney: $("#tourney").value.trim(),
     round: numOrNull($("#round").value),
     replays: [...document.querySelectorAll("#replayInputs input")].map(i => cleanUrl(i.value)).filter(Boolean),
@@ -1320,10 +1326,12 @@ function cellColor(wr){
 function units(m, mode){
   const gl0 = m.format === "bo3" && Array.isArray(m.gameList) ? m.gameList.filter(g => g.r) : null;
   const gl = gl0 && gl0.length ? gl0 : null;
-  if (gl && mode !== "match") return gl.map(g => ({ result: g.r, start: g.s, mull: g.mull, tags: g.tags || [], turns: g.turns ?? null, w: 1, m }));
-  if (gl) { const t = gl.map(g => g.turns).filter(Boolean); return [{ result: m.result, start: gl[0].s, mull: gl[0].mull, tags: tagsOf(m), turns: t.length ? Math.round(t.reduce((a, b) => a + b, 0) / t.length) : null, w: 1, m }]; }
+  // Ältere Bo3 ohne Bewertung je Spiel: die Gesamtbewertung gilt für jedes Spiel
+  const gPerf = gl && gl.some(g => g.perf != null) ? null : (m.perf ?? null);
+  if (gl && mode !== "match") return gl.map(g => ({ result: g.r, start: g.s, mull: g.mull, perf: g.perf ?? gPerf, tags: g.tags || [], turns: g.turns ?? null, w: 1, m }));
+  if (gl) { const t = gl.map(g => g.turns).filter(Boolean); return [{ result: m.result, start: gl[0].s, mull: gl[0].mull, perf: avgPerf(gl) ?? (m.perf ?? null), tags: tagsOf(m), turns: t.length ? Math.round(t.reduce((a, b) => a + b, 0) / t.length) : null, w: 1, m }]; }
   const w = mode === "scaled" && m.format === "bo3" && GAMES_PLAYED[m.games] ? GAMES_PLAYED[m.games] : 1;
-  return [{ result: m.result, start: m.start, mull: m.mull, tags: m.tags || [], turns: m.turns ?? null, w, m }];
+  return [{ result: m.result, start: m.start, mull: m.mull, perf: m.perf ?? null, tags: m.tags || [], turns: m.turns ?? null, w, m }];
 }
 function aggU(us){ let n = 0, w = 0; us.forEach(u => { n += u.w; if (u.result === "W") w += u.w; }); return { n, w }; }
 function groupU(us, keyFn){
@@ -1421,7 +1429,7 @@ function deckPickHtml(){
   }).join("");
   return `<section class="block deckpick"><div class="row" style="justify-content:space-between">
       <h2 style="margin:0">Decks</h2>
-      <button type="button" class="chip small" data-deckpick="__all" aria-pressed="${allOn}">${allOn ? "Alle ausgew\u00e4hlt" : "Alle ausw\u00e4hlen"}</button>
+      <span class="row" style="gap:8px"><button type="button" class="chip small" data-deckpick="__all" aria-pressed="${allOn}">${allOn ? "Alle ausgew\u00e4hlt" : "Alle ausw\u00e4hlen"}</button><button type="button" class="chip small" data-deckpick="__none" aria-pressed="${!onCount}">Alle abw\u00e4hlen</button></span>
     </div>
     <div class="chips" style="margin-top:8px">${chips}</div>
     <p class="statnote" style="margin-top:8px">${allOn ? "Alle Decks z\u00e4hlen. Tippe Decks weg, um die Auswertung einzugrenzen." : onCount + " von " + decks.length + " Decks z\u00e4hlen in dieser Auswertung."}</p>
@@ -1531,10 +1539,11 @@ function renderStats(){
 
   // Eigene Leistung
   const avg1 = arr => arr.length ? (arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(1).replace(".", ",") : "–";
-  const perfW = list.filter(m => m.result === "W" && m.perf).map(m => m.perf), perfL = list.filter(m => m.result === "L" && m.perf).map(m => m.perf);
+  const perfW = U.filter(u => u.result === "W" && u.perf).map(u => u.perf), perfL = U.filter(u => u.result === "L" && u.perf).map(u => u.perf);
   if (perfW.length + perfL.length) {
     html += `<section class="block"><h2>Eigene Leistung</h2><table class="stats"><thead><tr><th></th><th class="num">bei Sieg</th><th class="num">bei Niederlage</th></tr></thead><tbody>
-      <tr><td>Durchschnitt (1–5)</td><td class="num">${avg1(perfW)}</td><td class="num">${avg1(perfL)}</td></tr></tbody></table></section>`;
+      <tr><td>Durchschnitt (1–5)</td><td class="num">${avg1(perfW)}</td><td class="num">${avg1(perfL)}</td></tr>
+      <tr><td>Bewertete ${unitWord}</td><td class="num">${perfW.length}</td><td class="num">${perfL.length}</td></tr></tbody></table></section>`;
   }
   if (!filt.player) {
     const byPlayer = group(list, m => m.player || "?");
@@ -1623,6 +1632,7 @@ $("#statsOut").addEventListener("click", e => {
   else if (b.dataset.deckpick){
     const k = b.dataset.deckpick;
     if (k === "__all"){ deckOff.clear(); }
+    else if (k === "__none"){ statDecks().forEach(d => deckOff.add(d.k)); }
     else if (deckOff.has(k)) deckOff.delete(k); else deckOff.add(k);
     LS.set("deckOff", [...deckOff]); renderStats();
   }
@@ -1680,9 +1690,9 @@ function renderLog(){
     const dk = pairKey(m.deckColors || []), ok = pairKey(m.oppColors || []);
     const mine = !m.by || !myId || m.by === myId;
     const bits = [fmtDate(m.ts), m.player, m.tourney ? m.tourney + (m.round ? " R" + m.round : "") : m.event, m.format === "bo3" ? (m.incomplete ? "Bo3 (unvollständig)" : "Bo3") : "Bo1", m.gameList ? "" : (m.start === "play" ? "angefangen" : "nachgezogen"),
-      !m.gameList && m.mull != null ? "Mulligan " + m.mull : "", m.turns ? m.turns + " Züge" : "", m.perf ? "Leistung " + m.perf + "/5" : "", ...(m.tags || [])].filter(Boolean);
+      !m.gameList && m.mull != null ? "Mulligan " + m.mull : "", m.turns ? m.turns + " Züge" : "", !m.gameList && m.perf ? "Leistung " + perfTxt(m.perf) + "/5" : m.gameList && m.perf ? "Leistung Ø " + perfTxt(m.perf) + "/5" : "", ...(m.tags || [])].filter(Boolean);
     const pack = Array.isArray(m.gameList) && m.gameList.length > 0;
-    const glHtml = pack ? `<span class="games">${m.gameList.map((g, i) => `<span class="grow${g.missing ? " miss" : ""}"><span class="gb ${g.r === "W" ? "W" : g.r === "L" ? "L" : "Q"}">${g.r === "W" ? "S" : g.r === "L" ? "N" : "?"}</span><span>Spiel ${i + 1} · ${g.missing ? (g.r ? "fehlt im Export, Ergebnis aus dem Spielstand" : "fehlt im Export") : (g.s === "play" ? "angefangen" : g.s === "draw" ? "nachgezogen" : "?") + (g.mull != null ? ", Mulligan " + g.mull : "") + (g.turns ? ", " + g.turns + " Züge" : "")}${(g.tags || []).length ? ", " + esc(g.tags.join(", ")) : ""}</span></span>`).join("")}</span>` : "";
+    const glHtml = pack ? `<span class="games">${m.gameList.map((g, i) => `<span class="grow${g.missing ? " miss" : ""}"><span class="gb ${g.r === "W" ? "W" : g.r === "L" ? "L" : "Q"}">${g.r === "W" ? "S" : g.r === "L" ? "N" : "?"}</span><span>Spiel ${i + 1} · ${g.missing ? (g.r ? "fehlt im Export, Ergebnis aus dem Spielstand" : "fehlt im Export") : (g.s === "play" ? "angefangen" : g.s === "draw" ? "nachgezogen" : "?") + (g.mull != null ? ", Mulligan " + g.mull : "") + (g.perf != null ? ", Leistung " + g.perf + "/5" : "") + (g.turns ? ", " + g.turns + " Züge" : "")}${(g.tags || []).length ? ", " + esc(g.tags.join(", ")) : ""}</span></span>`).join("")}</span>` : "";
     const perGameReps = pack && m.gameList.some(g => g.rep);
     const reps = perGameReps ? [] : (m.replays || []).map(cleanUrl).filter(Boolean);
     const repLinksHtml = perGameReps ? m.gameList.map((g, i) => g.rep ? `<a href="https://duels.ink/replay/${esc(g.rep)}" target="_blank" rel="noopener noreferrer">Replay Spiel ${i + 1}</a>` : "").join("") : "";
@@ -1840,7 +1850,7 @@ $("#csvBtn").onclick = async () => {
     m.format, m.result === "W" ? "Sieg" : "Niederlage", m.games || "", m.start === "play" ? "ja" : "nein", m.event, m.meta, (m.tags||[]).join("; "), m.notes,
     m.keyCards, seenEntries(m).map(([id, n]) => (n ? n + "x " : "") + cardName(id)).join("; "), m.mull ?? "", m.perf ?? "", m.tourney || "", m.round ?? "", (m.replays||[]).join(" "),
     m.turns ?? "", (METAS.find(p => p.id === periodOf(m.ts)) || { name: "vorher" }).name,
-    (m.gameList || []).map((g, i) => `S${i + 1} ${g.r === "W" ? "Sieg" : "Niederlage"} ${g.s === "play" ? "angef." : "nachgez."}${g.mull != null ? " Mull " + g.mull : ""}${g.turns ? " " + g.turns + "Z" : ""}${(g.tags || []).length ? " [" + g.tags.join(", ") + "]" : ""}`).join(" | ")
+    (m.gameList || []).map((g, i) => `S${i + 1} ${g.r === "W" ? "Sieg" : "Niederlage"} ${g.s === "play" ? "angef." : "nachgez."}${g.mull != null ? " Mull " + g.mull : ""}${g.perf != null ? " Leist " + g.perf : ""}${g.turns ? " " + g.turns + "Z" : ""}${(g.tags || []).length ? " [" + g.tags.join(", ") + "]" : ""}`).join(" | ")
   ].map(q).join(";"));
   downloadFile(`match-log-${new Date().toISOString().slice(0,10)}.csv`, "\ufeff" + [cols.join(";"), ...rows].join("\n"), "text/csv;charset=utf-8");
 };
@@ -2304,9 +2314,9 @@ async function handleReplayFiles(fileList){
       const old = matches.filter(m => (G.seriesId && m.seriesId === G.seriesId) || (m.replays || []).some(u => replayIdsFrom(u).some(id => gIds.includes(id))))
         .filter(m => !(m.by && myId && m.by !== myId)).sort((a, b) => a.ts - b.ts);
       const base = old[0] || null;
-      const tagsByRep = {};
+      const tagsByRep = {}, perfByRep = {};
       old.forEach(m => {
-        if (Array.isArray(m.gameList)) m.gameList.forEach((g, i) => { const id = g.rep || replayIdsFrom((m.replays || [])[i] || "")[0]; if (id && (g.tags || []).length) tagsByRep[id] = g.tags; });
+        if (Array.isArray(m.gameList)) m.gameList.forEach((g, i) => { const id = g.rep || replayIdsFrom((m.replays || [])[i] || "")[0]; if (id && (g.tags || []).length) tagsByRep[id] = g.tags; if (id && g.perf != null) perfByRep[id] = g.perf; });
         else if ((m.tags || []).length) (m.replays || []).forEach(u => replayIdsFrom(u).forEach(id => tagsByRep[id] = m.tags));
       });
       const hit = matchDeck(r.myColors.slice(0, 2), r.myList);
@@ -2316,7 +2326,7 @@ async function handleReplayFiles(fileList){
       const sug = detectArch(pairKey(oppColors), seen);
       let gameList = null;
       if (G.bo3){
-        const fresh = L.map(gameOfReplay).map(g => ({ ...g, tags: tagsByRep[g.rep] || [] }));
+        const fresh = L.map(gameOfReplay).map(g => ({ ...g, tags: tagsByRep[g.rep] || [], perf: perfByRep[g.rep] ?? null }));
         if (G.seriesId){
           const byNo = new Map();
           old.filter(m => m.seriesId === G.seriesId).forEach(m => (m.gameList || []).forEach(g => { if (g.no && !g.missing) byNo.set(g.no, g); }));
@@ -2347,7 +2357,7 @@ async function handleReplayFiles(fileList){
         openMe: G.bo3 ? null : (r.openMe || null), openOpp: G.bo3 ? null : (r.openOpp || null),
         event: base ? base.event : prefs.event, meta: base ? base.meta : prefs.meta, tags: G.bo3 ? [] : (tagsByRep[String(r.replayId)] || []),
         notes: [...new Set(old.map(x => x.notes).filter(Boolean))].join(" · ").slice(0, 500), keyCards: base ? base.keyCards || "" : "",
-        mull: firstKnown ? firstKnown.mull : r.mullMe, perf: base ? base.perf ?? null : null, tourney: base ? base.tourney || "" : "", round: base ? base.round ?? null : null,
+        mull: firstKnown ? firstKnown.mull : r.mullMe, perf: avgPerf(gameList) ?? (base ? base.perf ?? null : null), tourney: base ? base.tourney || "" : "", round: base ? base.round ?? null : null,
         replays: repLinks, by: base ? base.by || null : null
       };
       let id = null;
