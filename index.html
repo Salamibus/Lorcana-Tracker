@@ -212,7 +212,15 @@ ul.log li{display:grid;grid-template-columns:auto 1fr auto;gap:4px 12px;align-it
 ul.log .main{font-size:15px}
 ul.log li li{display:block;padding:2px 0;border:0;font-size:13px}
 ul.log details.seen{font-size:13px;margin-top:4px}
-.opening{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}.oside{border:1px solid var(--line);border-radius:var(--radius-s);padding:6px 8px}.oside .oh{font-weight:600;font-size:12px;color:var(--muted);margin-bottom:4px}.otrow{display:flex;gap:6px;padding:2px 0}.otrow .ot{flex:0 0 auto;font-weight:600;color:var(--gold);font-variant-numeric:tabular-nums}.otrow .ol{flex:1 1 auto;min-width:0}.og{font-weight:600;font-size:13px;margin:8px 0 2px}@media (max-width:420px){.opening{grid-template-columns:1fr}}
+.otable{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:6px;font-size:13px}
+.otable th{text-align:left;font-weight:600;color:var(--muted);padding:4px 6px;border-bottom:1px solid var(--line)}
+.otable th:first-child,.otable td.ot{width:2.4em;padding-left:2px;padding-right:2px}
+.otable td{vertical-align:top;padding:5px 6px;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
+.otable td.ot{font-weight:600;color:var(--gold);font-variant-numeric:tabular-nums}
+.otable .ok{font-weight:700;color:var(--gold)}
+.og{font-weight:600;font-size:13px;margin:8px 0 2px}
+ul.log .openwrap{grid-column:1 / 4;font-size:13px}
+ul.log .openwrap details.seen{margin-top:0}
 ul.log .sub{font-size:13px;color:var(--muted);grid-column:2}
 ul.log li.pack{border-left:3px solid var(--gold);background:color-mix(in srgb, var(--gold) 7%, transparent);padding-left:10px;padding-right:6px;border-radius:var(--radius-s);margin:6px 0;border-bottom:0}
 ul.log .games{display:block;margin:6px 0 4px}
@@ -731,24 +739,36 @@ function seenEntries(m){
 }
 
 /* ---------- Eröffnung (erste Züge) anzeigen ---------- */
-function openingSideHtml(title, turns){
-  if (!turns || !turns.length) return "";
-  const rows = turns.map(t => `<div class="otrow"><span class="ot">T${t.t}</span><span class="ol">${t.lines.map(esc).join("<br>")}</span></div>`).join("");
-  return `<div class="oside"><div class="oh">${esc(title)}</div>${rows}</div>`;
+/* Aktionszeile "P Karte, Karte" als "P: Karte, Karte" */
+const OPEN_KINDS = { P: "gespielt", I: "Tinte", C: "Angriff", A: "Fähigkeit", S: "gesungen" };
+function openingLineHtml(line){
+  const mt = String(line).match(/^([PICAS]) (.*)$/);
+  return mt ? `<span class="ok" title="${OPEN_KINDS[mt[1]]}">${mt[1]}:</span> ${esc(mt[2])}` : esc(line);
+}
+function openingTableHtml(g){
+  // Wer das Spiel angefangen hat, steht links; ohne Angabe steht "Ich" links
+  const meFirst = g.start !== "draw";
+  const cols = meFirst ? [["Ich", g.me], ["Gegner", g.opp]] : [["Gegner", g.opp], ["Ich", g.me]];
+  const n = Math.max(...cols.map(([, t]) => (t || []).reduce((mx, x) => Math.max(mx, x.t), 0)));
+  if (!n) return "";
+  const cell = (turns, t) => { const x = (turns || []).find(y => y.t === t); return x ? x.lines.map(openingLineHtml).join("<br>") : `<span class="note">–</span>`; };
+  const head = cols.map(([who], i) => `<th>${who}${g.start && i === 0 ? ' <span class="note">fängt an</span>' : ""}</th>`).join("");
+  const rows = Array.from({ length: n }, (_, i) => `<tr><td class="ot">${i + 1}</td>${cols.map(([, t]) => `<td>${cell(t, i + 1)}</td>`).join("")}</tr>`).join("");
+  return `<table class="otable"><thead><tr><th>Zug</th>${head}</tr></thead><tbody>${rows}</tbody></table>`;
 }
 function matchOpenings(m){
   // Bo1: m.openMe/openOpp; Bo3: je Spiel in gameList
   if (Array.isArray(m.gameList) && m.gameList.some(g => g.openMe || g.openOpp)){
-    return m.gameList.map((g, i) => ({ label: `Spiel ${i + 1}`, me: g.openMe, opp: g.openOpp })).filter(x => x.me || x.opp);
+    return m.gameList.map((g, i) => ({ label: `Spiel ${i + 1}`, me: g.openMe, opp: g.openOpp, start: g.s || null })).filter(x => x.me || x.opp);
   }
-  if (m.openMe || m.openOpp) return [{ label: "", me: m.openMe, opp: m.openOpp }];
+  if (m.openMe || m.openOpp) return [{ label: "", me: m.openMe, opp: m.openOpp, start: m.start || null }];
   return [];
 }
 function openingHtml(m){
   const games = matchOpenings(m);
   if (!games.length) return "";
-  const body = games.map(g => `${g.label ? `<div class="og">${esc(g.label)}</div>` : ""}<div class="opening">${openingSideHtml("Ich", g.me)}${openingSideHtml("Gegner", g.opp)}</div>`).join("");
-  return `<details class="seen"><summary>Eröffnung: erste Züge</summary>${body}</details>`;
+  const body = games.map(g => `${g.label ? `<div class="og">${esc(g.label)}</div>` : ""}${openingTableHtml(g)}`).join("");
+  return `<details class="seen"><summary>Eröffnung: erste Züge</summary>${body}<p class="note" style="margin:6px 0 0">P: gespielt · I: Tinte · C: Angriff · A: Fähigkeit · S: gesungen</p></details>`;
 }
 
 function seenHtml(entries, open){
@@ -1699,8 +1719,9 @@ function renderLog(){
     return `<li class="${pack ? "pack" : ""}"><span class="badge ${m.result}">${m.games || (m.result === "W" ? "S" : "N")}</span>
       <span class="main">${selMode ? `<input type="checkbox" class="selbox" data-sel="${esc(m.id)}" ${selIds.has(m.id) ? "checked" : ""} aria-label="Auswählen"> ` : ""}${mini(dk)} ${esc(m.deckName || pairName(dk))} gegen ${mini(ok)} ${esc(m.oppArch || pairName(ok))}${m.oppName ? ` <span class="note">(${esc(m.oppName)})</span>` : ""}</span>
       ${mine ? `<button class="del" data-id="${esc(m.id)}">Löschen</button>` : "<span></span>"}
-      <span class="sub">${esc(bits.join(", "))}${glHtml}${m.keyCards ? `<br>Schlüsselkarten: ${esc(m.keyCards)}` : ""}${m.notes ? `<br>${esc(m.notes)}` : ""}${seenHtml(seenEntries(m), false)}${openingHtml(m)}</span>
+      <span class="sub">${esc(bits.join(", "))}${glHtml}${m.keyCards ? `<br>Schlüsselkarten: ${esc(m.keyCards)}` : ""}${m.notes ? `<br>${esc(m.notes)}` : ""}${seenHtml(seenEntries(m), false)}</span>
       <span class="links">${repLinksHtml}${reps.map((u, i) => `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${reps.length > 1 ? "Replay Spiel " + (i + 1) : "Replay ansehen"}</a>`).join("")}${mine ? `<button class="del" data-edit="${esc(m.id)}">Bearbeiten</button>` : ""}</span>
+      ${openingHtml(m) ? `<div class="openwrap">${openingHtml(m)}</div>` : ""}
       ${editing === m.id ? `<div class="edit" data-for="${esc(m.id)}">
         ${Array.from({ length: m.format === "bo3" ? 3 : 1 }, (_, i) => `<input class="field" type="url" data-rep="${i}" placeholder="Replay-Link${m.format === "bo3" ? " Spiel " + (i + 1) : ""}" value="${esc((m.replays || [])[i] || "")}">`).join("")}
         <select class="field" data-archsel>${["", ...archListFor(ok)].map(a => `<option value="${esc(a)}" ${a === (m.oppArch || "") ? "selected" : ""}>${a ? esc(a) : "Gegner-Variante: unbekannt"}</option>`).join("")}</select>
