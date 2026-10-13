@@ -195,6 +195,7 @@ tr.thin td{opacity:.55}
 .bar{height:8px;border-radius:4px;background:var(--line);position:relative;min-width:60px}
 .bar b{position:absolute;inset:0 auto 0 0;border-radius:4px;background:var(--gold)}
 .bar::after{content:"";position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--muted);opacity:.5}
+.bar.inkbar::after{left:var(--avg);width:2px;opacity:.9;background:var(--ink)}
 .scroll{overflow-x:auto}
 table.matrix{border-collapse:separate;border-spacing:3px;font-size:13px}
 table.matrix th{font-weight:500;color:var(--muted);padding:4px;text-align:center;white-space:nowrap}
@@ -532,8 +533,9 @@ const blankGame = () => ({ r: null, s: null, mull: null, perf: null, tags: [], t
 /* Leistung eines Bo3: Schnitt der bewerteten Einzelspiele, eine Nachkommastelle */
 const avgPerf = gl => { const p = (gl || []).map(g => g.perf).filter(x => x != null); return p.length ? Math.round(p.reduce((a, b) => a + b, 0) / p.length * 10) / 10 : null; };
 const perfTxt = v => String(v).replace(".", ",");
+const sumMaps = arr => { const o = {}; let any = false; (arr || []).forEach(x => { if (!x) return; any = true; for (const k in x) o[k] = (o[k] || 0) + x[k]; }); return any ? o : null; };
 const form = { opp: [], result: null, games: null, start: null, tags: [], newDeckColors: [], mull: null, perf: null, arch: null, archAdd: false, openMe: null, openOpp: null, seriesId: null,
-  perGame: false, gl: [blankGame(), blankGame(), blankGame()], gAdd: false, myList: null, oppSeen: [], oppSeenN: {}, archSuggest: null, deckPending: null, deckHint: null };
+  perGame: false, gl: [blankGame(), blankGame(), blankGame()], gAdd: false, myList: null, myInked: null, myHeld: null, oppSeen: [], oppSeenN: {}, archSuggest: null, deckPending: null, deckHint: null };
 
 /* ---------- Speicher: geteilte Datenbank, sonst lokal ---------- */
 let matches = [];
@@ -961,7 +963,7 @@ function updateSave(){
 var editState = null;   // { id, ts, by, saved:{format,event,meta,deckKey}, queue:[ids], pos }
 function blankForm(){
   Object.assign(form, { opp: [], result: null, games: null, start: null, tags: [], mull: null, perf: null, arch: null, archAdd: false,
-    perGame: false, gl: [blankGame(), blankGame(), blankGame()], gAdd: false, myList: null, oppSeen: [], oppSeenN: {}, archSuggest: null, deckPending: null, deckHint: null });
+    perGame: false, gl: [blankGame(), blankGame(), blankGame()], gAdd: false, myList: null, myInked: null, myHeld: null, oppSeen: [], oppSeenN: {}, archSuggest: null, deckPending: null, deckHint: null });
   ["#notes", "#keyCards", "#turns", "#oppName", "#tourney", "#round"].forEach(s => $(s).value = "");
   document.querySelectorAll("#replayInputs input").forEach(i => i.value = "");
 }
@@ -977,6 +979,7 @@ function loadIntoForm(m){
   form.opp = (m.oppColors || []).slice(0, 2);
   form.arch = m.oppArch || null;
   form.myList = m.myList || null;
+  form.myInked = m.myInked || null; form.myHeld = m.myHeld || null;
   form.oppSeen = [...(m.oppSeen || [])];
   form.oppSeenN = { ...(m.oppSeenN || {}) };
   form.perf = m.perf != null ? String(m.perf) : null;
@@ -1266,6 +1269,8 @@ $("#saveBtn").onclick = async () => {
     openMe: pg ? null : (form.openMe || null),
     openOpp: pg ? null : (form.openOpp || null),
     myList: form.myList || null,
+    myInked: pg ? sumMaps(gameList.map(g => g.inked)) : (form.myInked || null),
+    myHeld: pg ? sumMaps(gameList.map(g => g.held)) : (form.myHeld || null),
     oppSeen: form.oppSeen.length ? [...form.oppSeen] : null,
     oppSeenN: Object.keys(form.oppSeenN || {}).length ? { ...form.oppSeenN } : null,
     event: prefs.event,
@@ -1305,7 +1310,7 @@ $("#saveBtn").onclick = async () => {
   if (m.myList) rememberDeckList(prefs.deckKey, m.myList);
   const keepOpp = prefs.pinOpp ? { opp: form.opp, arch: form.arch } : { opp: [], arch: null };
   Object.assign(form, { result: null, games: null, start: null, tags: [], mull: null, perf: null, archAdd: false,
-    gl: [blankGame(), blankGame(), blankGame()], gAdd: false, myList: null, oppSeen: [], oppSeenN: {}, archSuggest: null, deckPending: null, deckHint: null }, keepOpp);
+    gl: [blankGame(), blankGame(), blankGame()], gAdd: false, myList: null, myInked: null, myHeld: null, oppSeen: [], oppSeenN: {}, archSuggest: null, deckPending: null, deckHint: null }, keepOpp);
   ["#notes", "#keyCards", "#turns"].forEach(s => $(s).value = "");
   if (!prefs.pinOpp) $("#oppName").value = "";
   // Turniername bleibt für die nächste Runde stehen, die Runde zählt hoch
@@ -1324,7 +1329,7 @@ $("#toastUndo").onclick = async () => { if (lastSavedId) await store.remove(last
 
 /* ---------- Filter ---------- */
 const deckOff = new Set(LS.get("deckOff", []));
-const filt = { period: CUR_PERIOD, range: "all", player: "", deck: "", opp: "", event: "", format: "", meta: "", start: "", tag: "", tourney: "", opening: "" };
+const filt = { period: CUR_PERIOD, range: "all", player: "", deck: "", opp: "", event: "", format: "", meta: "", start: "", tag: "", tourney: "", opening: "", inked: "" };
 const tagsOf = m => [...new Set([...(m.tags || []), ...((m.gameList || []).flatMap(g => g.tags || []))])];
 function uniq(arr){ return [...new Set(arr.filter(Boolean))].sort((a,b) => a.localeCompare(b, "de")); }
 function renderFilters(target){
@@ -1344,6 +1349,8 @@ function renderFilters(target){
     sel("start","Angefangen", opt("","Egal",filt.start)+opt("play","Ich",filt.start)+opt("draw","Gegner",filt.start)) +
     sel("meta","Format", opt("","Alle",filt.meta)+uniq(matches.map(m=>m.meta)).map(v=>opt(v,v,filt.meta)).join("")) +
     sel("tag","Markierung", opt("","Alle",filt.tag)+uniq(matches.flatMap(tagsOf)).map(v=>opt(v,v,filt.tag)).join("")) +
+    (() => { const ids = [...new Set(matches.flatMap(m => Object.keys(m.myInked || {})))].sort((a, b) => cardName(a).localeCompare(cardName(b), "de"));
+      return ids.length ? sel("inked","Selbst getintet", opt("","Egal",filt.inked)+ids.map(id=>opt(id,cardName(id),filt.inked)).join("")) : ""; })() +
     (matches.some(m=>m.tourney) ? sel("tourney","Turnier", opt("","Alle",filt.tourney)+uniq(matches.map(m=>m.tourney)).map(v=>opt(v,v,filt.tourney)).join("")) : "") +
     (matches.some(m => openingText(m)) ? `<label>Eröffnung<input type="text" data-fo="opening" value="${esc(filt.opening)}" placeholder="z. B. 2P Mickey"></label>` : "");
   const active = Object.entries(filt).filter(([k, v]) => k === "period" ? v !== CUR_PERIOD : v && !(k === "range" && v === "all")).length;
@@ -1389,6 +1396,7 @@ function filtered(){
     if (filt.start && m.start !== filt.start) return false;
     if (filt.meta && m.meta !== filt.meta) return false;
     if (filt.tag && !tagsOf(m).includes(filt.tag)) return false;
+    if (filt.inked && !((m.myInked || {})[filt.inked] > 0)) return false;
     if (filt.tourney && m.tourney !== filt.tourney) return false;
     if (filt.opening && !matchesOpening(m, filt.opening)) return false;
     return true;
@@ -1460,6 +1468,27 @@ function trendHtml(list){
   }
   return `<section class="block"><h2>Siegquote im Zeitverlauf ${seg}</h2>${body}</section>`;
 }
+/* Selbst getintete Karten: wie oft getintet, gemessen daran, wie oft die Karte auf der Hand war */
+function inkHtml(list){
+  const withInk = list.filter(m => m.myHeld);
+  if (!withInk.length) return `<section class="block"><h2>Selbst getintet</h2><p class="note">Füllt sich mit eingelesenen Replays. Ältere Einträge ergänzt du, indem du die Replays noch einmal gesammelt einliest (z. B. als ZIP).</p></section>`;
+  const inked = sumMaps(withInk.map(m => m.myInked)) || {}, held = sumMaps(withInk.map(m => m.myHeld)) || {};
+  const games = withInk.reduce((n, m) => n + (Array.isArray(m.gameList) ? m.gameList.filter(g => g.held).length || 1 : 1), 0);
+  const tI = Object.values(inked).reduce((a, b) => a + b, 0), tH = Object.values(held).reduce((a, b) => a + b, 0);
+  const avg = tH ? tI / tH : 0;
+  const rows = Object.keys(inked).map(id => ({ id, i: inked[id], h: Math.max(held[id] || 0, inked[id]) }))
+    .map(r => ({ ...r, q: r.i / r.h })).sort((a, b) => (b.h >= MIN_N) - (a.h >= MIN_N) || b.q - a.q || b.i - a.i); // genug Daten zuerst
+  const showAll = inkShowAll || rows.length <= 15;
+  const DOT = " \u00b7 ";
+  return `<section class="block"><h2>Selbst getintet <small>aus Replays${DOT}${games} Spiele</small></h2>
+    <p class="statnote">Nur Karten, die du selbst aus der Hand getintet hast, keine Tinte durch Effekte. Quote = getintet geteilt durch „auf der Hand“ (Starthand nach Mulligan plus gezogen). Im Schnitt tintest du ${Math.round(avg * 100)}% deiner Handkarten, ${(tI / games).toFixed(1).replace(".", ",")} pro Spiel. Der Strich im Balken markiert den Schnitt. Blass: unter ${MIN_N}× auf der Hand.</p>
+    <div class="scroll"><table class="stats"><thead><tr><th>Karte</th><th class="num">getintet</th><th class="num">auf Hand</th><th class="num">Quote</th><th></th></tr></thead><tbody>
+    ${rows.slice(0, showAll ? rows.length : 15).map(r => `<tr class="${r.h < MIN_N ? "thin" : ""}"><td style="white-space:normal">${esc(cardName(r.id))}</td><td class="num">${r.i}</td><td class="num">${r.h}</td><td class="num"><b${r.q > avg * 1.5 && r.h >= MIN_N ? ' style="color:var(--gold)"' : ""}>${Math.round(r.q * 100)}%</b></td><td style="width:22%"><div class="bar inkbar" style="--avg:${Math.round(avg * 100)}%"><b style="width:${Math.round(r.q * 100)}%"></b></div></td></tr>`).join("")}
+    </tbody></table></div>
+    ${rows.length > 15 ? `<button type="button" class="chip small" data-inkall="1" style="margin-top:8px">${showAll ? "Weniger zeigen" : `Alle ${rows.length} Karten zeigen`}</button>` : ""}
+    <p class="statnote" style="margin-top:8px">Gold: mehr als anderthalbmal so oft getintet wie dein Schnitt. Mit dem Filter „Selbst getintet“ siehst du alle Matches, in denen du eine bestimmte Karte getintet hast.</p></section>`;
+}
+let inkShowAll = false;
 function cardSwapHtml(list){
   const withList = list.filter(m => m.myList && Object.keys(m.myList).length);
   if (!withList.length) return `<section class="block"><h2>Kartenwahl</h2><p class="note">Füllt sich mit eingelesenen Replays: Dann siehst du, mit welcher Kartenanzahl deine Decks öfter gewinnen.</p></section>`;
@@ -1495,6 +1524,7 @@ function statDecks(){
     if (filt.start && m.start !== filt.start) return false;
     if (filt.meta && m.meta !== filt.meta) return false;
     if (filt.tag && !tagsOf(m).includes(filt.tag)) return false;
+    if (filt.inked && !((m.myInked || {})[filt.inked] > 0)) return false;
     if (filt.tourney && m.tourney !== filt.tourney) return false;
     return true;
   });
@@ -1625,6 +1655,7 @@ function renderStats(){
   }
 
   html += cardSwapHtml(list);
+  html += inkHtml(list);
 
   // Eigene Leistung
   const avg1 = arr => arr.length ? (arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(1).replace(".", ",") : "–";
@@ -1718,6 +1749,7 @@ $("#statsOut").addEventListener("click", e => {
   if (b.dataset.wv){ prefs.weight = b.dataset.wv; LS.set("weight", prefs.weight); renderStats(); }
   else if (b.dataset.tr){ prefs.trendRes = b.dataset.tr; LS.set("trendRes", prefs.trendRes); renderStats(); }
   else if (b.dataset.shot){ makeStatCard(); }
+  else if (b.dataset.inkall){ inkShowAll = !inkShowAll; renderStats(); }
   else if (b.dataset.deckpick){
     const k = b.dataset.deckpick;
     if (k === "__all"){ deckOff.clear(); }
@@ -1788,7 +1820,7 @@ function renderLog(){
     return `<li class="${pack ? "pack" : ""}"><span class="badge ${m.result}">${m.games || (m.result === "W" ? "S" : "N")}</span>
       <span class="main">${selMode ? `<input type="checkbox" class="selbox" data-sel="${esc(m.id)}" ${selIds.has(m.id) ? "checked" : ""} aria-label="Auswählen"> ` : ""}${mini(dk)} ${esc(m.deckName || pairName(dk))} gegen ${mini(ok)} ${esc(m.oppArch || pairName(ok))}${m.oppName ? ` <span class="note">(${esc(m.oppName)})</span>` : ""}</span>
       ${mine ? `<button class="del" data-id="${esc(m.id)}">Löschen</button>` : "<span></span>"}
-      <span class="sub">${esc(bits.join(", "))}${glHtml}${m.keyCards ? `<br>Schlüsselkarten: ${esc(m.keyCards)}` : ""}${m.notes ? `<br>${esc(m.notes)}` : ""}${seenHtml(seenEntries(m), false)}</span>
+      <span class="sub">${esc(bits.join(", "))}${glHtml}${m.keyCards ? `<br>Schlüsselkarten: ${esc(m.keyCards)}` : ""}${m.notes ? `<br>${esc(m.notes)}` : ""}${seenHtml(seenEntries(m), false)}${m.myInked && Object.keys(m.myInked).length ? `<details class="seen"><summary>Selbst getintet: ${Object.values(m.myInked).reduce((a, b) => a + b, 0)} Karten</summary><ul class="seenlist">${Object.entries(m.myInked).sort((a, b) => b[1] - a[1] || cardName(a[0]).localeCompare(cardName(b[0]), "de")).map(([id, n]) => `<li><span class="n">${n}×</span>${esc(cardName(id))}</li>`).join("")}</ul></details>` : ""}</span>
       <span class="links">${repLinksHtml}${reps.map((u, i) => `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${reps.length > 1 ? "Replay Spiel " + (i + 1) : "Replay ansehen"}</a>`).join("")}${mine ? `<button class="del" data-edit="${esc(m.id)}">Bearbeiten</button>` : ""}</span>
       ${openingHtml(m) ? `<div class="openwrap">${openingHtml(m)}</div>` : ""}
       ${editing === m.id ? `<div class="edit" data-for="${esc(m.id)}">
@@ -1933,14 +1965,15 @@ function blobDownload(filename, data, mime){
 }
 $("#csvBtn").hidden = false;
 $("#csvBtn").onclick = async () => {
-  const cols = ["datum","spieler","deck","deckfarben","gegnerfarben","gegner_archetyp","gegnername","format","ergebnis","spiele","angefangen","event","set_format","markierungen","notiz","schluesselkarten","gegnerkarten_gesehen","mulligan","leistung","turnier","runde","replays","zuege","meta_zeitraum","einzelspiele"];
+  const cols = ["datum","spieler","deck","deckfarben","gegnerfarben","gegner_archetyp","gegnername","format","ergebnis","spiele","angefangen","event","set_format","markierungen","notiz","schluesselkarten","gegnerkarten_gesehen","mulligan","leistung","turnier","runde","replays","zuege","meta_zeitraum","einzelspiele","selbst_getintet"];
   const q = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
   const rows = filtered().sort((a, b) => a.ts - b.ts).map(m => [
     new Date(m.ts).toISOString(), m.player, m.deckName, (m.deckColors||[]).join("/"), (m.oppColors||[]).join("/"), m.oppArch, m.oppName,
     m.format, m.result === "W" ? "Sieg" : "Niederlage", m.games || "", m.start === "play" ? "ja" : "nein", m.event, m.meta, (m.tags||[]).join("; "), m.notes,
     m.keyCards, seenEntries(m).map(([id, n]) => (n ? n + "x " : "") + cardName(id)).join("; "), m.mull ?? "", m.perf ?? "", m.tourney || "", m.round ?? "", (m.replays||[]).join(" "),
     m.turns ?? "", (METAS.find(p => p.id === periodOf(m.ts)) || { name: "vorher" }).name,
-    (m.gameList || []).map((g, i) => `S${i + 1} ${g.r === "W" ? "Sieg" : "Niederlage"} ${g.s === "play" ? "angef." : "nachgez."}${g.mull != null ? " Mull " + g.mull : ""}${g.perf != null ? " Leist " + g.perf : ""}${g.turns ? " " + g.turns + "Z" : ""}${(g.tags || []).length ? " [" + g.tags.join(", ") + "]" : ""}`).join(" | ")
+    (m.gameList || []).map((g, i) => `S${i + 1} ${g.r === "W" ? "Sieg" : "Niederlage"} ${g.s === "play" ? "angef." : "nachgez."}${g.mull != null ? " Mull " + g.mull : ""}${g.perf != null ? " Leist " + g.perf : ""}${g.turns ? " " + g.turns + "Z" : ""}${(g.tags || []).length ? " [" + g.tags.join(", ") + "]" : ""}`).join(" | "),
+    Object.entries(m.myInked || {}).map(([id, n]) => n + "x " + cardName(id)).join("; ")
   ].map(q).join(";"));
   downloadFile(`match-log-${new Date().toISOString().slice(0,10)}.csv`, "\ufeff" + [cols.join(";"), ...rows].join("\n"), "text/csv;charset=utf-8");
 };
@@ -2155,6 +2188,20 @@ function parseReplay(d){
     if (l.player === opp && ["CARD_PLAYED","CARD_INKED","CARD_REVEALED"].includes(l.type))
       for (const r of (l.cardRefs||[]).slice(0,1)) oppCards[r.id] = (oppCards[r.id]||0)+1;
   }
+  /* Eigene Tinte: nur aktiv aus der Hand getintete Karten (CARD_INKED ohne Herkunft oder aus der Hand).
+     Effekte stehen als CARD_PUT_INTO_INKWELL oder CARD_INKED mit fromZone deck/discard im Log und zählen nicht.
+     Dazu, wie oft jede Karte auf die Hand kam: Starthand nach Mulligan plus gezogene Karten. */
+  const myInked = {}, myHeld = {};
+  const bump = (o, id, n = 1) => { if (id) o[id] = (o[id] || 0) + n; };
+  for (const l of (d.logs||[])){
+    if (l.player !== me) continue;
+    const refs = l.cardRefs || [];
+    if (l.type === "CARD_INKED"){ const z = l.data && l.data.fromZone; if (!z || z === "hand") bump(myInked, (l.data && l.data.cardId) || (refs[0] && refs[0].id)); }
+    else if (l.type === "INITIAL_HAND") refs.forEach(r => bump(myHeld, r.id));
+    else if (l.type === "MULLIGAN"){ const n = (l.data && l.data.mulliganCount) || 0; refs.slice(0, n).forEach(r => bump(myHeld, r.id, -1)); refs.slice(n).forEach(r => bump(myHeld, r.id)); }
+    else if (l.type === "CARD_DRAWN") bump(myHeld, (l.data && l.data.cardId) || (refs[0] && refs[0].id));
+  }
+  Object.keys(myHeld).forEach(k => { if (myHeld[k] <= 0) delete myHeld[k]; });
   const colorsOf = ids => { const s=new Set(); ids.forEach(i => (cards[i]?.colors||[]).forEach(c=>s.add(c))); return [...s]; };
   const rv0 = b.roomView || {};
   const deckIds = (rv0.mySetup && Array.isArray(rv0.mySetup.deckCardIds) && rv0.mySetup.deckCardIds.length) ? rv0.mySetup.deckCardIds : (d.decklist || []);
@@ -2222,7 +2269,7 @@ function parseReplay(d){
   return {
     series,
     ts: Number.isFinite(tsNum) && tsNum > 0 ? tsNum : Date.now(),
-    myList, cardNames: nameMap, oppSeen: Object.keys(oppSeenN), oppSeenN,
+    myList, myInked, myHeld, cardNames: nameMap, oppSeen: Object.keys(oppSeenN), oppSeenN,
     me: names[String(me)] || "", opp: names[String(opp)] || "",
     win: d.winner === me, reason: d.victoryReason, turns: d.turnCount,
     start: first === me ? "play" : (first === opp ? "draw" : null),
@@ -2281,12 +2328,13 @@ function prefillFromReplay(r){
         if (rr) Object.assign(form.gl[i], { r: rr, missing: true });
       }
     }
-    Object.assign(form.gl[slot], { r: r.win ? "W" : "L", s: r.start, mull: r.mullMe, turns: r.turns || null, openMe: r.openMe || null, openOpp: r.openOpp || null, missing: false, no: r.series ? r.series.no : null, wb: r.series ? r.series.before : null, rep: String(r.replayId) });
+    Object.assign(form.gl[slot], { inked: r.myInked || null, held: r.myHeld || null, r: r.win ? "W" : "L", s: r.start, mull: r.mullMe, turns: r.turns || null, openMe: r.openMe || null, openOpp: r.openOpp || null, missing: false, no: r.series ? r.series.no : null, wb: r.series ? r.series.before : null, rep: String(r.replayId) });
     const nx = form.gl[slot + 1]; if (nx && !nx.s) nx.s = r.win ? "draw" : "play";
   } else {
     form.result = r.win ? "W" : "L"; form.games = null; form.start = r.start;
     form.mull = r.mullMe != null ? String(r.mullMe) : null;
     form.openMe = r.openMe || null; form.openOpp = r.openOpp || null;
+    form.myInked = r.myInked || null; form.myHeld = r.myHeld || null;
   }
   const sug = detectArch(pairKey(form.opp), form.oppSeen);
   form.archSuggest = sug;
@@ -2325,7 +2373,8 @@ function groupReplays(parsed){
 /* --- Import-Ablauf: eine oder mehrere Dateien --- */
 function gameOfReplay(x){
   return { no: x.series ? x.series.no : null, r: x.win ? "W" : "L", s: x.start, mull: x.mullMe, tags: [], turns: x.turns || null,
-    openMe: x.openMe || null, openOpp: x.openOpp || null, wb: x.series ? x.series.before : null, rep: String(x.replayId), next: x.series ? x.series.next : null };
+    openMe: x.openMe || null, openOpp: x.openOpp || null, wb: x.series ? x.series.before : null, rep: String(x.replayId), next: x.series ? x.series.next : null,
+    inked: x.myInked || null, held: x.myHeld || null };
 }
 /* Bekannte Spiele nach Nummer ordnen; Lücken (vom Export verschluckt) aus dem Spielstand der Folgespiele erschließen */
 function buildSeriesGames(known){
@@ -2366,9 +2415,11 @@ async function handleReplayFiles(fileList){
   }
   const known = knownReplayIds(), single = parsed.length === 1; let skipped = 0;
   const knownSer = new Set(matches.filter(m => m.seriesId).flatMap(m => (m.replays || []).flatMap(u => replayIdsFrom(u))));
+  // Einträge aus der Zeit vor der Tinten-Auswertung werden beim Sammel-Import nachgetragen statt übersprungen
+  const inkKnown = new Set(matches.filter(m => m.myHeld).flatMap(m => (m.replays || []).flatMap(u => replayIdsFrom(u))));
   for (let i = parsed.length - 1; i >= 0; i--){
     const id = String(parsed[i].replayId);
-    if (known.has(id) && (single || !parsed[i].series || knownSer.has(id))) { parsed.splice(i, 1); skipped++; }
+    if (known.has(id) && (single || ((!parsed[i].series || knownSer.has(id)) && inkKnown.has(id)))) { parsed.splice(i, 1); skipped++; }
   }
   if (!parsed.length && skipped){
     box.className = "import-status ok";
@@ -2420,7 +2471,8 @@ async function handleReplayFiles(fileList){
         if (G.seriesId){
           const byNo = new Map();
           old.filter(m => m.seriesId === G.seriesId).forEach(m => (m.gameList || []).forEach(g => { if (g.no && !g.missing) byNo.set(g.no, g); }));
-          fresh.forEach(g => { if (!byNo.has(g.no)) byNo.set(g.no, g); });
+          // Neu eingelesene Spiele ergänzen gespeicherte um fehlende Tintendaten
+          fresh.forEach(g => { const o = byNo.get(g.no); if (!o) byNo.set(g.no, g); else if (!o.held && g.held) byNo.set(g.no, { ...o, inked: g.inked, held: g.held }); });
           gameList = buildSeriesGames([...byNo.values()]);
         } else gameList = fresh;
       }
@@ -2444,6 +2496,7 @@ async function handleReplayFiles(fileList){
         result, games: ser ? ser.score : null, start: firstKnown ? firstKnown.s : r.start,
         gameList, turns: G.bo3 ? null : (r.turns || null),
         myList: r.myList, oppSeen: Object.keys(seenAll), oppSeenN: seenAll,
+        myInked: gameList ? sumMaps(gameList.map(g => g.inked)) : (r.myInked || null), myHeld: gameList ? sumMaps(gameList.map(g => g.held)) : (r.myHeld || null),
         openMe: G.bo3 ? null : (r.openMe || null), openOpp: G.bo3 ? null : (r.openOpp || null),
         event: base ? base.event : prefs.event, meta: base ? base.meta : prefs.meta, tags: G.bo3 ? [] : (tagsByRep[String(r.replayId)] || []),
         notes: [...new Set(old.map(x => x.notes).filter(Boolean))].join(" · ").slice(0, 500), keyCards: base ? base.keyCards || "" : "",
