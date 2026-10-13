@@ -236,6 +236,7 @@ nav.tabs button[hidden]{display:none}
 .archmgr .amgroup{margin-top:10px}
 .archmgr .amrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;padding:4px 0}
 .archmgr .amrow input{flex:1 1 9em;min-width:0}
+#deckMgr .amrow{border-top:1px solid var(--line);padding:10px 0;margin-top:6px}
 .selbox{width:18px;height:18px;vertical-align:-3px;accent-color:var(--gold)}
 .selbar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:1.5px solid var(--gold);padding:10px 16px calc(10px + env(safe-area-inset-bottom));display:grid;gap:8px;box-shadow:0 -6px 18px rgba(0,0,0,.35)}
 .selbar .selhead,.selbar .selact{display:flex;flex-wrap:wrap;align-items:center;gap:8px;max-width:688px;width:100%;margin:0 auto}
@@ -325,6 +326,7 @@ ul.log .del{border:0;background:none;color:var(--muted);font-size:13px;text-deco
       <h2>Mein Deck</h2>
       <div class="chips" id="deckChips"></div>
       <p class="deckhint" id="deckHint" hidden></p>
+      <div class="archmgr" id="deckMgr" style="margin-top:10px" hidden></div>
       <div class="newdeck" id="newDeck" hidden>
         <div class="gems small" id="newDeckGems"></div>
         <input class="field" id="newDeckName" placeholder="Deckname, z. B. Amber/Steel Mickey" maxlength="40">
@@ -833,14 +835,16 @@ function renderEntry(){
   if (!prefs.deckKey && decks.length && !form.deckPending) prefs.deckKey = decks[0][0];
   $("#deckChips").innerHTML = decks.map(([k, d]) =>
     `<button class="chip" data-k="${esc(k)}" aria-pressed="${k === prefs.deckKey}">${mini(pairKey(d.colors))}${esc(d.name || pairName(pairKey(d.colors)))}</button>`
-  ).join("") + `<button class="chip add" id="addDeck">+ Neues Deck</button>`;
+  ).join("") + `<button class="chip add" id="addDeck">+ Neues Deck</button>`
+    + (decks.length ? `<button class="chip linkish" id="deckMgrBtn" aria-pressed="${!$("#deckMgr").hidden}">${$("#deckMgr").hidden ? "Decks verwalten" : "Verwalten schließen"}</button>` : "");
+  renderDeckMgr();
 
   const dh = $("#deckHint");
   if (form.deckPending){
     const same = decks.filter(([k, d]) => pairKey(d.colors) === pairKey(form.deckPending.colors));
     dh.hidden = false; dh.className = "deckhint";
     dh.textContent = `Welches Deck hast du gespielt? Das Replay zeigt ${pairName(pairKey(form.deckPending.colors))}. `
-      + (same.length ? "Tippe auf dein Deck oder lege unten eine neue Version mit Namen an." : "Gib dem Deck unten einen Namen.");
+      + (same.length ? `Tippe oben auf dein Deck (${same.map(([, d]) => d.name || pairName(pairKey(d.colors))).join(", ")}). Ist es ein neues, tippe auf „+ Neues Deck“.` : "Gib dem Deck unten einen Namen.");
   } else if (form.deckHint){ dh.hidden = false; dh.className = "deckhint ok"; dh.textContent = form.deckHint; }
   else dh.hidden = true;
   $("#seenBox").innerHTML = seenHtml(Object.entries(form.oppSeenN || {}), false);
@@ -1083,11 +1087,76 @@ $("#meta").addEventListener("change", e => { prefs.meta = e.target.value.trim() 
 $("#deckChips").addEventListener("click", e => {
   const b = e.target.closest("button"); if (!b) return;
   if (b.id === "addDeck") { $("#newDeck").hidden = false; form.newDeckColors = []; renderEntry(); $("#newDeckName").focus(); return; }
+  if (b.id === "deckMgrBtn") { $("#deckMgr").hidden = !$("#deckMgr").hidden; renderEntry(); return; }
+  if (!b.dataset.k) return;
   prefs.deckKey = b.dataset.k; LS.set("deckKey", prefs.deckKey);
-  if (form.deckPending){ form.deckPending = null; form.deckHint = null; }
+  if (form.deckPending){
+    // Liste aus dem Replay diesem Deck zuordnen, damit es beim nächsten Mal erkannt wird
+    rememberDeckList(prefs.deckKey, form.deckPending.list);
+    const d = currentDeck();
+    form.deckHint = `Gemerkt: Diese Liste gehört zu „${d ? d.name || pairName(pairKey(d.colors)) : ""}“. Beim nächsten Replay wird das Deck automatisch erkannt.`;
+    form.deckPending = null; $("#newDeck").hidden = true;
+  }
   renderEntry();
 });
 $("#newDeckCancel").onclick = () => { $("#newDeck").hidden = true; };
+/* ---------- Decks verwalten: umbenennen, löschen (Matches auf ein anderes Deck übertragen) ---------- */
+const deckLabel = d => d.name || pairName(pairKey(d.colors));
+const ownDeckMatches = k => matches.filter(m => m.player && m.player === prefs.player && deckKeyOf({ name: m.deckName, colors: m.deckColors || [] }) === k);
+function renderDeckMgr(){
+  const box = $("#deckMgr"); if (!box || box.hidden) return;
+  const decks = allMyDecks();
+  box.innerHTML = `<p class="note" style="margin:0">Umbenennen ändert alle deine Matches mit diesem Deck mit. Beim Löschen wählst du, auf welches Deck die Matches übertragen werden.</p>`
+    + decks.map(([k, d]) => {
+      const n = ownDeckMatches(k).length, others = decks.filter(([k2]) => k2 !== k).sort(([, a], [, b]) => (pairKey(b.colors) === pairKey(d.colors)) - (pairKey(a.colors) === pairKey(d.colors)));
+      const key = esc(k);
+      return `<div class="amrow" data-dk="${key}">${mini(pairKey(d.colors))}<input class="field" value="${esc(d.name)}" placeholder="${esc(pairName(pairKey(d.colors)))}" maxlength="40" aria-label="Deckname"><span class="note">${n} ${n === 1 ? "Match" : "Matches"}${deckLists[k] ? ", Liste bekannt" : ""}</span>`
+        + `<button class="chip small" type="button" data-dren>Umbenennen</button>`
+        + (n ? `<select class="field" data-dto style="flex:1 1 10em"><option value="">Matches übertragen auf …</option>${others.map(([k2, d2]) => `<option value="${esc(k2)}">${esc(deckLabel(d2))} (${esc(pairName(pairKey(d2.colors)))})</option>`).join("")}</select>` : "")
+        + `<button class="chip small" type="button" data-ddel>Löschen</button></div>`;
+    }).join("");
+}
+async function moveDeck(oldK, nd){
+  // Matches, Deckliste und Auswahl von oldK auf das Deck nd umstellen
+  const newK = deckKeyOf(nd);
+  const ids = ownDeckMatches(oldK).map(m => m.id);
+  prefs.decks = prefs.decks.filter(d => deckKeyOf(d) !== oldK);
+  if (!prefs.decks.some(d => deckKeyOf(d) === newK)) prefs.decks = [...prefs.decks, nd];
+  savePrefs();
+  if (deckLists[oldK]){ if (!deckLists[newK]) deckLists[newK] = deckLists[oldK]; delete deckLists[oldK]; LS.set("deckLists", deckLists); }
+  if (prefs.deckKey === oldK){ prefs.deckKey = newK; LS.set("deckKey", newK); }
+  if (ids.length) await bulkPatch(ids, () => ({ deckName: nd.name, deckColors: [...nd.colors] }));
+  return ids.length;
+}
+$("#deckMgr").addEventListener("click", async e => {
+  const row = e.target.closest("[data-dk]"); if (!row) return;
+  const k = row.dataset.dk, d = (allMyDecks().find(([x]) => x === k) || [])[1]; if (!d) return;
+  if (e.target.closest("[data-dren]")){
+    const name = row.querySelector("input").value.trim();
+    if (name === d.name) return;
+    const nd = { name, colors: [...d.colors] };
+    const merge = allMyDecks().some(([x]) => x === deckKeyOf(nd));
+    const n = await moveDeck(k, nd);
+    toast(merge ? `Mit „${deckLabel(nd)}“ zusammengelegt (${n} Matches).` : `Deck heißt jetzt „${deckLabel(nd)}“ (${n} Matches).`);
+    renderEntry(); return;
+  }
+  const del = e.target.closest("[data-ddel]"); if (!del) return;
+  const sel = row.querySelector("[data-dto]");
+  if (sel && !sel.value){ sel.focus(); toast("Erst wählen, auf welches Deck die Matches übertragen werden."); return; }
+  if (del.dataset.confirm !== "1"){ del.dataset.confirm = "1"; del.textContent = "Wirklich löschen?"; return; }
+  if (sel){
+    const target = allMyDecks().find(([x]) => x === sel.value); if (!target) return;
+    const n = await moveDeck(k, { name: target[1].name, colors: [...target[1].colors] });
+    toast(`„${deckLabel(d)}“ gelöscht, ${n} Matches jetzt bei „${deckLabel(target[1])}“.`);
+  } else {
+    prefs.decks = prefs.decks.filter(x => deckKeyOf(x) !== k); savePrefs();
+    if (deckLists[k]){ delete deckLists[k]; LS.set("deckLists", deckLists); }
+    if (prefs.deckKey === k){ prefs.deckKey = null; LS.set("deckKey", null); }
+    toast(`„${deckLabel(d)}“ gelöscht.`);
+  }
+  renderEntry();
+});
+$("#deckMgr").addEventListener("keydown", e => { if (e.key === "Enter" && e.target.matches("input")){ e.preventDefault(); const b = e.target.parentElement.querySelector("[data-dren]"); if (b) b.click(); } });
 $("#newDeckSave").onclick = () => {
   if (!form.newDeckColors.length) { $("#newDeckName").placeholder = "Erst die Deckfarben antippen"; return; }
   const d = { name: $("#newDeckName").value.trim(), colors: [...form.newDeckColors] };
@@ -2177,7 +2246,7 @@ function prefillFromReplay(r){
     prefs.deckKey = ""; form.deckHint = null;
     form.deckPending = { colors: r.myColors.slice(0, 2), list: r.myList };
     form.newDeckColors = r.myColors.slice(0, 2);
-    $("#newDeck").hidden = false;
+    $("#newDeck").hidden = allMyDecks().some(([, d]) => pairKey(d.colors) === pairKey(r.myColors.slice(0, 2)));
   }
   const openSeries = (r.series && form.seriesId === r.series.id) || form.perGame && prefs.format === "bo3" && form.gl.some(g => g.r)
     && !seriesOf(visibleGames().filter(g => g.r)).done
@@ -2407,6 +2476,8 @@ async function handleReplayFiles(fileList){
       + (errors.length ? "<ul><li>"+errors.map(esc).join("</li><li>")+"</li></ul>" : "")
       + unknown.map((u, i) => `<div class="namerow" data-uk="${i}"><span style="color:var(--ink)">Welches <b>eigene</b> Deck war das? Deine Liste ${mini(u.ck)} ${esc(pairName(u.ck))} ist noch keinem Deck zugeordnet, ${u.ids.length} ${u.ids.length === 1 ? "Match" : "Matches"}:</span>`
         + unknownDetails(u, unknown)
+        + (() => { const same = allMyDecks().filter(([, d]) => pairKey(d.colors) === u.ck && d.name);
+            return same.length ? `<div class="chips" style="flex-basis:100%"><span class="note" style="align-self:center">Bestehendes Deck:</span>${same.map(([k, d]) => `<button class="chip" type="button" data-ukdeck="${i}" data-k="${esc(k)}">${esc(d.name)}</button>`).join("")}</div><span class="note" style="flex-basis:100%">oder neues Deck anlegen:</span>` : ""; })()
         + `<input class="field" placeholder="Deckname, z. B. ${esc(pairName(u.ck))} v2" maxlength="40"><button class="chip" type="button" aria-pressed="true" data-ukname="${i}">Übernehmen</button></div>`).join("");
     if (savedIds.length) box.innerHTML += `<div class="acts"><button class="chip" type="button" aria-pressed="true" data-editall="1">${savedIds.length === 1 ? "Match jetzt ergänzen" : "Die " + savedIds.length + " Matches nacheinander ergänzen"}</button></div>`;
     pendingImported = savedIds;
@@ -2456,6 +2527,14 @@ $("#importStatus").addEventListener("click", e => {
   if (!e.target.closest("[data-editall]") || !pendingImported.length) return;
   const q = [...pendingImported].sort((a, b) => (matches.find(x => x.id === a)?.ts || 0) - (matches.find(x => x.id === b)?.ts || 0));
   startEdit(q[0], q);
+});
+$("#importStatus").addEventListener("click", async e => {
+  const b = e.target.closest("[data-ukdeck]"); if (!b) return;
+  const u = pendingUnknown[Number(b.dataset.ukdeck)]; if (!u) return;
+  const d = allMyDecks().find(([k]) => k === b.dataset.k); if (!d) return;
+  rememberDeckList(d[0], u.list);
+  for (const id of u.ids) await store.update(id, { deckName: d[1].name, deckColors: [...d[1].colors] });
+  b.closest(".namerow").innerHTML = `<span>Deck „${esc(d[1].name)}“ für ${u.ids.length} ${u.ids.length === 1 ? "Match" : "Matches"} übernommen. Beim nächsten Import wird es erkannt.</span>`;
 });
 $("#importStatus").addEventListener("click", async e => {
   const b = e.target.closest("[data-ukname]"); if (!b) return;
