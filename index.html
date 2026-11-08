@@ -91,6 +91,11 @@ section.block{margin:0 0 22px}
 .res{border:2px solid var(--line);background:var(--surface);border-radius:var(--radius-m);padding:16px 6px;font:700 24px/1 var(--display)}
 .res.w[aria-pressed="true"]{background:var(--win);border-color:var(--win);color:#fff}
 .res.l[aria-pressed="true"]{background:var(--loss);border-color:var(--loss);color:#fff}
+.res.d[aria-pressed="true"]{background:var(--muted);border-color:var(--muted);color:var(--bg)}
+.result{grid-template-columns:1fr 1fr 1fr}
+.result.bo3{grid-template-columns:repeat(5,1fr)}
+.result .res.d:not([data-g]){font-size:17px}
+.game .result .res.d{font-size:14px}
 .seg{display:inline-flex;border:1.5px solid var(--line);border-radius:999px;overflow:hidden;background:var(--surface)}
 .seg button{border:0;background:none;padding:7px 14px;font-size:14px}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg);font-weight:600}
@@ -209,7 +214,7 @@ table.matrix td small{display:block;opacity:.75;font-size:11px}
 ul.log{list-style:none;margin:0;padding:0}
 ul.log li{display:grid;grid-template-columns:auto 1fr auto;gap:4px 12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
 .badge{font:700 18px/1 var(--display);width:42px;text-align:center;padding:8px 0;border-radius:var(--radius-s);color:#fff}
-.badge.W{background:var(--win)} .badge.L{background:var(--loss)}
+.badge.W{background:var(--win)} .badge.L{background:var(--loss)} .badge.D{background:var(--muted);color:var(--bg)}
 ul.log .main{font-size:15px}
 ul.log li li{display:block;padding:2px 0;border:0;font-size:13px}
 ul.log details.seen{font-size:13px;margin-top:4px}
@@ -227,7 +232,7 @@ ul.log li.pack{border-left:3px solid var(--gold);background:color-mix(in srgb, v
 ul.log .games{display:block;margin:6px 0 4px}
 ul.log .grow{display:flex;align-items:center;gap:8px;padding:2px 0;color:var(--ink)}
 ul.log .gb{flex:0 0 22px;height:22px;display:inline-grid;place-items:center;border-radius:6px;font-weight:700;font-size:12px;color:#10152A}
-ul.log .gb.W{background:var(--win)} ul.log .gb.L{background:var(--loss)} ul.log .gb.Q{background:var(--line);color:var(--ink)}
+ul.log .gb.W{background:var(--win)} ul.log .gb.L{background:var(--loss)} ul.log .gb.Q{background:var(--line);color:var(--ink)} ul.log .gb.D{background:var(--muted)}
 ul.log .grow.miss{color:var(--muted)} ul.log .grow.miss .gb{opacity:.55;outline:1.5px dashed var(--muted);outline-offset:1px}
 .viewopt{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:18px 2px 4px;font-size:14px;color:var(--ink)}
 .viewopt input{width:18px;height:18px;accent-color:var(--gold)}
@@ -488,8 +493,8 @@ const EVENTS = ["Ladder / Quickplay","Turnier online","Turnier Paper","Paper","T
 const TAGS = ["Tintenprobleme","Schlechte Starthand","Flood","Gegner hatte die Kurve","Eigener Fehler","Knapp","Zeitdruck","Sehr klar","Gute Starthand","Schlüsselkarte nicht gezogen","Gegner-Fehler","Neue Liste getestet"];
 const MULL = ["0","1","2","3","4","5","6","7"].map(v => [v, v]);
 const PERF = ["1","2","3","4","5"];
-const BO3 = [["2-0","W"],["2-1","W"],["1-2","L"],["0-2","L"]];
-const GAMES_PLAYED = { "2-0": 2, "2-1": 3, "1-2": 3, "0-2": 2 };
+const BO3 = [["2-0","W"],["2-1","W"],["1-1","D"],["1-2","L"],["0-2","L"]];
+const GAMES_PLAYED = { "2-0": 2, "2-1": 3, "1-1": 2, "1-2": 3, "0-2": 2 };
 /* Meta-Zeiträume, fest für alle. Neues Set: eine Zeile anhängen, der vorige Zeitraum endet automatisch. */
 const METAS = [
   { id: "s14", name: "Set 14", from: "2026-10-03" },
@@ -701,6 +706,11 @@ const pairName = key => key ? key.split("+").map(k => INK[k]?.n || k).join("/") 
 const mini = key => key ? `<span class="mini" aria-hidden="true">${key.split("+").map(k => `<i style="--c:${INK[k]?.c||"#888"}"></i>`).join("")}</span>` : "";
 const deckKeyOf = d => (d.name || "") + "|" + pairKey(d.colors);
 const pct = (w, n) => n ? Math.round(100 * w / n) : 0;
+/* Ergebnisse: W Sieg, L Niederlage, D Unentschieden. Die Siegquote zählt Unentschieden nicht mit. */
+const resWord = r => r === "W" ? "Sieg" : r === "D" ? "Unentschieden" : "Niederlage";
+const resLetter = r => r === "W" ? "S" : r === "D" ? "U" : "N";
+const winq = o => pct(o.w, o.n - (o.d || 0));
+const rec = o => `${o.w}–${o.n - o.w - (o.d || 0)}${o.d ? ` <span class="note">(${o.d} U)</span>` : ""}`;
 const cleanUrl = v => { try { const u = new URL(String(v).trim()); return /^https?:$/.test(u.protocol) ? u.href : ""; } catch { return ""; } };
 const numOrNull = v => { const n = parseInt(v, 10); return Number.isFinite(n) ? n : null; };
 
@@ -806,6 +816,13 @@ function seriesOf(gl){
   const w = gl.filter(x => x.r === "W").length, l = gl.filter(x => x.r === "L").length;
   return { w, l, done: w === 2 || l === 2, result: w === 2 ? "W" : l === 2 ? "L" : null, score: `${w}-${l}` };
 }
+/* Endergebnis einer Serie, in der alle Spiele eingetragen sind (auch mit Unentschieden) */
+function seriesFinal(gl){
+  const ser = seriesOf(gl);
+  if (ser.done) return ser.result;
+  if (!gl.length || gl.some(g => !g.r)) return null;
+  return ser.w > ser.l ? "W" : ser.l > ser.w ? "L" : "D";
+}
 function renderGames(){
   const bo3 = prefs.format === "bo3";
   if (!bo3) form.perGame = false;
@@ -822,12 +839,12 @@ function renderGames(){
   const ser = seriesOf(vis.filter(g => g.r));
   box.innerHTML = vis.map((g, i) => `<div class="game${g.r ? " done" : ""}" data-gi="${i}">
     <div class="game-h">Spiel ${i + 1}<span class="seg">${[["play","Ich fange an"],["draw","Gegner"]].map(([v, l]) => `<button type="button" data-gs="${v}" aria-pressed="${g.s === v}">${l}</button>`).join("")}</span></div>
-    <div class="result"><button type="button" class="res w" data-gr="W" aria-pressed="${g.r === "W"}">Sieg</button><button type="button" class="res l" data-gr="L" aria-pressed="${g.r === "L"}">Niederlage</button></div>
+    <div class="result"><button type="button" class="res w" data-gr="W" aria-pressed="${g.r === "W"}">Sieg</button><button type="button" class="res d" data-gr="D" aria-pressed="${g.r === "D"}">Unentschieden</button><button type="button" class="res l" data-gr="L" aria-pressed="${g.r === "L"}">Niederlage</button></div>
     <div class="chips tight"><span class="note" style="align-self:center">Mulligan</span>${MULL.map(([v]) => `<button type="button" class="chip" data-gm="${v}" aria-pressed="${g.mull === Number(v)}">${v}</button>`).join("")}</div>
     <div class="chips tight"><span class="note" style="align-self:center">Leistung</span>${PERF.map(v => `<button type="button" class="chip" data-gp="${v}" aria-pressed="${g.perf === Number(v)}">${v}</button>`).join("")}</div>
     <div class="chips tight">${tags.map(t => `<button type="button" class="chip" data-gt="${esc(t)}" aria-pressed="${g.tags.includes(t)}">${prefs.customTags.includes(t) ? "★ " : ""}${esc(t)}</button>`).join("")}<button type="button" class="chip linkish" data-gadd>${form.gAdd ? "Abbrechen" : "+ Eigener Knopf"}</button></div>
     ${g.turns ? `<span class="note">${g.turns} Züge</span>` : ""}
-  </div>`).join("") + `<div class="series">${ser.done ? (ser.result === "W" ? "Match gewonnen, " : "Match verloren, ") + ser.score : "Stand " + ser.score}</div>`;
+  </div>`).join("") + `<div class="series">${(() => { const fin = seriesFinal(vis); return fin ? (fin === "W" ? "Match gewonnen, " : fin === "L" ? "Match verloren, " : "Unentschieden, ") + ser.score : "Stand " + ser.score; })()}</div>`;
 }
 
 /* ---------- Eintragen: Rendering ---------- */
@@ -856,10 +873,10 @@ function renderEntry(){
   const rb = $("#resultBox");
   if (prefs.format === "bo1") {
     rb.className = "result";
-    rb.innerHTML = `<button class="res w" data-r="W" aria-pressed="${form.result==="W"}">Sieg</button><button class="res l" data-r="L" aria-pressed="${form.result==="L"}">Niederlage</button>`;
+    rb.innerHTML = `<button class="res w" data-r="W" aria-pressed="${form.result==="W"}">Sieg</button><button class="res d" data-r="D" aria-pressed="${form.result==="D"}">Unentschieden</button><button class="res l" data-r="L" aria-pressed="${form.result==="L"}">Niederlage</button>`;
   } else {
     rb.className = "result bo3";
-    rb.innerHTML = BO3.map(([g, r]) => `<button class="res ${r==="W"?"w":"l"}" data-r="${r}" data-g="${g}" aria-pressed="${form.games===g}">${g}</button>`).join("");
+    rb.innerHTML = BO3.map(([g, r]) => `<button class="res ${r==="W"?"w":r==="D"?"d":"l"}" data-r="${r}" data-g="${g}" aria-pressed="${form.games===g}">${g}</button>`).join("");
   }
   $("#startLabel").textContent = prefs.format === "bo3" ? "Wer hat Spiel 1 angefangen?" : "Wer hat angefangen?";
   document.querySelectorAll("#playSeg button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === form.start));
@@ -1259,13 +1276,13 @@ $("#saveBtn").onclick = async () => {
     oppArch: form.arch || "",
     oppName: $("#oppName").value.trim(),
     format: prefs.format,
-    result: pg ? ser.result : form.result,
+    result: pg ? seriesFinal(gameList) : form.result,
     games: pg ? ser.score : form.games,
     start: pg ? gameList[0].s : form.start,
     gameList,
     turns: pg ? null : numOrNull($("#turns").value),
     seriesId: form.seriesId || null,
-    incomplete: pg ? !ser.done : false,
+    incomplete: pg ? !seriesFinal(gameList) : false,
     openMe: pg ? null : (form.openMe || null),
     openOpp: pg ? null : (form.openOpp || null),
     myList: form.myList || null,
@@ -1318,7 +1335,7 @@ $("#saveBtn").onclick = async () => {
   document.querySelectorAll("#replayInputs input").forEach(i => i.value = "");
   renderEntry();
   $("#importStatus").hidden = true;
-  toast(`Gespeichert: ${m.result === "W" ? "Sieg" : "Niederlage"} gegen ${pairName(pairKey(m.oppColors))}`, true);
+  toast(`Gespeichert: ${resWord(m.result)} gegen ${pairName(pairKey(m.oppColors))}`, true);
   window.scrollTo({ top: 0 });
 };
 function toast(msg, undo = false){
@@ -1406,12 +1423,12 @@ function filtered(){
 /* ---------- Auswerten ---------- */
 function group(list, keyFn){
   const g = new Map();
-  list.forEach(m => { const k = keyFn(m); if (!g.has(k)) g.set(k, { n:0, w:0, list:[] }); const x = g.get(k); x.n++; if (m.result === "W") x.w++; x.list.push(m); });
+  list.forEach(m => { const k = keyFn(m); if (!g.has(k)) g.set(k, { n:0, w:0, d:0, list:[] }); const x = g.get(k); x.n++; if (m.result === "W") x.w++; else if (m.result === "D") x.d++; x.list.push(m); });
   return [...g.entries()].sort((a, b) => b[1].n - a[1].n);
 }
 const MIN_N = 5;
 function wrRow(label, x, total, extra = ""){
-  return `<tr class="${x.n < MIN_N ? "thin" : ""}"><td>${label}</td>${extra}<td class="num">${x.w}–${x.n - x.w}</td><td class="num"><b>${pct(x.w, x.n)}%</b></td><td style="width:30%"><div class="bar"><b style="width:${pct(x.w, x.n)}%"></b></div></td></tr>`;
+  return `<tr class="${x.n < MIN_N ? "thin" : ""}"><td>${label}</td>${extra}<td class="num">${rec(x)}</td><td class="num"><b>${winq(x)}%</b></td><td style="width:30%"><div class="bar"><b style="width:${winq(x)}%"></b></div></td></tr>`;
 }
 function cellColor(wr){
   // 50 % neutral, darüber grün, darunter rot – über color-mix, damit hell/dunkel passt
@@ -1430,13 +1447,13 @@ function units(m, mode){
   const w = mode === "scaled" && m.format === "bo3" && GAMES_PLAYED[m.games] ? GAMES_PLAYED[m.games] : 1;
   return [{ result: m.result, start: m.start, mull: m.mull, perf: m.perf ?? null, tags: m.tags || [], turns: m.turns ?? null, w, m }];
 }
-function aggU(us){ let n = 0, w = 0; us.forEach(u => { n += u.w; if (u.result === "W") w += u.w; }); return { n, w }; }
+function aggU(us){ let n = 0, w = 0, d = 0; us.forEach(u => { n += u.w; if (u.result === "W") w += u.w; else if (u.result === "D") d += u.w; }); return { n, w, d }; }
 function groupU(us, keyFn){
   const g = new Map();
   us.forEach(u => { const k = keyFn(u); if (k == null) return; if (!g.has(k)) g.set(k, []); g.get(k).push(u); });
   return [...g.entries()].map(([k, l]) => [k, aggU(l)]).sort((a, b) => b[1].n - a[1].n);
 }
-const qTxt = a => a.n ? `${pct(a.w, a.n)}% (${a.n})` : "–";
+const qTxt = a => a.n ? `${winq(a)}% (${a.n})` : "–";
 const WEIGHT_TXT = {
   game: "Einzeln erfasste Bo3-Spiele zählen je Spiel, ein pauschaler Bo3-Eintrag zählt einmal.",
   scaled: "Wie „pro Spiel“, aber ein pauschaler Bo3-Eintrag zählt so oft, wie gespielt wurde: 2-0 doppelt, 2-1 dreifach.",
@@ -1446,7 +1463,7 @@ function trendHtml(list){
   const res = prefs.trendRes;
   const keyOf = ts => { const d = new Date(ts); d.setHours(0, 0, 0, 0); if (res === "week") d.setDate(d.getDate() - (d.getDay() + 6) % 7); return d.getTime(); };
   const g = new Map();
-  list.forEach(m => { const k = keyOf(m.ts); const x = g.get(k) || { n: 0, w: 0 }; x.n++; if (m.result === "W") x.w++; g.set(k, x); });
+  list.forEach(m => { const k = keyOf(m.ts); const x = g.get(k) || { n: 0, w: 0, d: 0 }; x.n++; if (m.result === "W") x.w++; else if (m.result === "D") x.d++; g.set(k, x); });
   const rows = [...g.entries()].sort((a, b) => a[0] - b[0]).slice(-30);
   const seg = `<span class="seg">${[["day","Tag"],["week","Woche"]].map(([v, l]) => `<button type="button" data-tr="${v}" aria-pressed="${res === v}">${l}</button>`).join("")}</span>`;
   let body;
@@ -1454,7 +1471,7 @@ function trendHtml(list){
   else {
     const bw = 36, gap = 14, H = 120, top = 8, W = Math.max(rows.length * (bw + gap) + gap, 120), Ht = top + H + 38;
     const bars = rows.map(([k, x], i) => {
-      const wr = pct(x.w, x.n), h = Math.max(2, H * wr / 100), X = gap + i * (bw + gap);
+      const wr = winq(x), h = Math.max(2, H * wr / 100), X = gap + i * (bw + gap);
       const d = new Date(k), lab = d.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" });
       return `<g opacity="${x.n < MIN_N ? .45 : 1}"><title>${res === "week" ? "Woche ab " : ""}${lab}: ${wr} % aus ${x.n}</title>
         <rect x="${X}" y="${top + H - h}" width="${bw}" height="${h}" rx="3" style="fill:${wr >= 50 ? "var(--win)" : "var(--loss)"}"/>
@@ -1500,13 +1517,13 @@ function cardSwapHtml(list){
     const ids = [...new Set(x.list.flatMap(m => Object.keys(m.myList)))];
     const rows = ids.map(id => {
       const v = new Map();
-      x.list.forEach(m => { const k = m.myList[id] || 0; const a = v.get(k) || { n: 0, w: 0 }; a.n++; if (m.result === "W") a.w++; v.set(k, a); });
+      x.list.forEach(m => { const k = m.myList[id] || 0; const a = v.get(k) || { n: 0, w: 0, d: 0 }; a.n++; if (m.result === "W") a.w++; else if (m.result === "D") a.d++; v.set(k, a); });
       if (v.size < 2) return null;
-      const rates = [...v.values()].map(a => pct(a.w, a.n));
+      const rates = [...v.values()].map(a => winq(a));
       return { id, v: [...v.entries()].sort((a, b) => b[0] - a[0]), spread: Math.max(...rates) - Math.min(...rates) };
     }).filter(Boolean).sort((a, b) => b.spread - a.spread).slice(0, 15);
     html += `<p class="sub-h" style="margin-top:12px">${mini(c)} ${esc(n || pairName(c))} <span class="note">(${x.n} Listen)</span></p>`;
-    html += rows.length ? `<table class="stats"><tbody>${rows.map(r => `<tr><td style="white-space:normal">${esc(cardName(r.id))}</td><td><div class="cardvars">${r.v.map(([k, a]) => `<span class="${a.n < MIN_N ? "thin" : ""}">${k}×: <b>${pct(a.w, a.n)}%</b> (${a.n})</span>`).join("")}</div></td></tr>`).join("")}</tbody></table>`
+    html += rows.length ? `<table class="stats"><tbody>${rows.map(r => `<tr><td style="white-space:normal">${esc(cardName(r.id))}</td><td><div class="cardvars">${r.v.map(([k, a]) => `<span class="${a.n < MIN_N ? "thin" : ""}">${k}×: <b>${winq(a)}%</b> (${a.n})</span>`).join("")}</div></td></tr>`).join("")}</tbody></table>`
       : `<p class="note">Alle Listen dieses Decks waren gleich.</p>`;
   });
   return html + `</section>`;
@@ -1532,7 +1549,7 @@ function statDecks(){
   base.forEach(m => {
     const k = deckKeyOf({ name: m.deckName, colors: m.deckColors || [] });
     if (!g.has(k)) g.set(k, { k, name: m.deckName || "", colors: m.deckColors || [], n: 0, w: 0 });
-    const x = g.get(k); x.n++; if (m.result === "W") x.w++;
+    const x = g.get(k); x.n++; if (m.result === "W") x.w++; else if (m.result === "D") x.d = (x.d || 0) + 1;
   });
   return [...g.values()].sort((a, b) => b.n - a.n);
 }
@@ -1544,7 +1561,7 @@ function deckPickHtml(){
   const DOT = " \u00b7 ";
   const chips = decks.map(d => {
     const on = !deckOff.has(d.k);
-    return `<button type="button" class="chip" data-deckpick="${esc(d.k)}" aria-pressed="${on}">${mini(pairKey(d.colors))}${esc(d.name || pairName(pairKey(d.colors)))} <span class="dq">${pct(d.w, d.n)}%${DOT}${d.n}</span></button>`;
+    return `<button type="button" class="chip" data-deckpick="${esc(d.k)}" aria-pressed="${on}">${mini(pairKey(d.colors))}${esc(d.name || pairName(pairKey(d.colors)))} <span class="dq">${winq(d)}%${DOT}${d.n}</span></button>`;
   }).join("");
   return `<section class="block deckpick"><div class="row" style="justify-content:space-between">
       <h2 style="margin:0">Decks</h2>
@@ -1576,12 +1593,12 @@ function renderStats(){
   const w = list.filter(m => m.result === "W").length;
   const pl = aggU(U.filter(u => u.start === "play")), dr = aggU(U.filter(u => u.start === "draw"));
   const byGame = hasBo3 && mode !== "match";
-  const tot = byGame ? aggU(U) : { n: list.length, w };
+  const tot = byGame ? aggU(U) : { n: list.length, w, d: list.filter(m => m.result === "D").length };
 
   let html = per ? `<p class="statnote">Meta-Zeitraum ${esc(per.name)}, ab ${fmtDay(per.from)}</p>` : "";
-  html += `<div class="headline"><div class="big">${pct(tot.w, tot.n)}<span>%</span></div>
-    <dl><dt>${byGame ? "Spiele" : "Matches"}</dt><dd>${tot.n}${byGame ? ` <span class="note">(${list.length} Matches)</span>` : ""}</dd><dt>Bilanz</dt><dd>${tot.w}–${tot.n - tot.w}</dd>
-    <dt>Angefangen</dt><dd>${pct(pl.w, pl.n)}% (${pl.n})</dd><dt>Nachgezogen</dt><dd>${pct(dr.w, dr.n)}% (${dr.n})</dd></dl></div>`;
+  html += `<div class="headline"><div class="big">${winq(tot)}<span>%</span></div>
+    <dl><dt>${byGame ? "Spiele" : "Matches"}</dt><dd>${tot.n}${byGame ? ` <span class="note">(${list.length} Matches)</span>` : ""}</dd><dt>Bilanz</dt><dd>${tot.w}–${tot.n - tot.w - tot.d}${tot.d ? `–${tot.d}` : ""}</dd>${tot.d ? `<dt>Unentschieden</dt><dd>${tot.d} <span class="note">(nicht in der Quote)</span></dd>` : ""}
+    <dt>Angefangen</dt><dd>${winq(pl)}% (${pl.n})</dd><dt>Nachgezogen</dt><dd>${winq(dr)}% (${dr.n})</dd></dl></div>`;
   html += `<div class="row" style="margin:4px 0 10px"><button type="button" class="ghost" data-shot="1">Auswertungskarte als Bild</button></div>`;
   html += deckPickHtml();
   if (hasBo3) html += `<section class="block"><div class="row"><span class="note">Bo3 zählen</span><span class="seg">${[["game","pro Spiel"],["scaled","hochgerechnet"],["match","pro Match"]].map(([v, l]) => `<button type="button" data-wv="${v}" aria-pressed="${mode === v}">${l}</button>`).join("")}</span></div>
@@ -1594,7 +1611,7 @@ function renderStats(){
   html += `<section class="block"><h2>Matchups</h2><div class="scroll"><table class="stats">
     <thead><tr><th>Gegner</th><th class="num">Anteil</th><th class="num">S–N</th><th class="num">Quote</th></tr></thead><tbody>
     ${byOpp.map(([k, x]) => { const us = U.filter(u => pairKey(u.m.oppColors || []) === k), a = byGame ? aggU(us) : x;
-      return `<tr class="${a.n < MIN_N ? "thin" : ""}"><td style="white-space:normal">${mini(k)} ${esc(pairName(k))}<br><span class="note">angefangen ${qTxt(aggU(us.filter(u => u.start === "play")))}, nachgezogen ${qTxt(aggU(us.filter(u => u.start === "draw")))}</span></td><td class="num">${pct(a.n, tot.n)}%</td><td class="num">${a.w}–${a.n - a.w}</td><td class="num"><b>${pct(a.w, a.n)}%</b></td></tr>`; }).join("")}
+      return `<tr class="${a.n < MIN_N ? "thin" : ""}"><td style="white-space:normal">${mini(k)} ${esc(pairName(k))}<br><span class="note">angefangen ${qTxt(aggU(us.filter(u => u.start === "play")))}, nachgezogen ${qTxt(aggU(us.filter(u => u.start === "draw")))}</span></td><td class="num">${pct(a.n, tot.n)}%</td><td class="num">${rec(a)}</td><td class="num"><b>${winq(a)}%</b></td></tr>`; }).join("")}
     </tbody></table></div><p class="statnote">Unter jeder Farbkombi: Siegquote und Zahl der ${unitWord}, je nachdem wer angefangen hat.</p></section>`;
 
   // Matrix Deck x Gegner
@@ -1607,7 +1624,7 @@ function renderStats(){
         return `<tr><th class="rowh">${mini(c)} ${esc(n || pairName(c))}</th>${topOpps.map(ok => {
           const sub = dx.list.filter(m => pairKey(m.oppColors || []) === ok);
           if (!sub.length) return `<td style="opacity:.35">–</td>`;
-          const sw = sub.filter(m => m.result === "W").length, r = pct(sw, sub.length);
+          const sw = sub.filter(m => m.result === "W").length, r = pct(sw, sub.length - sub.filter(m => m.result === "D").length);
           return `<td style="${cellColor(r)}${sub.length < MIN_N ? ";opacity:.6" : ""}">${r}%<small>${sub.length}</small></td>`;
         }).join("")}</tr>`;
       }).join("")}</tbody></table></div></section>`;
@@ -1633,9 +1650,9 @@ function renderStats(){
   // Spielmuster: Markierungen mit/ohne
   const tagSet = uniq(U.flatMap(u => u.tags));
   if (tagSet.length) {
-    const rows = tagSet.map(t => { const a = aggU(U.filter(u => u.tags.includes(t))), o = aggU(U.filter(u => !u.tags.includes(t))); return { t, a, o, d: pct(a.w, a.n) - pct(o.w, o.n) }; }).sort((x, y) => y.a.n - x.a.n);
+    const rows = tagSet.map(t => { const a = aggU(U.filter(u => u.tags.includes(t))), o = aggU(U.filter(u => !u.tags.includes(t))); return { t, a, o, d: winq(a) - winq(o) }; }).sort((x, y) => y.a.n - x.a.n);
     html += `<section class="block"><h2>Spielmuster</h2><div class="scroll"><table class="stats"><thead><tr><th>Markierung</th><th class="num">${unitWord}</th><th class="num">mit</th><th class="num">ohne</th><th class="num">±</th></tr></thead><tbody>
-      ${rows.map(r => `<tr class="${r.a.n < MIN_N ? "thin" : ""}"><td style="white-space:normal">${esc(r.t)}</td><td class="num">${r.a.n}</td><td class="num">${pct(r.a.w, r.a.n)}%</td><td class="num">${r.o.n ? pct(r.o.w, r.o.n) + "%" : "–"}</td><td class="num" style="color:${r.d >= 0 ? "var(--win)" : "var(--loss)"};font-weight:600">${r.o.n ? (r.d > 0 ? "+" : "") + r.d : "–"}</td></tr>`).join("")}
+      ${rows.map(r => `<tr class="${r.a.n < MIN_N ? "thin" : ""}"><td style="white-space:normal">${esc(r.t)}</td><td class="num">${r.a.n}</td><td class="num">${winq(r.a)}%</td><td class="num">${r.o.n ? winq(r.o) + "%" : "–"}</td><td class="num" style="color:${r.d >= 0 ? "var(--win)" : "var(--loss)"};font-weight:600">${r.o.n ? (r.d > 0 ? "+" : "") + r.d : "–"}</td></tr>`).join("")}
       </tbody></table></div><p class="statnote">Siegquote der ${unitWord} mit und ohne diese Markierung. ± ist der Unterschied in Prozentpunkten.</p></section>`;
   }
 
@@ -1685,7 +1702,7 @@ function makeStatCard(){
 
   // Matchups nach Farbkombi, nur aussagekräftige
   const byOpp = group(list, m => pairKey(m.oppColors || []))
-    .map(([k, x]) => ({ k, n: x.n, w: x.w, q: x.n ? x.w / x.n : 0 }))
+    .map(([k, x]) => ({ k, n: x.n, w: x.w, d: x.d, q: x.n - x.d ? x.w / (x.n - x.d) : 0 }))
     .filter(o => o.n >= MIN_N);
   const best = byOpp.slice().sort((a, b) => b.q - a.q || b.n - a.n).slice(0, 3);
   const worst = byOpp.slice().sort((a, b) => a.q - b.q || b.n - a.n).slice(0, 3);
@@ -1708,13 +1725,14 @@ function makeStatCard(){
   // große Quote
   let y = 150;
   g.fillStyle = "#E0B84A"; g.font = "700 58px " + FN;
-  g.fillText(pct(w, list.length) + "%", pad, y);
+  const dN = list.filter(m => m.result === "D").length;
+  g.fillText(pct(w, list.length - dN) + "%", pad, y);
   g.fillStyle = "#98A0BE"; g.font = "16px " + FN;
   g.fillText("Siegquote", pad, y + 26);
   g.fillStyle = "#E6E9F4"; g.font = "600 20px " + FN; g.textAlign = "right";
-  g.fillText(w + "–" + (list.length - w), W - pad, y - 20);
+  g.fillText(w + "–" + (list.length - w - dN) + (dN ? "–" + dN : ""), W - pad, y - 20);
   g.fillStyle = "#98A0BE"; g.font = "15px " + FN;
-  g.fillText("angefangen " + pct(pl.w, pl.n) + "%  ·  nachgezogen " + pct(dr.w, dr.n) + "%", W - pad, y + 6);
+  g.fillText("angefangen " + winq(pl) + "%  ·  nachgezogen " + winq(dr) + "%", W - pad, y + 6);
   g.textAlign = "left";
 
   function line(label, q, n, col){
@@ -1730,9 +1748,9 @@ function makeStatCard(){
 
   y += 70;
   if (best.length){ head("Beste Matchups"); y += 26;
-    best.forEach(o => { line(o.k, pct(o.w, o.n), o.n, "#4CC486"); y += 30; }); y += 8; }
+    best.forEach(o => { line(o.k, winq(o), o.n, "#4CC486"); y += 30; }); y += 8; }
   if (worst.length){ head("Schwerste Matchups"); y += 26;
-    worst.forEach(o => { line(o.k, pct(o.w, o.n), o.n, "#F06078"); y += 30; }); }
+    worst.forEach(o => { line(o.k, winq(o), o.n, "#F06078"); y += 30; }); }
 
   g.fillStyle = "#6B7398"; g.font = "13px " + FN;
   g.fillText("ab " + MIN_N + " " + unitWord + " je Matchup  ·  " + new Date().toLocaleDateString("de-DE"), pad, H - 20);
@@ -1813,11 +1831,11 @@ function renderLog(){
     const bits = [fmtDate(m.ts), m.player, m.tourney ? m.tourney + (m.round ? " R" + m.round : "") : m.event, m.format === "bo3" ? (m.incomplete ? "Bo3 (unvollständig)" : "Bo3") : "Bo1", m.gameList ? "" : (m.start === "play" ? "angefangen" : "nachgezogen"),
       !m.gameList && m.mull != null ? "Mulligan " + m.mull : "", m.turns ? m.turns + " Züge" : "", !m.gameList && m.perf ? "Leistung " + perfTxt(m.perf) + "/5" : m.gameList && m.perf ? "Leistung Ø " + perfTxt(m.perf) + "/5" : "", ...(m.tags || [])].filter(Boolean);
     const pack = Array.isArray(m.gameList) && m.gameList.length > 0;
-    const glHtml = pack ? `<span class="games">${m.gameList.map((g, i) => `<span class="grow${g.missing ? " miss" : ""}"><span class="gb ${g.r === "W" ? "W" : g.r === "L" ? "L" : "Q"}">${g.r === "W" ? "S" : g.r === "L" ? "N" : "?"}</span><span>Spiel ${i + 1} · ${g.missing ? (g.r ? "fehlt im Export, Ergebnis aus dem Spielstand" : "fehlt im Export") : (g.s === "play" ? "angefangen" : g.s === "draw" ? "nachgezogen" : "?") + (g.mull != null ? ", Mulligan " + g.mull : "") + (g.perf != null ? ", Leistung " + g.perf + "/5" : "") + (g.turns ? ", " + g.turns + " Züge" : "")}${(g.tags || []).length ? ", " + esc(g.tags.join(", ")) : ""}</span></span>`).join("")}</span>` : "";
+    const glHtml = pack ? `<span class="games">${m.gameList.map((g, i) => `<span class="grow${g.missing ? " miss" : ""}"><span class="gb ${g.r === "W" || g.r === "L" || g.r === "D" ? g.r : "Q"}">${g.r ? resLetter(g.r) : "?"}</span><span>Spiel ${i + 1} · ${g.missing ? (g.r ? "fehlt im Export, Ergebnis aus dem Spielstand" : "fehlt im Export") : (g.s === "play" ? "angefangen" : g.s === "draw" ? "nachgezogen" : "?") + (g.mull != null ? ", Mulligan " + g.mull : "") + (g.perf != null ? ", Leistung " + g.perf + "/5" : "") + (g.turns ? ", " + g.turns + " Züge" : "")}${(g.tags || []).length ? ", " + esc(g.tags.join(", ")) : ""}</span></span>`).join("")}</span>` : "";
     const perGameReps = pack && m.gameList.some(g => g.rep);
     const reps = perGameReps ? [] : (m.replays || []).map(cleanUrl).filter(Boolean);
     const repLinksHtml = perGameReps ? m.gameList.map((g, i) => g.rep ? `<a href="https://duels.ink/replay/${esc(g.rep)}" target="_blank" rel="noopener noreferrer">Replay Spiel ${i + 1}</a>` : "").join("") : "";
-    return `<li class="${pack ? "pack" : ""}"><span class="badge ${m.result}">${m.games || (m.result === "W" ? "S" : "N")}</span>
+    return `<li class="${pack ? "pack" : ""}"><span class="badge ${m.result}">${m.games || resLetter(m.result)}</span>
       <span class="main">${selMode ? `<input type="checkbox" class="selbox" data-sel="${esc(m.id)}" ${selIds.has(m.id) ? "checked" : ""} aria-label="Auswählen"> ` : ""}${mini(dk)} ${esc(m.deckName || pairName(dk))} gegen ${mini(ok)} ${esc(m.oppArch || pairName(ok))}${m.oppName ? ` <span class="note">(${esc(m.oppName)})</span>` : ""}</span>
       ${mine ? `<button class="del" data-id="${esc(m.id)}">Löschen</button>` : "<span></span>"}
       <span class="sub">${esc(bits.join(", "))}${glHtml}${m.keyCards ? `<br>Schlüsselkarten: ${esc(m.keyCards)}` : ""}${m.notes ? `<br>${esc(m.notes)}` : ""}${seenHtml(seenEntries(m), false)}${m.myInked && Object.keys(m.myInked).length ? `<details class="seen"><summary>Selbst getintet: ${Object.values(m.myInked).reduce((a, b) => a + b, 0)} Karten</summary><ul class="seenlist">${Object.entries(m.myInked).sort((a, b) => b[1] - a[1] || cardName(a[0]).localeCompare(cardName(b[0]), "de")).map(([id, n]) => `<li><span class="n">${n}×</span>${esc(cardName(id))}</li>`).join("")}</ul></details>` : ""}</span>
@@ -1969,10 +1987,10 @@ $("#csvBtn").onclick = async () => {
   const q = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
   const rows = filtered().sort((a, b) => a.ts - b.ts).map(m => [
     new Date(m.ts).toISOString(), m.player, m.deckName, (m.deckColors||[]).join("/"), (m.oppColors||[]).join("/"), m.oppArch, m.oppName,
-    m.format, m.result === "W" ? "Sieg" : "Niederlage", m.games || "", m.start === "play" ? "ja" : "nein", m.event, m.meta, (m.tags||[]).join("; "), m.notes,
+    m.format, resWord(m.result), m.games || "", m.start === "play" ? "ja" : "nein", m.event, m.meta, (m.tags||[]).join("; "), m.notes,
     m.keyCards, seenEntries(m).map(([id, n]) => (n ? n + "x " : "") + cardName(id)).join("; "), m.mull ?? "", m.perf ?? "", m.tourney || "", m.round ?? "", (m.replays||[]).join(" "),
     m.turns ?? "", (METAS.find(p => p.id === periodOf(m.ts)) || { name: "vorher" }).name,
-    (m.gameList || []).map((g, i) => `S${i + 1} ${g.r === "W" ? "Sieg" : "Niederlage"} ${g.s === "play" ? "angef." : "nachgez."}${g.mull != null ? " Mull " + g.mull : ""}${g.perf != null ? " Leist " + g.perf : ""}${g.turns ? " " + g.turns + "Z" : ""}${(g.tags || []).length ? " [" + g.tags.join(", ") + "]" : ""}`).join(" | "),
+    (m.gameList || []).map((g, i) => `S${i + 1} ${g.r ? resWord(g.r) : "?"} ${g.s === "play" ? "angef." : "nachgez."}${g.mull != null ? " Mull " + g.mull : ""}${g.perf != null ? " Leist " + g.perf : ""}${g.turns ? " " + g.turns + "Z" : ""}${(g.tags || []).length ? " [" + g.tags.join(", ") + "]" : ""}`).join(" | "),
     Object.entries(m.myInked || {}).map(([id, n]) => n + "x " + cardName(id)).join("; ")
   ].map(q).join(";"));
   downloadFile(`match-log-${new Date().toISOString().slice(0,10)}.csv`, "\ufeff" + [cols.join(";"), ...rows].join("\n"), "text/csv;charset=utf-8");
@@ -2027,12 +2045,12 @@ function renderCounter(){
     return;
   }
   if (won){
-    mid.innerHTML = `<span class="msg">${won === "W" ? "Sieg" : "Niederlage"} nach ${ctr.turn} Zügen.${ctr.done ? "" : " Verzählt? Mit − korrigieren."}</span>
+    mid.innerHTML = `<span class="msg">${resWord(won)} nach ${ctr.turn} Zügen.${ctr.done ? "" : " Verzählt? Mit − korrigieren."}</span>
       <button type="button" class="big-btn" data-c="take-${won}">Ins Match übernehmen</button>${ctr.done ? `<button type="button" class="chip" data-c="undo">Weiterspielen</button>` : ""}`;
     return;
   }
   mid.innerHTML = `<span class="turn">Zug ${ctr.turn}</span><button type="button" class="big-btn" data-c="next">Zug beenden</button>
-    <button type="button" class="chip" data-c="end-W">Gegner gibt auf</button><button type="button" class="chip" data-c="end-L">Ich gebe auf</button><button type="button" class="chip linkish" data-c="reset">Neu</button>`;
+    <button type="button" class="chip" data-c="end-W">Gegner gibt auf</button><button type="button" class="chip" data-c="end-L">Ich gebe auf</button><button type="button" class="chip" data-c="end-D">Unentschieden</button><button type="button" class="chip linkish" data-c="reset">Neu</button>`;
 }
 $("#lore").addEventListener("click", e => {
   const b = e.target.closest("button"); if (!b) return;
@@ -2061,7 +2079,7 @@ function takeCounter(res){
     Object.assign(form.gl[i], { r: res, s: start, turns });
     const nx = form.gl[i + 1]; if (nx && !nx.s) nx.s = res === "L" ? "play" : "draw";
     const ser = seriesOf(visibleGames().filter(g => g.r));
-    if (!ser.done){ toEntry = false; note = `Spiel ${i + 1} übernommen (${res === "W" ? "Sieg" : "Niederlage"}), Stand ${ser.score}.`; }
+    if (!seriesFinal(visibleGames())){ toEntry = false; note = `Spiel ${i + 1} übernommen (${resWord(res)}), Stand ${ser.score}.`; }
   } else {
     form.result = res; form.games = null; form.start = start; $("#turns").value = turns;
   }
@@ -2271,7 +2289,7 @@ function parseReplay(d){
     ts: Number.isFinite(tsNum) && tsNum > 0 ? tsNum : Date.now(),
     myList, myInked, myHeld, cardNames: nameMap, oppSeen: Object.keys(oppSeenN), oppSeenN,
     me: names[String(me)] || "", opp: names[String(opp)] || "",
-    win: d.winner === me, reason: d.victoryReason, turns: d.turnCount,
+    win: d.winner === me, draw: d.winner !== me && d.winner !== opp, reason: d.victoryReason, turns: d.turnCount,
     start: first === me ? "play" : (first === opp ? "draw" : null),
     mullMe: mull[me] ?? null, mullOpp: mull[opp] ?? null,
     myColors, oppColors,
@@ -2328,10 +2346,10 @@ function prefillFromReplay(r){
         if (rr) Object.assign(form.gl[i], { r: rr, missing: true });
       }
     }
-    Object.assign(form.gl[slot], { inked: r.myInked || null, held: r.myHeld || null, r: r.win ? "W" : "L", s: r.start, mull: r.mullMe, turns: r.turns || null, openMe: r.openMe || null, openOpp: r.openOpp || null, missing: false, no: r.series ? r.series.no : null, wb: r.series ? r.series.before : null, rep: String(r.replayId) });
+    Object.assign(form.gl[slot], { inked: r.myInked || null, held: r.myHeld || null, r: resOf(r), s: r.start, mull: r.mullMe, turns: r.turns || null, openMe: r.openMe || null, openOpp: r.openOpp || null, missing: false, no: r.series ? r.series.no : null, wb: r.series ? r.series.before : null, rep: String(r.replayId) });
     const nx = form.gl[slot + 1]; if (nx && !nx.s) nx.s = r.win ? "draw" : "play";
   } else {
-    form.result = r.win ? "W" : "L"; form.games = null; form.start = r.start;
+    form.result = resOf(r); form.games = null; form.start = r.start;
     form.mull = r.mullMe != null ? String(r.mullMe) : null;
     form.openMe = r.openMe || null; form.openOpp = r.openOpp || null;
     form.myInked = r.myInked || null; form.myHeld = r.myHeld || null;
@@ -2360,7 +2378,7 @@ function groupReplays(parsed){
       return;
     }
     const g = groups.find(G => !G.seriesId && (G.bo3 || r.format === "bo3")
-      && !seriesOf(G.list.map(x => ({ r: x.win ? "W" : "L" }))).done
+      && !seriesOf(G.list.map(x => ({ r: resOf(x) }))).done
       && (G.list[0].opp && r.opp ? G.list[0].opp === r.opp : pairKey(G.list[0].oppColors) === pairKey(r.oppColors))
       && r.ts - G.list[G.list.length - 1].ts < 3600e3);
     if (g){ g.list.push(r); g.bo3 = true; return; }
@@ -2371,8 +2389,9 @@ function groupReplays(parsed){
 }
 
 /* --- Import-Ablauf: eine oder mehrere Dateien --- */
+const resOf = x => x.draw ? "D" : x.win ? "W" : "L";
 function gameOfReplay(x){
-  return { no: x.series ? x.series.no : null, r: x.win ? "W" : "L", s: x.start, mull: x.mullMe, tags: [], turns: x.turns || null,
+  return { no: x.series ? x.series.no : null, r: resOf(x), s: x.start, mull: x.mullMe, tags: [], turns: x.turns || null,
     openMe: x.openMe || null, openOpp: x.openOpp || null, wb: x.series ? x.series.before : null, rep: String(x.replayId), next: x.series ? x.series.next : null,
     inked: x.myInked || null, held: x.myHeld || null };
 }
@@ -2437,7 +2456,7 @@ async function handleReplayFiles(fileList){
     box.className = "import-status ok";
     box.innerHTML = `Übernommen: <b>${esc(r.me)}</b> (${r.myColors.map(c=>INK[c]?.n||c).join("/")}) `
       + `gegen <b>${esc(r.opp)}</b> (${r.oppColors.map(c=>INK[c]?.n||c).join("/")}) — `
-      + `${r.win?"Sieg":"Niederlage"}, ${r.start==="play"?"ich angefangen":"Gegner angefangen"}, `
+      + `${resWord(resOf(r))}, ${r.start==="play"?"ich angefangen":"Gegner angefangen"}, `
       + (r.mullMe != null ? `Mulligan ${r.mullMe}. ` : "")
       + (prefs.format === "bo3"
         ? (seriesOf(visibleGames().filter(g => g.r)).done ? `Spiel ${slot + 1} eingetragen, das Bo3 ist komplett. Prüfen und speichern.` : `Als Spiel ${slot + 1} des Bo3 eingetragen. Das nächste Replay einfach hinterher einlesen.`)
@@ -2480,7 +2499,7 @@ async function handleReplayFiles(fileList){
       const incomplete = !!(ser && !ser.done);
       if (gameList && gameList.some(g => g.missing)) gaps++;
       const lastR = gameList ? [...gameList].reverse().find(g => g.r) : null;
-      const result = ser ? (ser.result || (ser.w > ser.l ? "W" : ser.l > ser.w ? "L" : (lastR ? lastR.r : "L"))) : (r.win ? "W" : "L");
+      const result = ser ? (ser.result || (ser.w > ser.l ? "W" : ser.l > ser.w ? "L" : (gameList.every(g => g.r) ? "D" : (lastR ? lastR.r : "L")))) : resOf(r);
       const firstKnown = gameList ? gameList.find(g => !g.missing) : null;
       const repLinks = [...new Set([
         ...(gameList ? gameList.filter(g => g.rep).map(g => "https://duels.ink/replay/" + g.rep) : L.map(x => "https://duels.ink/replay/" + x.replayId)),
@@ -2572,7 +2591,7 @@ function unknownDetails(u, all){
     if (top.length) cards = `<div class="note" style="flex-basis:100%">Karten (Auszug): ${top.map(([id, n]) => `${n}× ${esc(cardName(id))}`).join(", ")}</div>`;
   }
   const rows = u.ids.map(id => matches.find(m => m.id === id)).filter(Boolean).sort((a, b) => a.ts - b.ts).map(m =>
-    `<li>${esc(fmtDate(m.ts))} · ${m.result === "W" ? "Sieg" : "Niederlage"}${m.games ? " " + esc(m.games) : ""} gegen ${mini(pairKey(m.oppColors || []))} ${esc(pairName(pairKey(m.oppColors || [])))}${m.oppArch ? " (" + esc(m.oppArch) + ")" : ""}${m.oppName ? " · " + esc(m.oppName) : ""}</li>`).join("");
+    `<li>${esc(fmtDate(m.ts))} · ${resWord(m.result)}${m.games ? " " + esc(m.games) : ""} gegen ${mini(pairKey(m.oppColors || []))} ${esc(pairName(pairKey(m.oppColors || [])))}${m.oppArch ? " (" + esc(m.oppArch) + ")" : ""}${m.oppName ? " · " + esc(m.oppName) : ""}</li>`).join("");
   return cards + (rows ? `<details class="seen" style="flex-basis:100%"><summary>Welche Matches?</summary><ul class="seenlist" style="columns:1">${rows}</ul></details>` : "");
 }
 let pendingUnknown = [], pendingImported = [];
