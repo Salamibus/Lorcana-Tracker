@@ -287,6 +287,9 @@ ul.log .del{border:0;background:none;color:var(--muted);font-size:13px;text-deco
 .profile p{margin:4px 0 0;font-size:14px;color:var(--muted)}
 .statnote{font-size:13px;color:var(--muted);margin:-4px 0 10px}
 .chip.small{font-size:13px;padding:5px 10px}
+.qfilt{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.qfilt .seg-l{font-size:12px;color:var(--muted);margin:0 2px 0 6px}
+.qfilt .seg-l:first-child{margin-left:0}
 .chip .dq{color:var(--muted);font-size:12px;font-weight:400}
 .chip[aria-pressed="false"] .dq{opacity:.7}
 [hidden]{display:none!important}
@@ -318,9 +321,10 @@ ul.log .del{border:0;background:none;color:var(--muted);font-size:13px;text-deco
         <span class="drop-sub">optional, füllt das Formular aus</span>
       </label>
       <div class="linkrow">
-        <input class="field" id="replayLink" type="url" inputmode="url" placeholder="oder Replay-Link einfügen" autocomplete="off">
+        <input class="field" id="replayLink" type="url" inputmode="url" placeholder="oder Replay-Link bzw. -Inhalt einfügen" autocomplete="off">
         <button class="chip" type="button" id="replayLinkGo">Laden</button>
       </div>
+      <div class="row" style="margin-top:8px"><button class="chip" type="button" id="replayPaste">Replay aus Zwischenablage einfügen</button></div>
       <div class="import-status" id="importStatus" hidden></div>
     </section>
 
@@ -1363,7 +1367,7 @@ function renderFilters(target){
     sel("opp","Gegnerfarben", opt("","Alle",filt.opp)+opps.map(k=>opt(k,pairName(k),filt.opp)).join("")) +
     sel("event","Event", opt("","Alle",filt.event)+uniq(matches.map(m=>m.event)).map(v=>opt(v,v,filt.event)).join("")) +
     sel("format","Bo1 / Bo3", opt("","Beide",filt.format)+opt("bo1","Bo1",filt.format)+opt("bo3","Bo3",filt.format)) +
-    sel("start","Angefangen", opt("","Egal",filt.start)+opt("play","Ich",filt.start)+opt("draw","Gegner",filt.start)) +
+    sel("start","Angefangen", opt("","Egal",filt.start)+opt("play","OTP (ich)",filt.start)+opt("draw","OTD (Gegner)",filt.start)) +
     sel("meta","Format", opt("","Alle",filt.meta)+uniq(matches.map(m=>m.meta)).map(v=>opt(v,v,filt.meta)).join("")) +
     sel("tag","Markierung", opt("","Alle",filt.tag)+uniq(matches.flatMap(tagsOf)).map(v=>opt(v,v,filt.tag)).join("")) +
     (() => { const ids = [...new Set(matches.flatMap(m => Object.keys(m.myInked || {})))].sort((a, b) => cardName(a).localeCompare(cardName(b), "de"));
@@ -1398,6 +1402,16 @@ function matchesOpening(m, query){
   });
 }
 
+/* OTP/OTD: bei Bo3 zählt jedes Spiel (außer bei der Zählweise „pro Match“, dort Spiel 1) */
+function startMatches(m){
+  if (m.start === filt.start) return true;
+  return prefs.weight !== "match" && Array.isArray(m.gameList) && m.gameList.some(g => g.r && g.s === filt.start);
+}
+function quickFiltHtml(){
+  const b = (k, v, l) => `<button type="button" class="chip small" data-qf="${k}" data-qv="${v}" aria-pressed="${filt[k] === v}">${l}</button>`;
+  return `<div class="qfilt"><span class="seg-l">Format</span>${b("format", "", "Alle")}${b("format", "bo1", "Bo1")}${b("format", "bo3", "Bo3")}`
+    + `<span class="seg-l">Start</span>${b("start", "", "Alle")}${b("start", "play", "OTP")}${b("start", "draw", "OTD")}</div>`;
+}
 function filtered(){
   const now = Date.now();
   return matches.filter(m => {
@@ -1410,7 +1424,7 @@ function filtered(){
     if (filt.opp && pairKey(m.oppColors || []) !== filt.opp) return false;
     if (filt.event && m.event !== filt.event) return false;
     if (filt.format && m.format !== filt.format) return false;
-    if (filt.start && m.start !== filt.start) return false;
+    if (filt.start && !startMatches(m)) return false;
     if (filt.meta && m.meta !== filt.meta) return false;
     if (filt.tag && !tagsOf(m).includes(filt.tag)) return false;
     if (filt.inked && !((m.myInked || {})[filt.inked] > 0)) return false;
@@ -1538,7 +1552,7 @@ function statDecks(){
     if (filt.player && m.player !== filt.player) return false;
     if (filt.event && m.event !== filt.event) return false;
     if (filt.format && m.format !== filt.format) return false;
-    if (filt.start && m.start !== filt.start) return false;
+    if (filt.start && !startMatches(m)) return false;
     if (filt.meta && m.meta !== filt.meta) return false;
     if (filt.tag && !tagsOf(m).includes(filt.tag)) return false;
     if (filt.inked && !((m.myInked || {})[filt.inked] > 0)) return false;
@@ -1582,20 +1596,21 @@ function renderStats(){
     const msg = (pick && deckOff.size) ? "Keine Decks ausgewählt. Tippe oben mindestens ein Deck an." : (per && !matches.some(m => periodOf(m.ts) === per.id)
     ? `Im Meta-Zeitraum ${esc(per.name)} (ab ${fmtDay(per.from)}) gibt es noch keine Matches. Ältere Einträge zeigt der Filter „Meta-Zeitraum“ mit „Alle Zeiträume“.`
     : "Keine Matches für diese Filter. Lockere einen Filter, zum Beispiel den Zeitraum.");
-    out.innerHTML = pick + `<div class="empty">${msg}</div>`;
+    out.innerHTML = quickFiltHtml() + pick + `<div class="empty">${msg}</div>`;
     return;
   }
 
   const mode = prefs.weight;
   const hasBo3 = list.some(m => m.format === "bo3");
-  const U = list.flatMap(m => units(m, mode));
+  const U = list.flatMap(m => units(m, mode)).filter(u => !filt.start || u.start === filt.start);
   const unitWord = hasBo3 && mode !== "match" ? "Spiele" : "Matches";
   const w = list.filter(m => m.result === "W").length;
   const pl = aggU(U.filter(u => u.start === "play")), dr = aggU(U.filter(u => u.start === "draw"));
   const byGame = hasBo3 && mode !== "match";
   const tot = byGame ? aggU(U) : { n: list.length, w, d: list.filter(m => m.result === "D").length };
 
-  let html = per ? `<p class="statnote">Meta-Zeitraum ${esc(per.name)}, ab ${fmtDay(per.from)}</p>` : "";
+  let html = quickFiltHtml() + (per ? `<p class="statnote">Meta-Zeitraum ${esc(per.name)}, ab ${fmtDay(per.from)}</p>` : "");
+  if (filt.start) html += `<p class="statnote">Nur ${filt.start === "play" ? "OTP (du fängst an)" : "OTD (Gegner fängt an)"}${hasBo3 && mode !== "match" ? ", bei Bo3 je Spiel" : ""}.</p>`;
   html += `<div class="headline"><div class="big">${winq(tot)}<span>%</span></div>
     <dl><dt>${byGame ? "Spiele" : "Matches"}</dt><dd>${tot.n}${byGame ? ` <span class="note">(${list.length} Matches)</span>` : ""}</dd><dt>Bilanz</dt><dd>${tot.w}–${tot.n - tot.w - tot.d}${tot.d ? `–${tot.d}` : ""}</dd>${tot.d ? `<dt>Unentschieden</dt><dd>${tot.d} <span class="note">(nicht in der Quote)</span></dd>` : ""}
     <dt>Angefangen</dt><dd>${winq(pl)}% (${pl.n})</dd><dt>Nachgezogen</dt><dd>${winq(dr)}% (${dr.n})</dd></dl></div>`;
@@ -1696,7 +1711,7 @@ function makeStatCard(){
   const hasBo3 = list.some(m => m.format === "bo3");
   const unitWord = hasBo3 && mode !== "match" ? "Spiele" : "Matches";
   const w = list.filter(m => m.result === "W").length;
-  const U = list.flatMap(m => units(m, mode));
+  const U = list.flatMap(m => units(m, mode)).filter(u => !filt.start || u.start === filt.start);
   const pl = aggU(U.filter(u => u.start === "play")), dr = aggU(U.filter(u => u.start === "draw"));
   const per = METAS.find(x => x.id === filt.period);
 
@@ -1768,6 +1783,7 @@ $("#statsOut").addEventListener("click", e => {
   else if (b.dataset.tr){ prefs.trendRes = b.dataset.tr; LS.set("trendRes", prefs.trendRes); renderStats(); }
   else if (b.dataset.shot){ makeStatCard(); }
   else if (b.dataset.inkall){ inkShowAll = !inkShowAll; renderStats(); }
+  else if (b.dataset.qf){ filt[b.dataset.qf] = b.dataset.qv; renderFilters($("#filters")); renderFilters($("#filtersLog")); renderStats(); renderLog(); }
   else if (b.dataset.deckpick){
     const k = b.dataset.deckpick;
     if (k === "__all"){ deckOff.clear(); }
@@ -2651,6 +2667,34 @@ async function fetchReplay(id){
   }
   throw new Error(lastErr);
 }
+/* --- Replay aus der Zwischenablage --- */
+const looksLikeReplay = t => typeof t === "string" && /^\s*[\[{]/.test(t) && /duels-replay/.test(t.slice(0, 2000));
+function importClipboard(files, txt){
+  if (files && files.length) return handleReplayFiles(files);
+  if (looksLikeReplay(txt)) return handleReplayFiles([new File([txt], "zwischenablage.replay", { type: "application/json" })]);
+}
+async function readClipboard(){
+  const box = $("#importStatus");
+  const fail = msg => { box.hidden = false; box.className = "import-status err"; box.innerHTML = msg; };
+  let txt = "", files = [];
+  try {
+    if (navigator.clipboard && navigator.clipboard.read){
+      for (const item of await navigator.clipboard.read()){
+        for (const type of item.types){
+          const blob = await item.getType(type);
+          if (type === "text/plain") txt = await blob.text();
+          else if (type !== "text/html") files.push(new File([blob], "zwischenablage", { type }));
+        }
+      }
+    } else if (navigator.clipboard && navigator.clipboard.readText) txt = await navigator.clipboard.readText();
+  } catch (e) {
+    try { txt = await navigator.clipboard.readText(); }
+    catch { return fail("Der Browser erlaubt hier keinen Zugriff auf die Zwischenablage. So geht es trotzdem: oben ins Feld „Replay-Link einfügen“ lange tippen und „Einfügen“ wählen, am Computer Strg+V bzw. Cmd+V drücken."); }
+  }
+  if (files.length || looksLikeReplay(txt)) return importClipboard(files, txt);
+  if (replayIdsFrom(txt).length){ $("#replayLink").value = txt.trim(); return handleReplayLinks(); }
+  fail("In der Zwischenablage ist kein Replay. Kopiere die Replay-Datei, den Inhalt einer Replay-Datei oder einen Replay-Link von duels.ink und tippe dann noch einmal. Kopierte Dateien kannst du am Computer auch mit Strg+V bzw. Cmd+V einfügen.");
+}
 async function handleReplayLinks(){
   const inp = $("#replayLink"), box = $("#importStatus");
   const ids = replayIdsFrom(inp.value);
@@ -2687,7 +2731,25 @@ async function handleReplayLinks(){
   if (!inp || !go) return;
   go.addEventListener("click", handleReplayLinks);
   inp.addEventListener("keydown", e => { if (e.key === "Enter"){ e.preventDefault(); handleReplayLinks(); } });
-  inp.addEventListener("paste", () => setTimeout(() => { if (replayIdsFrom(inp.value).length) handleReplayLinks(); }, 0));
+  inp.addEventListener("paste", e => {
+    // Ganze Replay-Datei (Text) ins Feld eingefügt: direkt einlesen
+    const txt = e.clipboardData && e.clipboardData.getData("text");
+    const files = e.clipboardData ? [...e.clipboardData.files] : [];
+    if (files.length || looksLikeReplay(txt)){ e.preventDefault(); importClipboard(files, txt); return; }
+    setTimeout(() => { if (replayIdsFrom(inp.value).length) handleReplayLinks(); }, 0);
+  });
+  $("#replayPaste").addEventListener("click", readClipboard);
+  // Strg+V / Cmd+V irgendwo auf der Seite: kopierte Replay-Dateien einlesen
+  document.addEventListener("paste", e => {
+    if (e.defaultPrevented || e.target.closest("input,textarea,select,[contenteditable]")) return;
+    const files = e.clipboardData ? [...e.clipboardData.files] : [];
+    const txt = e.clipboardData && e.clipboardData.getData("text");
+    if (!files.length && !looksLikeReplay(txt) && !replayIdsFrom(txt || "").length) return;
+    e.preventDefault();
+    if (curTab !== "entry") switchTab("entry");
+    if (!files.length && !looksLikeReplay(txt)){ inp.value = txt.trim(); handleReplayLinks(); return; }
+    importClipboard(files, txt);
+  });
   $("#importStatus").addEventListener("click", e => {
     const b = e.target.closest("[data-openrep]"); if (b) window.open(b.dataset.openrep, "_blank", "noopener");
   });
